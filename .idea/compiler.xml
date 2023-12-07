@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <excludeFromCompile>
+      <directory url="file://$PROJECT_DIR$/lmy-live-api/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/lmy-live-common-interface/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/lmy-live-framework/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/lmy-live-framework/lmy-live-framework-datasource-starter/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/lmy-live-framework/lmy-live-framework-datasource-starter1/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/lmy-live-framework/lmy-live-framework-redis-starter/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/lmy-test/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/lmy-live-id-generate-interface/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/lmy-live-id-generate-provider/src/main/resources/archetype-resources" includeSubdirectories="true" />
+    </excludeFromCompile>
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="lmy-live-user-provider" />
+        <module name="lmy-live-api" />
+        <module name="lmy-live-framework-datasource-starter" />
+        <module name="lmy-live-user-interface" />
+        <module name="lmy-live-common-interface" />
+        <module name="lmy-live-framework-redis-starter" />
+        <module name="lmy-live-framework-datasource-starter1" />
+        <module name="lmy-test" />
+        <module name="lmy-live-id-generate-interface" />
+        <module name="lmy-live-id-generate-provider" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="lmy-live-framework-datasource-starter1" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="lmy-live-api" options="-parameters" />
+      <module name="lmy-live-common-interface" options="-parameters" />
+      <module name="lmy-live-framework" options="" />
+      <module name="lmy-live-framework-datasource-starter" options="-parameters" />
+      <module name="lmy-live-framework-datasource-starter1" options="-parameters" />
+      <module name="lmy-live-framework-redis-starter" options="-parameters" />
+      <module name="lmy-live-id-generate-interface" options="-parameters" />
+      <module name="lmy-live-id-generate-provider" options="-parameters" />
+      <module name="lmy-live-user-interface" options="-parameters" />
+      <module name="lmy-live-user-provider" options="-parameters" />
+      <module name="lmy-test" options="-parameters" />
+    </option>
+  </component>
+</project>

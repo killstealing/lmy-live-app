@@ -1,0 +1,8 @@
+spring:
+  cloud:
+    nacos:
+      username: lmy
+      password: lmy
+      discovery:
+        server-addr: 192.168.3.24:8848
+        namespace: lmy-live-test

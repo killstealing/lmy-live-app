@@ -1,0 +1,6 @@
+dubbo:
+  application:
+    name: lmy-live-api
+    qos-enable: false
+  registry:
+    address: nacos://192.168.3.24:8848?namespace=lmy-live-test&&username=lmy&&password=lmy
