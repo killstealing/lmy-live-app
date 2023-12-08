@@ -27,7 +27,7 @@ public class UserProviderApplication implements CommandLineRunner {
     private IUserTagService iUserTagService;
     @Override
     public void run(String... args) throws Exception {
-        long userId=1001;
+        long userId=1002;
         System.out.println(iUserTagService.setTag(userId, UserTagsEnum.IS_RICH));
         System.out.println("当前用户是否拥有RICH 标签:"+iUserTagService.containTag(userId,UserTagsEnum.IS_RICH));
         System.out.println(iUserTagService.setTag(userId, UserTagsEnum.IS_VIP));
