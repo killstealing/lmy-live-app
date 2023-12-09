@@ -1,4 +1,4 @@
-package org.lmy.live.common.interfaces;
+package org.lmy.live.common.interfaces.utils;
 
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeanUtils;

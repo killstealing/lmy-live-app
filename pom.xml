@@ -13,7 +13,6 @@
         <module>lmy-live-api</module>
         <module>lmy-live-common-interface</module>
         <module>lmy-live-framework</module>
-        <module>lmy-live-framework/lmy-live-framework-datasource-starter</module>
         <module>lmy-test</module>
         <module>lmy-live-id-generate-interface</module>
         <module>lmy-live-id-generate-provider</module>
