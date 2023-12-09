@@ -2,6 +2,9 @@ package com.lmy.live.user.provider.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Maps;
+import com.lmy.live.user.constants.CacheAsyncDeleteCode;
+import com.lmy.live.user.constants.UserProviderTopicNames;
+import com.lmy.live.user.dto.UserCacheAsyncDeleteDTO;
 import com.lmy.live.user.dto.UserDTO;
 import com.lmy.live.user.provider.dao.mapper.IUserMapper;
 import com.lmy.live.user.provider.dao.po.UserPO;
@@ -17,7 +20,6 @@ import org.lmy.live.common.interfaces.ConvertBeanUtils;
 import org.lmy.live.common.interfaces.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,13 +29,12 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import static com.alibaba.com.caucho.hessian.io.HessianInputFactory.log;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -50,9 +51,6 @@ public class UserServiceImpl implements IUserService {
     private UserProviderCacheKeyBuilder userProviderCacheKeyBuilder;
     @Resource
     private Producer producer;
-    @Value("${lmy.rmq.topic}")
-    private String topic;
-
     @Override
     public UserDTO getByUserId(Long userId) {
         if(userId==null){
@@ -76,20 +74,26 @@ public class UserServiceImpl implements IUserService {
         String key = userProviderCacheKeyBuilder.buildUserInfoKey(userDTO.getUserId());
         //立即删除缓存
         redisTemplate.delete(key);
-        String tag = "yourMessageTagA";
         ClientServiceProvider provider = ClientServiceProvider.loadService();
         // 普通消息发送。
         Duration messageDelayTime = Duration.ofSeconds(1);
+
+        UserCacheAsyncDeleteDTO userCacheAsyncDeleteDTO=new UserCacheAsyncDeleteDTO();
+        userCacheAsyncDeleteDTO.setCode(CacheAsyncDeleteCode.USER_INFO_DELETE.getCode());
+        Map<String, Object> jsonParam=new HashMap<>();
+        jsonParam.put("userId",userDTO.getUserId());
+        userCacheAsyncDeleteDTO.setJson(JSON.toJSONString(jsonParam));
+
         Message message = provider.newMessageBuilder()
-                .setTopic(topic)
+                .setTopic(UserProviderTopicNames.CACHE_ASYNC_DELETE_TOPIC)
                 // 设置消息索引键，可根据关键字精确查找某条消息。
 //                .setKeys("messageKey")
                 // 设置消息Tag，用于消费端根据指定Tag过滤消息。
-                .setTag(tag)
+                .setTag("*")
                 // Set expected delivery timestamp of message.
                 .setDeliveryTimestamp(System.currentTimeMillis() + messageDelayTime.toMillis())
                 // 消息体。
-                .setBody(JSON.toJSONBytes(userDTO))
+                .setBody(JSON.toJSONBytes(userCacheAsyncDeleteDTO))
                 .build();
         SendReceipt sendReceipt = null;
         try {
@@ -99,10 +103,6 @@ public class UserServiceImpl implements IUserService {
         }
         logger.info("Send message successfully, messageId={}", sendReceipt.getMessageId());
         return i>=0;
-    }
-
-    private void sendMessage(){
-
     }
 
     @Override

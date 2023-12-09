@@ -1,10 +1,10 @@
 spring:
   application:
-    name: qiyu-live-id-generate-provider
+    name: lmy-live-id-generate-provider
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     #访问主库
-    url: jdbc:mysql://cloud.db:8808/qiyu_live_common?useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://192.168.3.24:8808/lmy_live_common?useUnicode=true&characterEncoding=utf8
     username: root
     password: root
 dubbo:
