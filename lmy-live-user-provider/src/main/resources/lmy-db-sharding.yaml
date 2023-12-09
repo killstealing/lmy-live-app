@@ -19,7 +19,7 @@ rules:
         staticStrategy:
           writeDataSourceName: user_master
           readDataSourceNames:
-            - user_slave0
+            - user_master
   - !SINGLE
     defaultDataSource: user_ds ## 不分表分分库的默认数据源
   - !SHARDING

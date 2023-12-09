@@ -15,7 +15,7 @@ public interface IUserTagMapper extends BaseMapper<UserTagPO> {
      * @param tag
      * @return
      */
-    @Update("update t_user_tag set ${fieldName}=${fieldName} | #{tag} where user_id=#{userId}")
+    @Update("update t_user_tag set ${fieldName}=${fieldName} | #{tag} where user_id=#{userId} and ${fieldName} & #{tag} = 0")
     int setTag(Long userId, String fieldName, long tag);
 
     /**
@@ -26,6 +26,6 @@ public interface IUserTagMapper extends BaseMapper<UserTagPO> {
      * @param tag
      * @return
      */
-    @Update("update t_user_tag set ${fieldName}=${fieldName} &~ #{tag} where user_id=#{userId}")
+    @Update("update t_user_tag set ${fieldName}=${fieldName} &~ #{tag} where user_id=#{userId} and ${fieldName} & #{tag} = #{tag}")
     int cancelTag(Long userId, String fieldName, long tag);
 }
