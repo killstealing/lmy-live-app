@@ -5,7 +5,11 @@ services:
     image: 'lmy-live-api-docker:1.0-SNAPSHOT'
     ports:
       - "8090:8090"
+    volumes:
+      - /tmp/logs/lmy-live-api:/tmp/logs/lmy-live-api
     environment:
+      - spring.cloud.nacos.discovery.ip=192.168.3.24
+      - TZ=Asia/Shanghai
       - server.port=8090
       - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms512m -Xmx512m -Xmn128m -Xss256k
 #    extra_hosts:
@@ -15,7 +19,11 @@ services:
     image: 'lmy-live-api-docker:1.0-SNAPSHOT'
     ports:
       - "8091:8091"
+    volumes:
+      - /tmp/logs/lmy-live-api:/tmp/logs/lmy-live-api
     environment:
+      - spring.cloud.nacos.discovery.ip=192.168.3.24
+      - TZ=Asia/Shanghai
       - server.port=8091
       - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms512m -Xmx512m -Xmn128m -Xss256k
 #    extra_hosts:

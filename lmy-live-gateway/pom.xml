@@ -6,12 +6,26 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>lmy-live-api</artifactId>
+    <artifactId>lmy-live-gateway</artifactId>
+
+    <version>1.0.1</version>
+    <properties>
+        <spring-cloud-starter-gateway.version>4.0.6</spring-cloud-starter-gateway.version>
+        <spring-cloud-starter-loadbalancer.version>4.0.3</spring-cloud-starter-loadbalancer.version>
+        <spring-cloud-starter-bootstrap.version>3.0.2</spring-cloud-starter-bootstrap.version>
+        <alibaba-fastjson.version>2.0.10</alibaba-fastjson.version>
+    </properties>
     <dependencies>
+        <!--gateway 内部引入了 webflux-->
         <dependency>
-            <groupId>org.apache.dubbo</groupId>
-            <artifactId>dubbo-spring-boot-starter</artifactId>
-            <version>3.2.0-beta.3</version>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-gateway</artifactId>
+            <version>${spring-cloud-starter-gateway.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+            <version>${spring-cloud-starter-loadbalancer.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -24,22 +38,12 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
-            <version>3.0.2</version>
+            <version>${spring-cloud-starter-bootstrap.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>log4j-to-slf4j</artifactId>
-                    <groupId>org.apache.logging.log4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.idea</groupId>
-            <artifactId>lmy-live-user-interface</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${alibaba-fastjson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.idea</groupId>
@@ -48,13 +52,15 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>${project.artifactId}-docker</finalName>
+        <finalName>${artifactId}-docker</finalName>
         <plugins>
             <plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>1.2.0</version>
                 <executions>
+                    <!-- 当 mvn 执行 install 操作的时候，执行 docker 的
+                   build -->
                     <execution>
                         <id>build</id>
                         <phase>install</phase>
@@ -67,28 +73,34 @@
                     <imageTags>
                         <imageTag>${project.version}</imageTag>
                     </imageTags>
-                    <imageName>${project.build.finalName}</imageName>
-
+                    <imageName>${project.build.finalName}
+                    </imageName>
+                    <!--指定 Dockerfile 文件的位置-->
                     <dockerDirectory>${project.basedir}/docker</dockerDirectory>
+                    <!-- 指定 jar 包路径，这里对应 Dockerfile 中复制
+                   jar 包到 docker 容器指定目录配置，也可以写到 Docokerfile 中 -->
                     <resources>
                         <resource>
                             <targetPath>/</targetPath>
-                            <directory>${project.build.directory}</directory>
-                            <include>${project.build.finalName}.jar</include>
+                            <!-- 将下边目录的内容，拷贝到 docker 镜像
+                           中 -->
+                            <directory>$
+                                {project.build.directory}
+                            </directory>
+                            <include>$
+                                {project.build.finalName}.jar
+                            </include>
                         </resource>
                         <resource>
                             <targetPath>/</targetPath>
+
                             <directory>${arthus.zip.address}</directory>
-                            <include>arthas-boot.jar</include>
-                        </resource>
-                        <resource>
-                            <targetPath>/</targetPath>
-                            <directory>${arthus.zip.address}</directory>
-                            <include>math-game.jar</include>
+                            <include>arthas-bin.zip</include>
                         </resource>
                     </resources>
                 </configuration>
             </plugin>
+            <!-- 将 springboot 应用打包成 jar-->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

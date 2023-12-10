@@ -7,3 +7,6 @@
 #server:
 #  servlet:
 #    context-path: /live/api
+#spring:
+#  application:
+#    name: lmy-live-api

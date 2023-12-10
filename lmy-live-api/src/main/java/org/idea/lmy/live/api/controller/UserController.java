@@ -3,6 +3,8 @@ package org.idea.lmy.live.api.controller;
 import com.lmy.live.user.dto.UserDTO;
 import com.lmy.live.user.interfaces.IUserRpc;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -12,12 +14,16 @@ import java.util.Map;
 @RequestMapping(value = "/user")
 public class UserController {
 
+    private static final Logger logger= LoggerFactory.getLogger(UserController.class);
+
     @DubboReference
     private IUserRpc userRpc;
 
     @GetMapping(value = "/getUserInfo")
     public UserDTO getUserInfo(Long userId){
-        return userRpc.getByUserId(userId);
+        UserDTO userDTO = userRpc.getByUserId(userId);
+        logger.info("[getUserInfo] userDTO is {}",userDTO);
+        return userDTO;
     }
 
     @PostMapping(value="updateUserInfo")

@@ -16,6 +16,7 @@
         <module>lmy-test</module>
         <module>lmy-live-id-generate-interface</module>
         <module>lmy-live-id-generate-provider</module>
+        <module>lmy-live-gateway</module>
     </modules>
     <packaging>pom</packaging>
 
