@@ -1,0 +1,32 @@
+version: '3'
+services:
+  lmy-live-user-provider-docker-1:
+    container_name: lmy-live-user-provider-docker-1
+    image: 'lmy-live-user-provider-docker:1.2023121001'
+    ports:
+      - "9091:9091"
+  #注意 xss 参数是设置线程的栈空间大小，这里至少要比 136k 大，否则会出错
+    environment:
+      - DUBBO_IP_TO_REGISTRY=192.168.3.24
+      - DUBBO_PORT_TO_REGISTRY=9091
+      - DUBBO_PORT_TO_BIND=9091
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms512m -Xmx512m -Xmn128m -Xss256k
+#    extra_hosts:
+#      - 'lmy.nacos.com:175.178.130.183'
+#      - 'cloud.db:175.178.130.183'
+#      - 'lmy.rmq.com:192.168.40.167'
+  lmy-live-user-provider-docker-2:
+    container_name: lmy-live-user-provider-docker-2
+    image: 'lmy-live-user-provider-docker:1.2023121001'
+    ports:
+      - "9092:9092"
+    #注意 xss 参数是设置线程的栈空间大小，这里至少要比 136k 大，否则会出错
+    environment:
+      - DUBBO_IP_TO_REGISTRY=192.168.3.24
+      - DUBBO_PORT_TO_REGISTRY=9092
+      - DUBBO_PORT_TO_BIND=9092
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms512m -Xmx512m -Xmn128m -Xss256k
+#    extra_hosts:
+#      - 'lmy.nacos.com:175.178.130.183'
+#      - 'cloud.db:175.178.130.183'
+#      - 'lmy.rmq.com:192.168.40.167'
