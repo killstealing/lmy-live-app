@@ -1,50 +1,56 @@
-spring:
-  application:
-    name: lmy-live-user-provider
-  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-    driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
-#    url: jdbc:mysql://192.168.3.24:8808/lmy_live_user?useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
-    username: root
-    password: root
-    url: jdbc:shardingsphere:classpath:lmy-db-sharding.yaml
-    hikari:
-      pool-name: lmy-user-pool
-      minimum-idle: 150
-      maximum-pool-size: 300
-#      connection-init-sql: select 1
-      connection-timeout: 4000
-      max-lifetime: 60000
-  data:
-    redis:
-      port: 6379
-      host: 192.168.3.24
-      lettuce:
-        pool:
-          min-idle: 10
-          max-active: 50
-          max-idle: 20
-      connect-timeout: 5000
-      password: redis
-
-lmy:
-  rmq:
-    topic: user-update-cache
-    producer:
-      nameSrv: 192.168.3.24:8081
-      groupName: ${spring.application.name}
-      retryTimes: 3
-      sendTimeout: 3000
-    consumer:
-      nameSrv: 192.168.3.24:8081
-      groupName: ${spring.application.name}
-
-dubbo:
-  application:
-    name: ${spring.application.name}
-  registry:
-    address: nacos://192.168.3.24:8848?namespace=lmy-live-test&&username=lmy&&password=lmy
-  server: true
-  protocol:
-    name: dubbo
-    port: 9091
+#spring:
+#  application:
+#    name: lmy-live-user-provider
+#  datasource:
+##    driver-class-name: com.mysql.cj.jdbc.Driver
+#    driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
+##    url: jdbc:mysql://192.168.3.24:8808/lmy_live_user?useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
+#    username: root
+#    password: root
+#    url: jdbc:shardingsphere:classpath:lmy-db-sharding.yaml
+#    url: jdbc:shardingsphere:nacos:192.168.3.24:8848:lmy-live-user-shardingjdbc.yaml?username=lmy&&password=lmy&&namespace=lmy-live-test
+#    hikari:
+#      pool-name: lmy-user-pool
+#      minimum-idle: 150
+#      maximum-pool-size: 300
+##      connection-init-sql: select 1
+#      connection-timeout: 4000
+#      max-lifetime: 60000
+#  data:
+#    redis:
+#      port: 6379
+#      host: 192.168.3.24
+#      lettuce:
+#        pool:
+#          min-idle: 10
+#          max-active: 50
+#          max-idle: 20
+#      connect-timeout: 5000
+#      password: redis
+##  cloud:
+##    nacos:
+##      config:
+##        import-check:
+##          enabled: false
+#
+#lmy:
+#  rmq:
+#    topic: user-update-cache
+#    producer:
+#      nameSrv: 192.168.3.24:8081
+#      groupName: ${spring.application.name}
+#      retryTimes: 3
+#      sendTimeout: 3000
+#    consumer:
+#      nameSrv: 192.168.3.24:8081
+#      groupName: ${spring.application.name}
+#
+#dubbo:
+#  application:
+#    name: ${spring.application.name}
+#  registry:
+#    address: nacos://192.168.3.24:8848?namespace=lmy-live-test&&username=lmy&&password=lmy
+#  server: true
+#  protocol:
+#    name: dubbo
+#    port: 9091

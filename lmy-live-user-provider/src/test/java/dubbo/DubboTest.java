@@ -6,7 +6,7 @@ import org.apache.dubbo.config.*;
 
 public class DubboTest {
 
-    private static final String REGISTER_ADDRESS = "nacos://127.0.0.1:8848?namespace=qiyu-live-test&&username=qiyu&&password=qiyu";
+    private static final String REGISTER_ADDRESS = "nacos://127.0.0.1:8848?namespace=lmy-live-test&&username=lmy&&password=lmy";
     private static RegistryConfig registryConfig;
     private static ApplicationConfig applicationConfig;
     private IUserRpc userRpc;
