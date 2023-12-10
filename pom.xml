@@ -27,6 +27,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <springboot.version>3.0.4</springboot.version>
         <lmy-mysql.version>8.0.28</lmy-mysql.version>
+        <arthus.zip.address>/home/lmy/runningJars/arthas/</arthus.zip.address>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>
