@@ -1,0 +1,11 @@
+#spring:
+#  cloud:
+#    gateway:
+#      discovery:
+#        locator:
+#          enabled: true
+#      routes:
+#        - id: lmy-live-api
+#          uri: lb://lmy-live-api
+#          predicates:
+#            - Path=/live/api/**

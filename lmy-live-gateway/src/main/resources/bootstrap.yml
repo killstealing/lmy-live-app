@@ -1,0 +1,22 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: lmy-live-gateway
+  cloud:
+    nacos:
+      username: lmy
+      password: lmy
+      discovery:
+        server-addr: 192.168.3.24:8848
+        namespace: lmy-live-test
+      config:
+        import-check:
+          enabled: false
+        file-extension: yaml
+        server-addr: 192.168.3.24:8848
+        namespace: lmy-live-test
+  config:
+    import:
+      - optional:nacos:lmy-live-gateway.yaml
+
