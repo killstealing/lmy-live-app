@@ -1,0 +1,22 @@
+version: '3'
+services:
+  lmy-live-api-docker-1:
+    container_name: lmy-live-api-docker-1
+    image: 'lmy-live-api-docker:1.0-SNAPSHOT'
+    ports:
+      - "8090:8090"
+    environment:
+      - server.port=8090
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms512m -Xmx512m -Xmn128m -Xss256k
+#    extra_hosts:
+#      - 'lmy.nacos.com:175.178.130.183'
+  lmy-live-api-docker-2:
+    container_name: lmy-live-api-docker-2
+    image: 'lmy-live-api-docker:1.0-SNAPSHOT'
+    ports:
+      - "8091:8091"
+    environment:
+      - server.port=8091
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms512m -Xmx512m -Xmn128m -Xss256k
+#    extra_hosts:
+#      - 'lmy.nacos.com:175.178.130.183'

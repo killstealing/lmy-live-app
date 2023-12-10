@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>lmy-live-user-provider</artifactId>
+    <version>1.2023121001</version>
 
     <properties>
 
