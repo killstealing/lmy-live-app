@@ -8,6 +8,7 @@
 #    username: root
 #    password: root
 #    url: jdbc:shardingsphere:classpath:lmy-db-sharding.yaml
+#    url: jdbc:shardingsphere:nacos:192.168.3.24:8848:lmy-live-user-shardingjdbc.yaml?username=lmy&&password=lmy&&namespace=lmy-live-test
 #    hikari:
 #      pool-name: lmy-user-pool
 #      minimum-idle: 150
