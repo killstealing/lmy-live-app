@@ -6,7 +6,10 @@ services:
     ports:
       - "9091:9091"
   #注意 xss 参数是设置线程的栈空间大小，这里至少要比 136k 大，否则会出错
+    volumes:
+      - /tmp/logs/lmy-live-user-provider:/tmp/logs/lmy-live-user-provider
     environment:
+      - TZ=Asia/Shanghai
       - DUBBO_IP_TO_REGISTRY=192.168.3.24
       - DUBBO_PORT_TO_REGISTRY=9091
       - DUBBO_PORT_TO_BIND=9091
@@ -21,7 +24,10 @@ services:
     ports:
       - "9092:9092"
     #注意 xss 参数是设置线程的栈空间大小，这里至少要比 136k 大，否则会出错
+    volumes:
+      - /tmp/logs/lmy-live-user-provider:/tmp/logs/lmy-live-user-provider
     environment:
+      - TZ=Asia/Shanghai
       - DUBBO_IP_TO_REGISTRY=192.168.3.24
       - DUBBO_PORT_TO_REGISTRY=9092
       - DUBBO_PORT_TO_BIND=9092
