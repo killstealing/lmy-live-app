@@ -1,31 +1,34 @@
-spring:
-  application:
-    name: lmy-live-msg-provider
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: root
-    url: jdbc:mysql://192.168.3.24:3306/lmy_live_msg?useUnicode=true&characterEncoding=utf8
-    hikari:
-      pool-name: lmy-live-msg-pool
-      minimum-idle: 10
-      maximum-pool-size: 200
-  data:
-    redis:
-      port: 6379
-      host: 192.168.3.24
-      lettuce:
-        pool:
-          min-idle: 10
-          max-active: 50
-          max-idle: 20
-      connect-timeout: 5000
-      password: redis
-dubbo:
-  application:
-    name: ${spring.application.name}
-  registry:
-    address: nacos://192.168.3.24:8848?namespace=lmy-live-test&&username=lmy&&password=lmy
-  protocol:
-    name: dubbo
-    port: 9092
+#spring:
+#  application:
+#    name: lmy-live-msg-provider
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    username: root
+#    password: root
+#    url: jdbc:mysql://192.168.3.24:8808/lmy_live_msg?useUnicode=true&characterEncoding=utf8
+#    hikari:
+#      pool-name: lmy-live-msg-pool
+#      minimum-idle: 10
+#      maximum-pool-size: 200
+#      connection-init-sql: select 1
+#      connection-timeout: 4000
+#      max-lifetime: 60000
+#  data:
+#    redis:
+#      port: 6379
+#      host: 192.168.3.24
+#      lettuce:
+#        pool:
+#          min-idle: 10
+#          max-active: 50
+#          max-idle: 20
+#      connect-timeout: 5000
+#      password: redis
+#dubbo:
+#  application:
+#    name: ${spring.application.name}
+#  registry:
+#    address: nacos://192.168.3.24:8848?namespace=lmy-live-test&&username=lmy&&password=lmy
+#  protocol:
+#    name: dubbo
+#    port: 9092
