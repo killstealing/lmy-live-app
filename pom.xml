@@ -17,6 +17,8 @@
         <module>lmy-live-id-generate-interface</module>
         <module>lmy-live-id-generate-provider</module>
         <module>lmy-live-gateway</module>
+        <module>lmy-live-msg-interface</module>
+        <module>lmy-live-msg-provider</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -29,6 +31,10 @@
         <springboot.version>3.0.4</springboot.version>
         <lmy-mysql.version>8.0.28</lmy-mysql.version>
         <arthus.zip.address>/home/lmy/runningJars/arthas/</arthus.zip.address>
+        <dubbo-spring-boot-starter.version>3.2.0-beta.3</dubbo-spring-boot-starter.version>
+        <spring-cloud-starter-bootstrap.version>3.0.2</spring-cloud-starter-bootstrap.version>
+        <sharding.jdbc.version>5.3.2</sharding.jdbc.version>
+        <mybatis-plus.version>3.5.3</mybatis-plus.version>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>

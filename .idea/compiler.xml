@@ -12,6 +12,8 @@
       <directory url="file://$PROJECT_DIR$/lmy-live-id-generate-interface/src/main/resources/archetype-resources" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/lmy-live-id-generate-provider/src/main/resources/archetype-resources" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/lmy-live-gateway/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/lmy-live-msg-interface/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/lmy-live-msg-provider/src/main/resources/archetype-resources" includeSubdirectories="true" />
     </excludeFromCompile>
     <annotationProcessing>
       <profile name="Maven default annotation processors profile" enabled="true">
@@ -19,16 +21,18 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="lmy-live-user-provider" />
-        <module name="lmy-live-api" />
         <module name="lmy-live-framework-datasource-starter" />
         <module name="lmy-live-user-interface" />
         <module name="lmy-live-gateway" />
         <module name="lmy-live-common-interface" />
+        <module name="lmy-live-id-generate-provider" />
+        <module name="lmy-live-api" />
         <module name="lmy-live-framework-redis-starter" />
+        <module name="lmy-live-msg-provider" />
+        <module name="lmy-live-msg-interface" />
         <module name="lmy-live-framework-datasource-starter1" />
         <module name="lmy-test" />
         <module name="lmy-live-id-generate-interface" />
-        <module name="lmy-live-id-generate-provider" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -46,6 +50,8 @@
       <module name="lmy-live-gateway" options="-parameters" />
       <module name="lmy-live-id-generate-interface" options="-parameters" />
       <module name="lmy-live-id-generate-provider" options="-parameters" />
+      <module name="lmy-live-msg-interface" options="-parameters" />
+      <module name="lmy-live-msg-provider" options="-parameters" />
       <module name="lmy-live-user-interface" options="-parameters" />
       <module name="lmy-live-user-provider" options="-parameters" />
       <module name="lmy-test" options="-parameters" />
