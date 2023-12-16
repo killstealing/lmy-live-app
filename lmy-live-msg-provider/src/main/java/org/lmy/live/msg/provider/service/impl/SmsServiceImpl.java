@@ -78,15 +78,16 @@ public class SmsServiceImpl implements ISmsService {
     }
 
     private boolean mockSendMsg(String phone, Integer code) {
+        boolean result=false;
         try {
             logger.info(" ============= 创建短信发送通道中 ============= ,phone is {},code is {}", phone, code);
             Thread.sleep(1000);
             logger.info(" ============= 短信已经发送成功 ============= ");
-            return true;
+            result=true;
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } finally {
-            return false;
+            return result;
         }
     }
 }
