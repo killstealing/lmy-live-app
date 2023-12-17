@@ -1,7 +1,7 @@
 package com.lmy.live.user.provider;
 
-import com.lmy.live.user.constants.UserTagsEnum;
-import com.lmy.live.user.dto.UserDTO;
+import com.lmy.live.user.dto.UserLoginDTO;
+import com.lmy.live.user.provider.service.IUserPhoneService;
 import com.lmy.live.user.provider.service.IUserService;
 import com.lmy.live.user.provider.service.IUserTagService;
 import jakarta.annotation.Resource;
@@ -32,19 +32,40 @@ public class UserProviderApplication implements CommandLineRunner {
     private IUserTagService iUserTagService;
     @Resource
     private IUserService userService;
+    @Resource
+    private IUserPhoneService userPhoneService;
     @Override
     public void run(String... args) throws Exception {
-        long userId= 1006L;
 
-        UserDTO userDTO = userService.getByUserId(userId);
-        userDTO.setNickName("test-nick-name");
-        userService.updateUserInfo(userDTO);
 
-        System.out.println("当前用户是否拥有RICH 标签:"+iUserTagService.containTag(userId,UserTagsEnum.IS_RICH));
-        System.out.println(iUserTagService.setTag(userId, UserTagsEnum.IS_RICH));
-        System.out.println("当前用户是否拥有RICH 标签:"+iUserTagService.containTag(userId,UserTagsEnum.IS_RICH));
-        System.out.println(iUserTagService.cancelTag(userId, UserTagsEnum.IS_RICH));
-        System.out.println("当前用户是否拥有RICK标签:"+iUserTagService.containTag(userId,UserTagsEnum.IS_RICH));
+        //test 6-18  用户手机号注册登录RPC接口测试  start
+        String phone="17818723313";
+        UserLoginDTO userLoginDTO = userPhoneService.login(phone);
+        System.out.println("line 45:"+userLoginDTO);
+        System.out.println("line 46:"+userPhoneService.queryByUserId(userLoginDTO.getUserId()));
+        System.out.println("line 47:"+userPhoneService.queryByUserId(userLoginDTO.getUserId()));
+        System.out.println("line 48:"+userPhoneService.queryByPhone(phone));
+        System.out.println("line 49:"+userPhoneService.queryByPhone(phone));
+
+        //test 6-18  用户手机号注册登录RPC接口测试  end
+
+
+
+
+
+
+
+//        long userId= 1006L;
+
+//        UserDTO userDTO = userService.getByUserId(userId);
+//        userDTO.setNickName("test-nick-name");
+//        userService.updateUserInfo(userDTO);
+//
+//        System.out.println("当前用户是否拥有RICH 标签:"+iUserTagService.containTag(userId,UserTagsEnum.IS_RICH));
+//        System.out.println(iUserTagService.setTag(userId, UserTagsEnum.IS_RICH));
+//        System.out.println("当前用户是否拥有RICH 标签:"+iUserTagService.containTag(userId,UserTagsEnum.IS_RICH));
+//        System.out.println(iUserTagService.cancelTag(userId, UserTagsEnum.IS_RICH));
+//        System.out.println("当前用户是否拥有RICK标签:"+iUserTagService.containTag(userId,UserTagsEnum.IS_RICH));
 //
 //        CountDownLatch count=new CountDownLatch(1);
 //        for (int i = 0; i < 100; i++) {

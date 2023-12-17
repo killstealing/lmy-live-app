@@ -105,6 +105,12 @@
             <artifactId>lmy-live-framework-redis-starter</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.idea</groupId>
+            <artifactId>lmy-live-id-generate-interface</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
     <build>
         <finalName>${project.artifactId}-docker</finalName>
