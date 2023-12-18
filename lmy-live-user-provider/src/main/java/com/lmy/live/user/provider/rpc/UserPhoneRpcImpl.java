@@ -5,9 +5,11 @@ import com.lmy.live.user.dto.UserPhoneDTO;
 import com.lmy.live.user.interfaces.IUserPhoneRpc;
 import com.lmy.live.user.provider.service.IUserPhoneService;
 import jakarta.annotation.Resource;
+import org.apache.dubbo.config.annotation.DubboService;
 
 import java.util.List;
 
+@DubboService
 public class UserPhoneRpcImpl implements IUserPhoneRpc {
 
     @Resource

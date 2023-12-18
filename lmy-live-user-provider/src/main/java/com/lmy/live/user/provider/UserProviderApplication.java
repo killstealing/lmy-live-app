@@ -1,10 +1,5 @@
 package com.lmy.live.user.provider;
 
-import com.lmy.live.user.dto.UserLoginDTO;
-import com.lmy.live.user.provider.service.IUserPhoneService;
-import com.lmy.live.user.provider.service.IUserService;
-import com.lmy.live.user.provider.service.IUserTagService;
-import jakarta.annotation.Resource;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,24 +23,24 @@ public class UserProviderApplication implements CommandLineRunner {
         springApplication.run(args);
     }
 
-    @Resource
-    private IUserTagService iUserTagService;
-    @Resource
-    private IUserService userService;
-    @Resource
-    private IUserPhoneService userPhoneService;
+//    @Resource
+//    private IUserTagService iUserTagService;
+//    @Resource
+//    private IUserService userService;
+//    @Resource
+//    private IUserPhoneService userPhoneService;
     @Override
     public void run(String... args) throws Exception {
 
 
         //test 6-18  用户手机号注册登录RPC接口测试  start
-        String phone="17818723313";
-        UserLoginDTO userLoginDTO = userPhoneService.login(phone);
-        System.out.println("line 45:"+userLoginDTO);
-        System.out.println("line 46:"+userPhoneService.queryByUserId(userLoginDTO.getUserId()));
-        System.out.println("line 47:"+userPhoneService.queryByUserId(userLoginDTO.getUserId()));
-        System.out.println("line 48:"+userPhoneService.queryByPhone(phone));
-        System.out.println("line 49:"+userPhoneService.queryByPhone(phone));
+//        String phone="17818723313";
+//        UserLoginDTO userLoginDTO = userPhoneService.login(phone);
+//        System.out.println("line 45:"+userLoginDTO);
+//        System.out.println("line 46:"+userPhoneService.queryByUserId(userLoginDTO.getUserId()));
+//        System.out.println("line 47:"+userPhoneService.queryByUserId(userLoginDTO.getUserId()));
+//        System.out.println("line 48:"+userPhoneService.queryByPhone(phone));
+//        System.out.println("line 49:"+userPhoneService.queryByPhone(phone));
 
         //test 6-18  用户手机号注册登录RPC接口测试  end
 
