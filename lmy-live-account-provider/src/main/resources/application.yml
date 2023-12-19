@@ -14,6 +14,7 @@
 #dubbo:
 #  application:
 #    name: ${spring.application.name}
+#    qos-enable: false
 #  registry:
 #    #docker 启动的时候，注入 host 的配置
 #    address: nacos://192.168.3.24:8848?namespace=lmy-live-test&&username=lmy&&password=lmy

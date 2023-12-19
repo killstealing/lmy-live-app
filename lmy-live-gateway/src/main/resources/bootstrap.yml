@@ -19,4 +19,7 @@ spring:
   config:
     import:
       - optional:nacos:lmy-live-gateway.yaml
-
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG

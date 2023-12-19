@@ -8,6 +8,7 @@ import org.apache.dubbo.common.utils.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.idea.lmy.live.api.service.IUserLoginService;
 import org.idea.lmy.live.api.vo.UserLoginVO;
+import org.lmy.live.account.interfaces.IAccountTokenRPC;
 import org.lmy.live.common.interfaces.utils.ConvertBeanUtils;
 import org.lmy.live.common.interfaces.vo.WebResponseVO;
 import org.lmy.live.msg.dto.MsgCheckDTO;
@@ -28,6 +29,9 @@ public class UserLoginServiceImpl implements IUserLoginService {
 
     @DubboReference
     private IUserPhoneRpc userPhoneRpc;
+
+    @DubboReference
+    private IAccountTokenRPC accountTokenRPC;
 
     @Override
     public WebResponseVO sendLoginCode(String phone) {
@@ -62,9 +66,12 @@ public class UserLoginServiceImpl implements IUserLoginService {
         //验证码校验通过
         UserLoginDTO userLoginDTO = userPhoneRpc.login(phone);
         if(!userLoginDTO.isIfLoginSuccess()){
-            return WebResponseVO.bizError(userLoginDTO.getDesc());
+            logger.error("login has error, phone is {}",phone);
+            //极低概率发生，如果真有问题，提示系统异常
+            return WebResponseVO.sysError();
         }
-        Cookie cookie=new Cookie("lmytk",userLoginDTO.getToken());
+        String token=accountTokenRPC.createAndSaveLoginToken(userLoginDTO.getUserId());
+        Cookie cookie=new Cookie("lmytk",token);
         //http://app.qiyu.live.com/html/qiyu_live_list_room.html
         //http://api.qiyu.live.com/live/api/userLogin/sendLoginCode
         cookie.setDomain("lmy.live.com");
