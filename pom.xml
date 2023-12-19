@@ -19,6 +19,8 @@
         <module>lmy-live-gateway</module>
         <module>lmy-live-msg-interface</module>
         <module>lmy-live-msg-provider</module>
+        <module>lmy-live-account-interface</module>
+        <module>lmy-live-account-provider</module>
     </modules>
     <packaging>pom</packaging>
 

@@ -14,6 +14,8 @@
       <directory url="file://$PROJECT_DIR$/lmy-live-gateway/src/main/resources/archetype-resources" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/lmy-live-msg-interface/src/main/resources/archetype-resources" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/lmy-live-msg-provider/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/lmy-live-account-provider/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/lmy-live-account-interface/src/main/resources/archetype-resources" includeSubdirectories="true" />
     </excludeFromCompile>
     <annotationProcessing>
       <profile name="Maven default annotation processors profile" enabled="true">
@@ -25,6 +27,7 @@
         <module name="lmy-live-user-interface" />
         <module name="lmy-live-gateway" />
         <module name="lmy-live-common-interface" />
+        <module name="lmy-live-account-provider" />
         <module name="lmy-live-id-generate-provider" />
         <module name="lmy-live-api" />
         <module name="lmy-live-framework-redis-starter" />
@@ -33,6 +36,7 @@
         <module name="lmy-live-framework-datasource-starter1" />
         <module name="lmy-test" />
         <module name="lmy-live-id-generate-interface" />
+        <module name="lmy-live-account-interface" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -41,6 +45,8 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="lmy-live-account-interface" options="-parameters" />
+      <module name="lmy-live-account-provider" options="-parameters" />
       <module name="lmy-live-api" options="-parameters" />
       <module name="lmy-live-common-interface" options="-parameters" />
       <module name="lmy-live-framework" options="" />
