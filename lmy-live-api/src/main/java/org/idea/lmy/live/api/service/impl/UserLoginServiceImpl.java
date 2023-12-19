@@ -52,7 +52,7 @@ public class UserLoginServiceImpl implements IUserLoginService {
         if(!Pattern.matches(PHONE_REG,phone)){
             return WebResponseVO.errorParam("手机号格式异常");
         }
-        if(code==null||code<100000){
+        if(code==null||code<1000){
             return WebResponseVO.errorParam("验证码格式异常");
         }
         MsgCheckDTO msgCheckDTO = smsRpc.checkLoginCode(phone, code);

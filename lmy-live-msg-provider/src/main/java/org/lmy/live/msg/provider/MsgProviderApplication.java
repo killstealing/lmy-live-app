@@ -2,6 +2,7 @@ package org.lmy.live.msg.provider;
 
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
+import org.lmy.live.msg.enums.MsgSendResultEnum;
 import org.lmy.live.msg.provider.service.ISmsService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -25,6 +26,10 @@ public class MsgProviderApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
+        MsgSendResultEnum msgSendResultEnum = iSmsService.sendMessage("17665753022");
+        System.out.println(msgSendResultEnum);
+
 //        String phone="17665753022";
 //        MsgSendResultEnum msgSendResultEnum = iSmsService.sendMessage(phone);
 //        System.out.println(msgSendResultEnum);
