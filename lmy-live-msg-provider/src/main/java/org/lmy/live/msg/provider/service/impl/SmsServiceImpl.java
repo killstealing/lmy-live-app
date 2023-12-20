@@ -52,7 +52,7 @@ public class SmsServiceImpl implements ISmsService {
         int code= RandomUtils.nextInt(1000,9999);
         redisTemplate.opsForValue().set(codeCacheKey,code,60, TimeUnit.SECONDS);
         ThreadPoolManager.commonAsyncPool.execute(()->{
-            boolean sendStatus = this.mockSendMsg(phone, code);
+            boolean sendStatus = this.mockSendSms(phone, code);
             if (sendStatus) {
                 insertOne(phone,code);
             }
@@ -85,7 +85,26 @@ public class SmsServiceImpl implements ISmsService {
         smsMapper.insert(smsPO);
     }
 
-    private boolean mockSendMsg(String phone, Integer code) {
+    /**
+     * 模拟发送短信过程，感兴趣的朋友可以尝试对接一些第三方的短信平台
+     *
+     * @param phone
+     * @param code
+     */
+    private boolean mockSendSms(String phone, Integer code) {
+        try {
+            logger.info(" ============= 创建短信发送通道中 ============= ,phone is {},code is {}", phone, code);
+            Thread.sleep(1000);
+            logger.info(" ============= 短信已经发送成功 ============= ");
+            return true;
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            return false;
+        }
+    }
+
+    private boolean realSendMsg(String phone, Integer code) {
         boolean result=false;
         try {
             String serverIp = applicationProperties.getServerIp();

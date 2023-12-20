@@ -79,7 +79,7 @@ public class UserLoginServiceImpl implements IUserLoginService {
         //cookie有效期，一般他的默认单位是秒
         cookie.setMaxAge(30*24*3600);
         ////加上它，不然web浏览器不会将cookie自动记录下
-        response.setHeader("Access-Control-Allow-Credentials", "true");
+//        response.setHeader("Access-Control-Allow-Credentials", "true");
         response.addCookie(cookie);
         return WebResponseVO.success(ConvertBeanUtils.convert(userLoginDTO, UserLoginVO.class));
     }
