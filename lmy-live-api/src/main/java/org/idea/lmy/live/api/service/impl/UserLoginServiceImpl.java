@@ -8,6 +8,7 @@ import org.apache.dubbo.common.utils.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.idea.lmy.live.api.service.IUserLoginService;
 import org.idea.lmy.live.api.vo.UserLoginVO;
+import org.lmy.live.account.interfaces.IAccountTokenRPC;
 import org.lmy.live.common.interfaces.utils.ConvertBeanUtils;
 import org.lmy.live.common.interfaces.vo.WebResponseVO;
 import org.lmy.live.msg.dto.MsgCheckDTO;
@@ -28,6 +29,9 @@ public class UserLoginServiceImpl implements IUserLoginService {
 
     @DubboReference
     private IUserPhoneRpc userPhoneRpc;
+
+    @DubboReference
+    private IAccountTokenRPC accountTokenRPC;
 
     @Override
     public WebResponseVO sendLoginCode(String phone) {
@@ -52,7 +56,7 @@ public class UserLoginServiceImpl implements IUserLoginService {
         if(!Pattern.matches(PHONE_REG,phone)){
             return WebResponseVO.errorParam("手机号格式异常");
         }
-        if(code==null||code<100000){
+        if(code==null||code<1000){
             return WebResponseVO.errorParam("验证码格式异常");
         }
         MsgCheckDTO msgCheckDTO = smsRpc.checkLoginCode(phone, code);
@@ -62,9 +66,12 @@ public class UserLoginServiceImpl implements IUserLoginService {
         //验证码校验通过
         UserLoginDTO userLoginDTO = userPhoneRpc.login(phone);
         if(!userLoginDTO.isIfLoginSuccess()){
-            return WebResponseVO.bizError(userLoginDTO.getDesc());
+            logger.error("login has error, phone is {}",phone);
+            //极低概率发生，如果真有问题，提示系统异常
+            return WebResponseVO.sysError();
         }
-        Cookie cookie=new Cookie("lmytk",userLoginDTO.getToken());
+        String token=accountTokenRPC.createAndSaveLoginToken(userLoginDTO.getUserId());
+        Cookie cookie=new Cookie("lmytk",token);
         //http://app.qiyu.live.com/html/qiyu_live_list_room.html
         //http://api.qiyu.live.com/live/api/userLogin/sendLoginCode
         cookie.setDomain("lmy.live.com");
@@ -72,7 +79,7 @@ public class UserLoginServiceImpl implements IUserLoginService {
         //cookie有效期，一般他的默认单位是秒
         cookie.setMaxAge(30*24*3600);
         ////加上它，不然web浏览器不会将cookie自动记录下
-        response.setHeader("Access-Control-Allow-Credentials", "true");
+//        response.setHeader("Access-Control-Allow-Credentials", "true");
         response.addCookie(cookie);
         return WebResponseVO.success(ConvertBeanUtils.convert(userLoginDTO, UserLoginVO.class));
     }

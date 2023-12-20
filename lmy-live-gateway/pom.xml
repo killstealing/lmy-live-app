@@ -13,7 +13,7 @@
         <spring-cloud-starter-gateway.version>4.0.6</spring-cloud-starter-gateway.version>
         <spring-cloud-starter-loadbalancer.version>4.0.3</spring-cloud-starter-loadbalancer.version>
         <spring-cloud-starter-bootstrap.version>3.0.2</spring-cloud-starter-bootstrap.version>
-        <alibaba-fastjson.version>2.0.10</alibaba-fastjson.version>
+        <alibaba-fastjson.version>2.0.33</alibaba-fastjson.version>
     </properties>
     <dependencies>
         <!--gateway 内部引入了 webflux-->
@@ -26,6 +26,11 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
             <version>${spring-cloud-starter-loadbalancer.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+            <version>${dubbo-spring-boot-starter.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -48,6 +53,11 @@
         <dependency>
             <groupId>org.idea</groupId>
             <artifactId>lmy-live-common-interface</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.idea</groupId>
+            <artifactId>lmy-live-account-interface</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

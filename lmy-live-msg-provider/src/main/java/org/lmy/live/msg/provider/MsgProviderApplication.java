@@ -25,6 +25,10 @@ public class MsgProviderApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
+//        MsgSendResultEnum msgSendResultEnum = iSmsService.sendMessage("17665753022");
+//        System.out.println(msgSendResultEnum);
+
 //        String phone="17665753022";
 //        MsgSendResultEnum msgSendResultEnum = iSmsService.sendMessage(phone);
 //        System.out.println(msgSendResultEnum);

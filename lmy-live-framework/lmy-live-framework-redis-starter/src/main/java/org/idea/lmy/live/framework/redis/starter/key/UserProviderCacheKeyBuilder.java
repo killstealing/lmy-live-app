@@ -29,7 +29,7 @@ public class UserProviderCacheKeyBuilder extends RedisKeyBuilder {
     }
 
     public String buildUserLoginTokenKey(String token){
-        return super.getPrefix() + USER_TAG_KEY + super.getSplitItem() + token;
+        return super.getPrefix() + USER_LOGIN_TOKEN_KEY + super.getSplitItem() + token;
     }
 
     public String buildUserPhoneObjKey(String phone){

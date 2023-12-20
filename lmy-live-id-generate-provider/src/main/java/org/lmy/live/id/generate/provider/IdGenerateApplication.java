@@ -9,9 +9,6 @@ import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableDubbo
@@ -28,12 +25,12 @@ public class IdGenerateApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        Set<Long> set=new HashSet<>();
-        for (int i = 0; i < 1300; i++) {
-            Long id= idGenerateService.getUnSeqId(1);
-            System.out.println(i+":"+id);
-            set.add(id);
-        }
-        System.out.println("set size:"+set.size());
+//        Set<Long> set=new HashSet<>();
+//        for (int i = 0; i < 1300; i++) {
+//            Long id= idGenerateService.getUnSeqId(1);
+//            System.out.println(i+":"+id);
+//            set.add(id);
+//        }
+//        System.out.println("set size:"+set.size());
     }
 }

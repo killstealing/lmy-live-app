@@ -14,6 +14,7 @@
         <lmy-live-redis-starter.version>1.0-SNAPSHOT</lmy-live-redis-starter.version>
         <lmy-live-common-interface.version>1.0-SNAPSHOT</lmy-live-common-interface.version>
         <lmy-live-msg-interface.version>1.0-SNAPSHOT</lmy-live-msg-interface.version>
+        <com.cloopen.java-sms-sdk>1.0.4</com.cloopen.java-sms-sdk>
     </properties>
 
     <dependencies>
@@ -75,7 +76,11 @@
             <artifactId>shardingsphere-jdbc-core</artifactId>
             <version>${sharding.jdbc.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.cloopen</groupId>
+            <artifactId>java-sms-sdk</artifactId>
+            <version>${com.cloopen.java-sms-sdk}</version>
+        </dependency>
     </dependencies>
 
 </project>
