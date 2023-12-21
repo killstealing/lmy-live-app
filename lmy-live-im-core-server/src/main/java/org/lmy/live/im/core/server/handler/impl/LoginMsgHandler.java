@@ -12,6 +12,7 @@ public class LoginMsgHandler implements SimplyMsgHandler {
 
     @Override
     public void msgHanlder(ChannelHandlerContext ctx, ImMsg imMsg) {
-        logger.info("login msg handler start");
+        System.out.println("[loginMsg]:"+imMsg);
+        ctx.writeAndFlush(imMsg);
     }
 }

@@ -30,6 +30,7 @@ public class ImMsgDecoder extends ByteToMessageDecoder {
             ImMsg imMsg=new ImMsg();
             imMsg.setCode(code);
             imMsg.setLen(len);
+            imMsg.setMagic(ImConstants.DEFAULT_MAGIC);
             imMsg.setBody(body);
             out.add(imMsg);
         }

@@ -1,8 +1,11 @@
 package org.lmy.live.im.core.server.common;
 
+import org.lmy.live.im.interfaces.ImConstants;
+
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class ImMsg {
+public class ImMsg implements Serializable {
     //魔数 用于校验
     private short magic;
     //用于标识当前消息的作用，后续会交给不同的handler去处理
@@ -42,6 +45,15 @@ public class ImMsg {
 
     public void setBody(byte[] body) {
         this.body = body;
+    }
+
+    public static ImMsg buildMsg(int code, String body) {
+        ImMsg imMsg = new ImMsg();
+        imMsg.setMagic(ImConstants.DEFAULT_MAGIC);
+        imMsg.setCode(code);
+        imMsg.setLen(body.length());
+        imMsg.setBody(body.getBytes());
+        return imMsg;
     }
 
     @Override
