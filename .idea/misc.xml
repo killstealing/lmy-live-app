@@ -11,6 +11,7 @@
       <set>
         <option value="$PROJECT_DIR$/lmy-live-account-provider1/pom.xml" />
         <option value="$PROJECT_DIR$/lmy-live-framework/lmy-live-framework-datasource-starter1/pom.xml" />
+        <option value="$PROJECT_DIR$/lmy-live-ism-interface/pom.xml" />
       </set>
     </option>
   </component>
