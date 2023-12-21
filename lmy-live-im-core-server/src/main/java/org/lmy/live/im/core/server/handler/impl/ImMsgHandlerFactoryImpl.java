@@ -4,7 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import org.lmy.live.im.core.server.common.ImMsg;
 import org.lmy.live.im.core.server.handler.ImMsgHandlerFactory;
 import org.lmy.live.im.core.server.handler.SimplyMsgHandler;
-import org.lmy.live.im.interfaces.enums.ImMsgCodeEnum;
+import org.lmy.live.im.interfaces.constants.ImMsgCodeEnum;
 
 import java.util.HashMap;
 import java.util.Map;

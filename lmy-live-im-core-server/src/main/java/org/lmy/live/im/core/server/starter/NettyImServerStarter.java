@@ -1,4 +1,4 @@
-package org.lmy.live.im.core.server;
+package org.lmy.live.im.core.server.starter;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -11,23 +11,19 @@ import org.lmy.live.im.core.server.common.ImMsgEncoder;
 import org.lmy.live.im.core.server.handler.ImServerCoreHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 
-public class NettyImServerApplication {
-    private static final Logger logger= LoggerFactory.getLogger(NettyImServerApplication.class);
-    //指定监听的端口
+@Configuration
+public class NettyImServerStarter implements InitializingBean {
+    private static final Logger logger= LoggerFactory.getLogger(NettyImServerStarter.class);
+
+    @Value("${lmy.im.port}")
     private int port;
 
-    public int getPort() {
-        return port;
-    }
 
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public void startApplication(int port) throws InterruptedException {
-        setPort(port);
-
+    public void startApplication() throws InterruptedException {
         //处理accept 事件
         NioEventLoopGroup bossGroup=new NioEventLoopGroup();
         //处理read&write事件
@@ -57,13 +53,22 @@ public class NettyImServerApplication {
 
         //
         ChannelFuture channelFuture=serverBootstrap.bind(port).sync();
-        logger.info("服务启动成功，监听端口为 {}",getPort());
+        logger.info("服务启动成功，监听端口为 {}",port);
         //这里会阻塞掉主线程，实现服务长期开启的效果
         channelFuture.channel().closeFuture().sync();
     }
 
-    public static void main(String[] args) throws InterruptedException {
-        NettyImServerApplication nettyImServerApplication=new NettyImServerApplication();
-        nettyImServerApplication.startApplication(9090);
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        Thread thread=new Thread(()->{
+            try {
+                startApplication();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        thread.setName("lmy-live-im-server");
+        thread.start();
+
     }
 }

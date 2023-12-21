@@ -23,6 +23,7 @@
         <module>lmy-live-account-provider</module>
         <module>lmy-live-im-interface</module>
         <module>lmy-live-im-core-server</module>
+        <module>lmy-live-im-provider</module>
     </modules>
     <packaging>pom</packaging>
 
