@@ -18,6 +18,9 @@
       <directory url="file://$PROJECT_DIR$/lmy-live-account-interface/src/main/resources/archetype-resources" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/lmy-live-framework/lmy-live-framework-web-starter/src/main/resources/archetype-resources" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/lmy-live-account-provider1/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/lmy-live-ism-interface/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/lmy-live-im-interface/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/lmy-live-im-core-server/src/main/resources/archetype-resources" includeSubdirectories="true" />
     </excludeFromCompile>
     <annotationProcessing>
       <profile name="Maven default annotation processors profile" enabled="true">
@@ -40,12 +43,15 @@
         <module name="lmy-live-framework-datasource-starter1" />
         <module name="lmy-test" />
         <module name="lmy-live-id-generate-interface" />
+        <module name="lmy-live-im-core-server" />
+        <module name="lmy-live-im-interface" />
         <module name="lmy-live-account-interface" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="lmy-live-account-provider1" target="17" />
       <module name="lmy-live-framework-datasource-starter1" target="17" />
+      <module name="lmy-live-ism-interface" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -63,6 +69,9 @@
       <module name="lmy-live-gateway" options="-parameters" />
       <module name="lmy-live-id-generate-interface" options="-parameters" />
       <module name="lmy-live-id-generate-provider" options="-parameters" />
+      <module name="lmy-live-im-core-server" options="-parameters" />
+      <module name="lmy-live-im-interface" options="-parameters" />
+      <module name="lmy-live-ism-interface" options="-parameters" />
       <module name="lmy-live-msg-interface" options="-parameters" />
       <module name="lmy-live-msg-provider" options="-parameters" />
       <module name="lmy-live-user-interface" options="-parameters" />
