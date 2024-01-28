@@ -1,6 +1,6 @@
 package org.lmy.live.im.core.server.common;
 
-import org.lmy.live.im.interfaces.ImConstants;
+import org.lmy.live.im.interfaces.constants.ImConstants;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -55,6 +55,7 @@ public class ImMsg implements Serializable {
         imMsg.setBody(body.getBytes());
         return imMsg;
     }
+
 
     @Override
     public String toString() {

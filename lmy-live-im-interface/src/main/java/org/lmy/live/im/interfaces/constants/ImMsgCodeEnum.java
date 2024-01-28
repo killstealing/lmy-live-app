@@ -1,4 +1,4 @@
-package org.lmy.live.im.interfaces.enums;
+package org.lmy.live.im.interfaces.constants;
 
 public enum ImMsgCodeEnum {
     IM_LOGIN_MSG(1001,"登录im消息包"),

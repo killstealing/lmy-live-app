@@ -11,7 +11,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import org.lmy.live.im.core.server.common.ImMsg;
 import org.lmy.live.im.core.server.common.ImMsgDecoder;
 import org.lmy.live.im.core.server.common.ImMsgEncoder;
-import org.lmy.live.im.interfaces.enums.ImMsgCodeEnum;
+import org.lmy.live.im.interfaces.constants.ImMsgCodeEnum;
 
 public class NettyClientApplication {
 

@@ -7,7 +7,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
 public class ImMsgEncoder extends MessageToByteEncoder {
 
     @Override
-    protected void encode(ChannelHandlerContext channelHandlerContext, Object o, ByteBuf out) throws Exception {
+    protected void encode(ChannelHandlerContext ctx, Object o, ByteBuf out){
         ImMsg imMsg= (ImMsg) o;
         out.writeShort(imMsg.getMagic());
         out.writeInt(imMsg.getCode());

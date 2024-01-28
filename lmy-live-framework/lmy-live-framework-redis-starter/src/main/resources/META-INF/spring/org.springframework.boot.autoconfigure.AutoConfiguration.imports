@@ -3,3 +3,4 @@ org.idea.lmy.live.framework.redis.starter.key.UserProviderCacheKeyBuilder
 org.idea.lmy.live.framework.redis.starter.key.OtherCacheKeyBuilder
 org.idea.lmy.live.framework.redis.starter.key.MsgProviderCacheKeyBuilder
 org.idea.lmy.live.framework.redis.starter.key.AccountProviderCacheKeyBuilder
+org.idea.lmy.live.framework.redis.starter.key.ImProviderCacheKeyBuilder

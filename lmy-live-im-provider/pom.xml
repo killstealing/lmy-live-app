@@ -6,44 +6,33 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>lmy-live-im-core-server</artifactId>
-    <description>基于netty构建的im服务</description>
+    <artifactId>lmy-live-im-provider</artifactId>
 
     <properties>
-        <alibaba-fastjson.version>2.0.10</alibaba-fastjson.version>
-        <netty-all.version>4.1.18.Final</netty-all.version>
         <lmy-live-redis-starter.version>1.0-SNAPSHOT</lmy-live-redis-starter.version>
+        <lmy-live-im-interface.version>1.0-SNAPSHOT</lmy-live-im-interface.version>
+        <lmy-live-common-interface.version>1.0-SNAPSHOT</lmy-live-common-interface.version>
     </properties>
-
     <dependencies>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>${netty-all.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>${alibaba-fastjson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.idea</groupId>
             <artifactId>lmy-live-im-interface</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${lmy-live-im-interface.version}</version>
         </dependency>
         <dependency>
             <groupId>org.idea</groupId>
             <artifactId>lmy-live-common-interface</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${lmy-live-common-interface.version}</version>
         </dependency>
         <dependency>
             <groupId>org.idea</groupId>
             <artifactId>lmy-live-framework-redis-starter</artifactId>
             <version>${lmy-live-redis-starter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+            <version>${dubbo-spring-boot-starter.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -52,11 +41,6 @@
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.dubbo</groupId>
-            <artifactId>dubbo-spring-boot-starter</artifactId>
-            <version>${dubbo-spring-boot-starter.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>

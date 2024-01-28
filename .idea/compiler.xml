@@ -21,6 +21,7 @@
       <directory url="file://$PROJECT_DIR$/lmy-live-ism-interface/src/main/resources/archetype-resources" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/lmy-live-im-interface/src/main/resources/archetype-resources" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/lmy-live-im-core-server/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/lmy-live-im-provider/src/main/resources/archetype-resources" includeSubdirectories="true" />
     </excludeFromCompile>
     <annotationProcessing>
       <profile name="Maven default annotation processors profile" enabled="true">
@@ -29,6 +30,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="lmy-live-user-provider" />
         <module name="lmy-live-framework-datasource-starter" />
+        <module name="lmy-live-im-provider" />
         <module name="lmy-live-user-interface" />
         <module name="lmy-live-gateway" />
         <module name="lmy-live-common-interface" />
@@ -71,6 +73,7 @@
       <module name="lmy-live-id-generate-provider" options="-parameters" />
       <module name="lmy-live-im-core-server" options="-parameters" />
       <module name="lmy-live-im-interface" options="-parameters" />
+      <module name="lmy-live-im-provider" options="-parameters" />
       <module name="lmy-live-ism-interface" options="-parameters" />
       <module name="lmy-live-msg-interface" options="-parameters" />
       <module name="lmy-live-msg-provider" options="-parameters" />
