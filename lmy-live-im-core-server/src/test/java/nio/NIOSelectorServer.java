@@ -27,7 +27,7 @@ public class NIOSelectorServer {
         ServerSocket serverSocket=serverSocketChannel.socket();
         //进行服务的绑定
         serverSocket.bind(new InetSocketAddress(port));
-        //通过open（）方法找到selector
+        //通过open（）方法找到selector 高性能的selector 组件
         selector = Selector.open();
         System.out.println(selector);
         //注册到selector， 等待连接

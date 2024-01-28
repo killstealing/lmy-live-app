@@ -11,7 +11,7 @@ public class LogoutMsgHandler implements SimplyMsgHandler {
 
     @Override
     public void msgHanlder(ChannelHandlerContext ctx, ImMsg imMsg) {
-        System.out.println("[logoutMsg]:"+imMsg);
+        logger.info("[logoutMsg]:"+imMsg);
         ctx.writeAndFlush(imMsg);
     }
 }

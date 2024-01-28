@@ -56,6 +56,7 @@ public class ImMsg implements Serializable {
         return imMsg;
     }
 
+
     @Override
     public String toString() {
         return "ImMsg{" +

@@ -11,7 +11,7 @@ public class HeartBeatMsgHandler implements SimplyMsgHandler {
 
     @Override
     public void msgHanlder(ChannelHandlerContext ctx, ImMsg imMsg) {
-        System.out.println("[heartBeatMsg]:"+imMsg);
+        logger.info("[heartBeatMsg]:"+imMsg);
         ctx.writeAndFlush(imMsg);
     }
 }

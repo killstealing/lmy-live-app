@@ -11,19 +11,16 @@ import org.lmy.live.im.core.server.common.ImMsgEncoder;
 import org.lmy.live.im.core.server.handler.ImServerCoreHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
-public class NettyImServerStarter implements InitializingBean {
+
+public class NettyImServerStarter {
     private static final Logger logger= LoggerFactory.getLogger(NettyImServerStarter.class);
 
-    @Value("${lmy.im.port}")
-    private int port;
+//    @Value("${lmy.im.port}")
+//    private int port;
 
 
-    public void startApplication() throws InterruptedException {
+    public void startApplication(int port) throws InterruptedException {
         //处理accept 事件
         NioEventLoopGroup bossGroup=new NioEventLoopGroup();
         //处理read&write事件
@@ -58,17 +55,22 @@ public class NettyImServerStarter implements InitializingBean {
         channelFuture.channel().closeFuture().sync();
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Thread thread=new Thread(()->{
-            try {
-                startApplication();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        thread.setName("lmy-live-im-server");
-        thread.start();
+//    @Override
+//    public void afterPropertiesSet() throws Exception {
+//        Thread thread=new Thread(()->{
+//            try {
+//                startApplication();
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//        });
+//        thread.setName("lmy-live-im-server");
+//        thread.start();
+//
+//    }
 
+    public static void main(String[] args) throws InterruptedException {
+        NettyImServerStarter nettyImServerStarter=new NettyImServerStarter();
+        nettyImServerStarter.startApplication(9090);
     }
 }

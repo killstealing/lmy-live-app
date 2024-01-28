@@ -11,7 +11,7 @@ public class BizMsgHandler implements SimplyMsgHandler {
 
     @Override
     public void msgHanlder(ChannelHandlerContext ctx, ImMsg imMsg) {
-        System.out.println("[bizMsg]:"+imMsg);
+        logger.info("[bizMsg]:"+imMsg);
         ctx.writeAndFlush(imMsg);
     }
 }
