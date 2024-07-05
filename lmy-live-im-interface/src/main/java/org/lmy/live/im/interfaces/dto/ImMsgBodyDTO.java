@@ -5,7 +5,9 @@ import java.io.Serializable;
 public class ImMsgBodyDTO implements Serializable {
     private int appId;
     private Long userId;
+    //从业务服务中获取，用于在IM服务建立连接的时候使用
     private String token;
+    //和业务服务进行消息传递
     private String data;
 
     public int getAppId() {

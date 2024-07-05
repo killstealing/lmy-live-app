@@ -2,12 +2,15 @@ package org.lmy.live.im.core.server.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import jakarta.annotation.Resource;
 import org.lmy.live.im.core.server.common.ImMsg;
-import org.lmy.live.im.core.server.handler.impl.ImMsgHandlerFactoryImpl;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ImServerCoreHandler extends SimpleChannelInboundHandler {
 
-    private ImMsgHandlerFactory imMsgHandlerFactory=new ImMsgHandlerFactoryImpl();
+    @Resource
+    private ImMsgHandlerFactory imMsgHandlerFactory;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object obj) throws Exception {

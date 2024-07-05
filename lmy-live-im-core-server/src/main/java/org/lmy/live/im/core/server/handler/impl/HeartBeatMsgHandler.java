@@ -5,7 +5,9 @@ import org.lmy.live.im.core.server.common.ImMsg;
 import org.lmy.live.im.core.server.handler.SimplyMsgHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+@Component
 public class HeartBeatMsgHandler implements SimplyMsgHandler {
     private static final Logger logger = LoggerFactory.getLogger(HeartBeatMsgHandler.class);
 
