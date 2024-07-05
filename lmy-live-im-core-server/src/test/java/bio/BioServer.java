@@ -16,6 +16,8 @@ public class BioServer {
             byte[] bytes=new byte[10];
             inputStream.read(bytes);
             System.out.println("服务端收到的数据是： "+new String(bytes));
+
+
         }
     }
 }

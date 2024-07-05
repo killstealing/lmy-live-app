@@ -11,16 +11,20 @@ import org.lmy.live.im.core.server.common.ImMsgEncoder;
 import org.lmy.live.im.core.server.handler.ImServerCoreHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 
 
-public class NettyImServerStarter {
+@Configuration
+public class NettyImServerStarter implements InitializingBean {
     private static final Logger logger= LoggerFactory.getLogger(NettyImServerStarter.class);
 
-//    @Value("${lmy.im.port}")
-//    private int port;
+    @Value("${lmy.im.port}")
+    private int port;
 
 
-    public void startApplication(int port) throws InterruptedException {
+    public void startApplication() throws InterruptedException {
         //处理accept 事件
         NioEventLoopGroup bossGroup=new NioEventLoopGroup();
         //处理read&write事件
@@ -69,8 +73,24 @@ public class NettyImServerStarter {
 //
 //    }
 
-    public static void main(String[] args) throws InterruptedException {
-        NettyImServerStarter nettyImServerStarter=new NettyImServerStarter();
-        nettyImServerStarter.startApplication(9090);
+//    public static void main(String[] args) throws InterruptedException {
+//        NettyImServerStarter nettyImServerStarter=new NettyImServerStarter();
+//        nettyImServerStarter.startApplication(9090);
+//    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        Thread nettyServerThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    startApplication();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        nettyServerThread.setName("lmy-live-im-server");
+        nettyServerThread.start();
     }
 }
