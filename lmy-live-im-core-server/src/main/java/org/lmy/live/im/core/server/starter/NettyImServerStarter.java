@@ -59,38 +59,21 @@ public class NettyImServerStarter implements InitializingBean {
         channelFuture.channel().closeFuture().sync();
     }
 
-//    @Override
-//    public void afterPropertiesSet() throws Exception {
-//        Thread thread=new Thread(()->{
-//            try {
-//                startApplication();
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//        });
-//        thread.setName("lmy-live-im-server");
-//        thread.start();
-//
-//    }
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        Thread thread=new Thread(()->{
+            try {
+                startApplication();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        thread.setName("lmy-live-im-server");
+        thread.start();
+    }
 
 //    public static void main(String[] args) throws InterruptedException {
 //        NettyImServerStarter nettyImServerStarter=new NettyImServerStarter();
 //        nettyImServerStarter.startApplication(9090);
 //    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Thread nettyServerThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    startApplication();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-        nettyServerThread.setName("lmy-live-im-server");
-        nettyServerThread.start();
-    }
 }

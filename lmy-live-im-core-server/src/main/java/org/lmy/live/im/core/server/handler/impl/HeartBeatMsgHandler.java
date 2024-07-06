@@ -15,5 +15,10 @@ public class HeartBeatMsgHandler implements SimplyMsgHandler {
     public void msgHanlder(ChannelHandlerContext ctx, ImMsg imMsg) {
         logger.info("[heartBeatMsg]:"+imMsg);
         ctx.writeAndFlush(imMsg);
+
+        //心跳包基本校验
+        //心跳包record记录，redis储存心跳记录
+        //zset集合存储心跳记录，基于user Id 去做取模，key(userId)-score(心跳时间)
+
     }
 }
