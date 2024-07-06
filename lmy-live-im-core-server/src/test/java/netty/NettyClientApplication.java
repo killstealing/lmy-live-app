@@ -13,7 +13,7 @@ import org.lmy.live.im.core.server.common.ImMsgDecoder;
 import org.lmy.live.im.core.server.common.ImMsgEncoder;
 import org.lmy.live.im.interfaces.constants.ImMsgCodeEnum;
 
-public class NettyClientApplication {
+public class NettyClientApplication  {
 
     private void startConnection(String address, int port) throws InterruptedException {
         EventLoopGroup eventLoopGroup=new NioEventLoopGroup();
@@ -41,8 +41,13 @@ public class NettyClientApplication {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        NettyClientApplication nettyClientApplication=new NettyClientApplication();
-        nettyClientApplication.startConnection("localhost",9090);
+
 
     }
+
+//    @Override
+//    public void afterPropertiesSet() throws Exception {
+//        NettyClientApplication nettyClientApplication=new NettyClientApplication();
+//        nettyClientApplication.startConnection("localhost",9090);
+//    }
 }

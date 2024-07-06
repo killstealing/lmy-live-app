@@ -3,7 +3,9 @@ package netty;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.lmy.live.im.core.server.common.ImMsg;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ClientMsgHandler extends ChannelInboundHandlerAdapter {
 
     @Override

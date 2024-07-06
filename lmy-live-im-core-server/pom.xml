@@ -11,7 +11,7 @@
 
     <properties>
         <alibaba-fastjson.version>2.0.10</alibaba-fastjson.version>
-        <netty-all.version>4.1.18.Final</netty-all.version>
+        <netty-all.version>4.1.89.Final</netty-all.version>
         <lmy-live-redis-starter.version>1.0-SNAPSHOT</lmy-live-redis-starter.version>
     </properties>
 
@@ -19,6 +19,11 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
+            <version>${netty-all.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-resolver-dns</artifactId>
             <version>${netty-all.version}</version>
         </dependency>
         <dependency>

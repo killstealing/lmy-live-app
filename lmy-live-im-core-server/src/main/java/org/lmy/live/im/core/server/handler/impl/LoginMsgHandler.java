@@ -26,6 +26,10 @@ public class LoginMsgHandler implements SimplyMsgHandler {
 
     @Override
     public void msgHanlder(ChannelHandlerContext ctx, ImMsg imMsg) {
+        if(ImContextUtils.getUserId(ctx)!=null){
+            logger.error("LoginMsgHandler [msgHanlder] userId is existing, imMsg is {}", imMsg);
+            throw new IllegalArgumentException("已经登录了");
+        }
         byte[] body = imMsg.getBody();
         if(body==null || body.length==0){
             ctx.close();
