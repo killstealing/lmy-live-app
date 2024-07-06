@@ -1,9 +1,10 @@
 package org.lmy.live.im.core.server.common;
 
+import com.alibaba.fastjson2.JSON;
 import org.lmy.live.im.interfaces.constants.ImConstants;
+import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 public class ImMsg implements Serializable {
     //魔数 用于校验
@@ -63,7 +64,7 @@ public class ImMsg implements Serializable {
                 "magic=" + magic +
                 ", code=" + code +
                 ", len=" + len +
-                ", body=" + Arrays.toString(body) +
+                ", body=" + JSON.toJSONString(JSON.parseObject(new String(body), ImMsgBodyDTO.class)) +
                 '}';
     }
 }

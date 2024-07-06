@@ -6,6 +6,7 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import jakarta.annotation.Resource;
 import org.lmy.live.im.core.server.common.ImMsgDecoder;
 import org.lmy.live.im.core.server.common.ImMsgEncoder;
 import org.lmy.live.im.core.server.handler.ImServerCoreHandler;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 
 
@@ -22,6 +24,9 @@ public class NettyImServerStarter implements InitializingBean {
 
     @Value("${lmy.im.port}")
     private int port;
+
+    @Resource
+    private ApplicationContext applicationContext;
 
 
     public void startApplication() throws InterruptedException {
@@ -43,7 +48,7 @@ public class NettyImServerStarter implements InitializingBean {
                 channel.pipeline().addLast(new ImMsgDecoder());
                 channel.pipeline().addLast(new ImMsgEncoder());
                 //设置这个netty处理handler
-                channel.pipeline().addLast(new ImServerCoreHandler());
+                channel.pipeline().addLast(applicationContext.getBean(ImServerCoreHandler.class));
             }
         });
         //基于JVM的钩子函数去实现优雅关闭

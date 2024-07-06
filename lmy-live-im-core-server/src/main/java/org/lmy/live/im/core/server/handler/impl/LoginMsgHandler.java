@@ -2,6 +2,7 @@ package org.lmy.live.im.core.server.handler.impl;
 
 import com.alibaba.fastjson2.JSON;
 import io.netty.channel.ChannelHandlerContext;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.lmy.live.im.core.server.common.ChannelHandlerContextCache;
 import org.lmy.live.im.core.server.common.ImContextUtils;
 import org.lmy.live.im.core.server.common.ImMsg;
@@ -9,6 +10,7 @@ import org.lmy.live.im.core.server.handler.SimplyMsgHandler;
 import org.lmy.live.im.interfaces.constants.AppIdEnum;
 import org.lmy.live.im.interfaces.constants.ImMsgCodeEnum;
 import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
+import org.lmy.live.im.interfaces.rpc.ImTokenRpc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -17,13 +19,17 @@ import org.springframework.util.StringUtils;
 @Component
 public class LoginMsgHandler implements SimplyMsgHandler {
 
-//    @DubboReference
-//    private ImTokenRpc imTokenRpc;
+    @DubboReference
+    private ImTokenRpc imTokenRpc;
 
     private static final Logger logger = LoggerFactory.getLogger(LoginMsgHandler.class);
 
     @Override
     public void msgHanlder(ChannelHandlerContext ctx, ImMsg imMsg) {
+        if(ImContextUtils.getUserId(ctx)!=null){
+            logger.error("LoginMsgHandler [msgHanlder] userId is existing, imMsg is {}", imMsg);
+            throw new IllegalArgumentException("已经登录了");
+        }
         byte[] body = imMsg.getBody();
         if(body==null || body.length==0){
             ctx.close();
@@ -39,8 +45,7 @@ public class LoginMsgHandler implements SimplyMsgHandler {
             logger.error("LoginMsgHandler [msgHanlder] token error, imMsg is {}", imMsg);
             throw new IllegalArgumentException("token error");
         }
-//        Long userId = imTokenRpc.getUserIdByToken(token);
-        Long userId=1312312L;
+        Long userId = imTokenRpc.getUserIdByToken(token);
         if (userId!=null && userId.equals(imMsgBodyDTO.getUserId())){
             ChannelHandlerContextCache.put(userId,ctx);
             ImContextUtils.setUserId(ctx,userId);
