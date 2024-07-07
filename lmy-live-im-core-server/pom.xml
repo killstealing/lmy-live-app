@@ -13,6 +13,7 @@
         <alibaba-fastjson.version>2.0.10</alibaba-fastjson.version>
         <netty-all.version>4.1.89.Final</netty-all.version>
         <lmy-live-redis-starter.version>1.0-SNAPSHOT</lmy-live-redis-starter.version>
+        <lmy-live-mq-starter.version>1.0-SNAPSHOT</lmy-live-mq-starter.version>
     </properties>
 
     <dependencies>
@@ -20,6 +21,7 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>${netty-all.version}</version>
+
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
@@ -30,6 +32,12 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>${alibaba-fastjson.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>fastjson2</artifactId>
+                    <groupId>com.alibaba.fastjson2</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -51,6 +59,11 @@
             <version>${lmy-live-redis-starter.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.idea</groupId>
+            <artifactId>lmy-live-framework-mq-starter</artifactId>
+            <version>${lmy-live-mq-starter.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
@@ -67,6 +80,11 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
             <version>${spring-cloud-starter-bootstrap.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-client-java</artifactId>
+            <version>5.0.5</version>
         </dependency>
     </dependencies>
 </project>

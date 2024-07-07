@@ -12,5 +12,6 @@
         <module>lmy-live-framework-datasource-starter</module>
         <module>lmy-live-framework-redis-starter</module>
         <module>lmy-live-framework-web-starter</module>
+        <module>lmy-live-framework-mq-starter</module>
     </modules>
 </project>

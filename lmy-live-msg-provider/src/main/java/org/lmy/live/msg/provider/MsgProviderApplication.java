@@ -1,9 +1,6 @@
 package org.lmy.live.msg.provider;
 
-import jakarta.annotation.Resource;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
-import org.lmy.live.msg.provider.service.ISmsService;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,7 +9,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableDubbo
-public class MsgProviderApplication implements CommandLineRunner {
+public class MsgProviderApplication
+//        implements CommandLineRunner
+{
 
     public static void main(String[] args) {
         SpringApplication springApplication=new SpringApplication(MsgProviderApplication.class);
@@ -20,11 +19,11 @@ public class MsgProviderApplication implements CommandLineRunner {
         springApplication.run(args);
     }
 
-    @Resource
-    private ISmsService iSmsService;
+//    @Resource
+//    private ISmsService iSmsService;
 
-    @Override
-    public void run(String... args) throws Exception {
+//    @Override
+//    public void run(String... args) throws Exception {
 
 //        MsgSendResultEnum msgSendResultEnum = iSmsService.sendMessage("17665753022");
 //        System.out.println(msgSendResultEnum);
@@ -39,5 +38,5 @@ public class MsgProviderApplication implements CommandLineRunner {
 //            MsgCheckDTO msgCheckDTO = iSmsService.checkLoginCode(phone, code);
 //            System.out.println(msgCheckDTO);
 //        }
-    }
+//    }
 }

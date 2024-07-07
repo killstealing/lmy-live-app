@@ -12,6 +12,7 @@
     <properties>
         <lmy-live-msg-interface.version>1.0-SNAPSHOT</lmy-live-msg-interface.version>
         <lmy-live-redis-starter.version>1.0-SNAPSHOT</lmy-live-redis-starter.version>
+        <lmy-live-mq-starter.version>1.0-SNAPSHOT</lmy-live-mq-starter.version>
         <lmy-live-common-interface.version>1.0-SNAPSHOT</lmy-live-common-interface.version>
         <lmy-live-msg-interface.version>1.0-SNAPSHOT</lmy-live-msg-interface.version>
         <com.cloopen.java-sms-sdk>1.0.4</com.cloopen.java-sms-sdk>
@@ -60,6 +61,11 @@
             <groupId>org.idea</groupId>
             <artifactId>lmy-live-framework-redis-starter</artifactId>
             <version>${lmy-live-redis-starter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.idea</groupId>
+            <artifactId>lmy-live-framework-mq-starter</artifactId>
+            <version>${lmy-live-mq-starter.version}</version>
         </dependency>
         <dependency>
             <groupId>org.idea</groupId>
