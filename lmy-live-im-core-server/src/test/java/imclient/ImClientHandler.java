@@ -1,6 +1,7 @@
 package imclient;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -17,6 +18,8 @@ import org.lmy.live.im.interfaces.constants.AppIdEnum;
 import org.lmy.live.im.interfaces.constants.ImMsgCodeEnum;
 import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
 import org.lmy.live.im.interfaces.rpc.ImTokenRpc;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,7 @@ import java.util.Map;
 
 @Service
 public class ImClientHandler implements InitializingBean {
+    private static final Logger logger= LoggerFactory.getLogger(ImClientHandler.class);
 
     @DubboReference
     private ImTokenRpc imTokenRpc;
@@ -48,7 +52,7 @@ public class ImClientHandler implements InitializingBean {
             Map<Long, Channel> userIdChannelMap=new HashMap<>();
             //先登录
             for (int i = 0; i < 10; i++) {
-                Long userId=200000L+i;
+                Long userId=100000L+i;
                 String imLoginToken = imTokenRpc.createImLoginToken(userId, AppIdEnum.LMY_LIVE_BIZ.getCode());
                 ChannelFuture channelFuture=null;
                 try {
@@ -69,14 +73,32 @@ public class ImClientHandler implements InitializingBean {
             //发送心跳
             while (true){
                 for (Long userId :userIdChannelMap.keySet()) {
-                    //
                     ImMsgBodyDTO imMsgBodyDTO=new ImMsgBodyDTO();
                     imMsgBodyDTO.setUserId(userId);
                     imMsgBodyDTO.setAppId(AppIdEnum.LMY_LIVE_BIZ.getCode());
-                    imMsgBodyDTO.setData("true");
-                    ImMsg imMsg=ImMsg.buildMsg(ImMsgCodeEnum.IM_HEART_BEAT_MSG.getCode(), JSON.toJSONString(imMsgBodyDTO));
-                    Channel channel = userIdChannelMap.get(userId);
-                    channel.writeAndFlush(imMsg);
+//                    JSONObject jsonObject=new JSONObject();
+//                    jsonObject.put("userId",userId);
+//                    jsonObject.put("objectId",1012312L);
+//                    jsonObject.put("content","你好，我是"+userId);
+////                    imMsgBodyDTO.setData("true");
+//                    imMsgBodyDTO.setData(JSON.toJSONString(jsonObject));
+//                    ImMsg imMsg=ImMsg.buildMsg(ImMsgCodeEnum.IM_HEART_BEAT_MSG.getCode(), JSON.toJSONString(imMsgBodyDTO));
+//                    logger.info("[ImClientHandler] send message imMsg is {}",imMsg);
+//                    Channel channel = userIdChannelMap.get(userId);
+//                    channel.writeAndFlush(imMsg);
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", userId);
+                    jsonObject.put("objectId", 1001101L);
+                    jsonObject.put("content", "你好,我是" + userId);
+                    Map<String,Object> map=new HashMap<>();
+                    map.put("userId", userId);
+                    map.put("objectId", 1001101L);
+                    map.put("content", "你好,我是" + userId);
+//                    imMsgBodyDTO.setData(JSON.toJSONString(map));
+                    imMsgBodyDTO.setData("fasdfasdfasdfasfasfsaf1233333333333333");
+                    ImMsg heartBeatMsg = ImMsg.buildMsg(ImMsgCodeEnum.IM_BIZ_MSG.getCode(), JSON.toJSONString(imMsgBodyDTO));
+                    userIdChannelMap.get(userId).writeAndFlush(heartBeatMsg);
+                    logger.info("[ImClientHandler] send message imMsg is {}",heartBeatMsg);
                 }
                 try {
                     Thread.sleep(3000);

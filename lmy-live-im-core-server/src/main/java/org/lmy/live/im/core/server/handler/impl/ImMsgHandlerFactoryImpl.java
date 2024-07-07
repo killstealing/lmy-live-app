@@ -25,7 +25,7 @@ public class ImMsgHandlerFactoryImpl implements ImMsgHandlerFactory, Initializin
         if (simplyMsgHandler == null) {
             throw new IllegalArgumentException("msg code is error, code is " + imMsg.getCode());
         }
-        simplyMsgHandler.msgHanlder(ctx, imMsg);
+        simplyMsgHandler.msgHandler(ctx, imMsg);
     }
     @Override
     public void afterPropertiesSet() throws Exception {
