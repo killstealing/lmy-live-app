@@ -24,6 +24,9 @@
         <module>lmy-live-im-interface</module>
         <module>lmy-live-im-core-server</module>
         <module>lmy-live-im-provider</module>
+        <module>lmy-live-im-core-server-interface</module>
+        <module>lmy-live-im-router-interface</module>
+        <module>lmy-live-im-router-provider</module>
     </modules>
     <packaging>pom</packaging>
 

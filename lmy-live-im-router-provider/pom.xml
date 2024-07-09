@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>lmy-live-app</artifactId>
+        <groupId>org.idea</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>lmy-live-im-router-provider</artifactId>
+    <name>lmy-live-im-router-provider</name>
+    <properties>
+        <lmy-live-redis-starter.version>1.0-SNAPSHOT</lmy-live-redis-starter.version>
+        <lmy-live-im-router-interface.version>1.0-SNAPSHOT</lmy-live-im-router-interface.version>
+        <lmy-live-common-interface.version>1.0-SNAPSHOT</lmy-live-common-interface.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.idea</groupId>
+            <artifactId>lmy-live-im-router-interface</artifactId>
+            <version>${lmy-live-im-router-interface.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.idea</groupId>
+            <artifactId>lmy-live-common-interface</artifactId>
+            <version>${lmy-live-common-interface.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+            <version>${dubbo-spring-boot-starter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+            <version>${spring-cloud-starter-bootstrap.version}</version>
+        </dependency>
+    </dependencies>
+</project>
