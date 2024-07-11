@@ -1,10 +1,12 @@
 package org.lmy.live.im.core.server;
 
+import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
+@EnableDubbo
 public class ImCoreServerApplication {
     //指定监听的端口
     //基于netty去启动一个java进程，绑定监听的端口

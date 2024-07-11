@@ -1,0 +1,12 @@
+#spring:
+#  application:
+#    name: lmy-live-im-router-provider
+#
+#dubbo:
+#  protocol:
+#    cluster: imRouter
+#  application:
+#    name: ${spring.application.name}
+#    qos-enable: false
+#  registry:
+#    address: nacos://192.168.3.24:8848?namespace=lmy-live-test&&username=lmy&&password=lmy
