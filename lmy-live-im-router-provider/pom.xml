@@ -12,6 +12,8 @@
         <lmy-live-redis-starter.version>1.0-SNAPSHOT</lmy-live-redis-starter.version>
         <lmy-live-im-router-interface.version>1.0-SNAPSHOT</lmy-live-im-router-interface.version>
         <lmy-live-common-interface.version>1.0-SNAPSHOT</lmy-live-common-interface.version>
+        <lmy-live-im-core-server-interface.version>1.0-SNAPSHOT</lmy-live-im-core-server-interface.version>
+        <lmy-live-im-interface.version>1.0-SNAPSHOT</lmy-live-im-interface.version>
     </properties>
     <dependencies>
         <dependency>
@@ -41,6 +43,16 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
             <version>${spring-cloud-starter-bootstrap.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.idea</groupId>
+            <artifactId>lmy-live-im-core-server-interface</artifactId>
+            <version>${lmy-live-im-core-server-interface.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.idea</groupId>
+            <artifactId>lmy-live-im-interface</artifactId>
+            <version>${lmy-live-im-interface.version}</version>
         </dependency>
     </dependencies>
 </project>
