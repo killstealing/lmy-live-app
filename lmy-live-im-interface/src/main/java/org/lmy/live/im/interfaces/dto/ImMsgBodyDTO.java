@@ -7,6 +7,10 @@ public class ImMsgBodyDTO implements Serializable {
     private Long userId;
     //从业务服务中获取，用于在IM服务建立连接的时候使用
     private String token;
+    /**
+     * 消息code
+     */
+    private int bizCode;
     //和业务服务进行消息传递
     private String data;
 
@@ -42,12 +46,21 @@ public class ImMsgBodyDTO implements Serializable {
         this.data = data;
     }
 
+    public int getBizCode() {
+        return bizCode;
+    }
+
+    public void setBizCode(int bizCode) {
+        this.bizCode = bizCode;
+    }
+
     @Override
     public String toString() {
         return "ImMsgBodyDTO{" +
-                "appId='" + appId + '\'' +
+                "appId=" + appId +
                 ", userId=" + userId +
                 ", token='" + token + '\'' +
+                ", bizCode=" + bizCode +
                 ", data='" + data + '\'' +
                 '}';
     }
