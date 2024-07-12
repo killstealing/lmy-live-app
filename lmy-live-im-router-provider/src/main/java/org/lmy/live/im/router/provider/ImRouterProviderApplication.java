@@ -1,6 +1,5 @@
 package org.lmy.live.im.router.provider;
 
-import com.alibaba.fastjson2.JSON;
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
@@ -28,7 +27,7 @@ public class ImRouterProviderApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         for (int i = 0; i < 1000; i++) {
             ImMsgBodyDTO imMsgBodyDTO=new ImMsgBodyDTO();
-            imRouterService.sendMsg(1001L, JSON.toJSONString(imMsgBodyDTO));
+            imRouterService.sendMsg(1001L, imMsgBodyDTO);
             Thread.sleep(3000);
         }
     }

@@ -7,13 +7,17 @@ import org.idea.lmy.live.framework.redis.starter.key.ImCoreServerProviderCacheKe
 import org.lmy.live.im.core.server.common.ImContextUtils;
 import org.lmy.live.im.core.server.common.ImMsg;
 import org.lmy.live.im.core.server.handler.SimplyMsgHandler;
+import org.lmy.live.im.core.server.interfaces.constants.ImCoreServerConstants;
 import org.lmy.live.im.interfaces.constants.ImConstants;
 import org.lmy.live.im.interfaces.constants.ImMsgCodeEnum;
 import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class HeartBeatMsgHandler implements SimplyMsgHandler {
@@ -23,6 +27,8 @@ public class HeartBeatMsgHandler implements SimplyMsgHandler {
     private ImCoreServerProviderCacheKeyBuilder imCoreServerProviderCacheKeyBuilder;
     @Resource
     private RedisTemplate<String,Object> redisTemplate;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
     @Override
     public void msgHandler(ChannelHandlerContext ctx, ImMsg imMsg) {
         logger.info("[heartBeatMsg]: imMsg is {}",imMsg);
@@ -50,7 +56,8 @@ public class HeartBeatMsgHandler implements SimplyMsgHandler {
         //清理掉过期不在线的用户留下的心跳记录(在两次心跳包的发送间隔中，如果没有重新更新score值，就会导致被删除)
 //        this.removeExpireRecord(redisKey);
         redisTemplate.opsForZSet().removeRangeByScore(redisKey,0,System.currentTimeMillis()- ImConstants.DEFAULT_HEART_BEAT_GAP*1000*2);
-//        redisTemplate.expire(redisKey,5, TimeUnit.MINUTES);
+        redisTemplate.expire(redisKey,5, TimeUnit.MINUTES);
+        stringRedisTemplate.expire(ImCoreServerConstants.IM_BIND_IP_KEY+appId+":"+userId,ImConstants.DEFAULT_HEART_BEAT_GAP*2, TimeUnit.SECONDS);
         ImMsgBodyDTO imMsgBodyDTO=new ImMsgBodyDTO();
         imMsgBodyDTO.setUserId(userId);
         imMsgBodyDTO.setAppId(appId);

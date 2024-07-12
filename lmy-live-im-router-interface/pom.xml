@@ -7,5 +7,14 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>lmy-live-im-router-interface</artifactId>
-    <name>lmy-live-im-router-interface</name>
+    <properties>
+        <lmy-live-im-interface.version>1.0-SNAPSHOT</lmy-live-im-interface.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.idea</groupId>
+            <artifactId>lmy-live-im-interface</artifactId>
+            <version>${lmy-live-im-interface.version}</version>
+        </dependency>
+    </dependencies>
 </project>
