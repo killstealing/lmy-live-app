@@ -16,6 +16,9 @@
         <lmy-live-common-interface.version>1.0-SNAPSHOT</lmy-live-common-interface.version>
         <lmy-live-msg-interface.version>1.0-SNAPSHOT</lmy-live-msg-interface.version>
         <com.cloopen.java-sms-sdk>1.0.4</com.cloopen.java-sms-sdk>
+        <lmy-live-im-interface.version>1.0-SNAPSHOT</lmy-live-im-interface.version>
+        <lmy-live-im-core-server.version>1.0-SNAPSHOT</lmy-live-im-core-server.version>
+        <lmy-live-im-router-interface.version>1.0-SNAPSHOT</lmy-live-im-router-interface.version>
     </properties>
 
     <dependencies>
@@ -87,6 +90,21 @@
             <artifactId>java-sms-sdk</artifactId>
             <version>${com.cloopen.java-sms-sdk}</version>
         </dependency>
+        <dependency>
+            <groupId>org.idea</groupId>
+            <artifactId>lmy-live-im-interface</artifactId>
+            <version>${lmy-live-im-interface.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.idea</groupId>
+            <artifactId>lmy-live-im-router-interface</artifactId>
+            <version>${lmy-live-im-router-interface.version}</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.idea</groupId>-->
+<!--            <artifactId>lmy-live-im-core-server</artifactId>-->
+<!--            <version>${lmy-live-im-core-server.version}</version>-->
+<!--        </dependency>-->
     </dependencies>
 
 </project>

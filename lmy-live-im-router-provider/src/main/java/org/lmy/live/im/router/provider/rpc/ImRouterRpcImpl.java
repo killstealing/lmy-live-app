@@ -11,7 +11,7 @@ public class ImRouterRpcImpl implements ImRouterRpc {
     private ImRouterService imRouterService;
 
     @Override
-    public boolean sendMsg(Long userId, ImMsgBodyDTO msgBody) {
-        return imRouterService.sendMsg(userId,msgBody);
+    public boolean sendMsg(ImMsgBodyDTO msgBody) {
+        return imRouterService.sendMsg(msgBody);
     }
 }

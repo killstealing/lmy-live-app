@@ -27,7 +27,8 @@ public class ImRouterProviderApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         for (int i = 0; i < 1000; i++) {
             ImMsgBodyDTO imMsgBodyDTO=new ImMsgBodyDTO();
-            imRouterService.sendMsg(1001L, imMsgBodyDTO);
+            imMsgBodyDTO.setUserId(1001L);
+            imRouterService.sendMsg(imMsgBodyDTO);
             Thread.sleep(3000);
         }
     }
