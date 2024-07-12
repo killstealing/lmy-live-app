@@ -8,5 +8,16 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>lmy-live-im-core-server-interface</artifactId>
     <name>lmy-live-im-core-server-interface</name>
-    <url>http://maven.apache.org</url>
+    <properties>
+        <lmy-live-redis-starter.version>1.0-SNAPSHOT</lmy-live-redis-starter.version>
+        <lmy-live-im-interface.version>1.0-SNAPSHOT</lmy-live-im-interface.version>
+        <lmy-live-common-interface.version>1.0-SNAPSHOT</lmy-live-common-interface.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.idea</groupId>
+            <artifactId>lmy-live-im-interface</artifactId>
+            <version>${lmy-live-im-interface.version}</version>
+        </dependency>
+    </dependencies>
 </project>

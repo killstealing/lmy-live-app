@@ -2,19 +2,24 @@ package org.lmy.live.im.core.server.handler.impl;
 
 import com.alibaba.fastjson2.JSON;
 import io.netty.channel.ChannelHandlerContext;
+import jakarta.annotation.Resource;
 import org.lmy.live.im.core.server.common.ChannelHandlerContextCache;
 import org.lmy.live.im.core.server.common.ImContextUtils;
 import org.lmy.live.im.core.server.common.ImMsg;
 import org.lmy.live.im.core.server.handler.SimplyMsgHandler;
+import org.lmy.live.im.core.server.interfaces.constants.ImCoreServerConstants;
 import org.lmy.live.im.interfaces.constants.ImMsgCodeEnum;
 import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
 public class LogoutMsgHandler implements SimplyMsgHandler {
     private static final Logger logger= LoggerFactory.getLogger(LogoutMsgHandler.class);
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     public void msgHandler(ChannelHandlerContext ctx, ImMsg imMsg) {
@@ -41,6 +46,7 @@ public class LogoutMsgHandler implements SimplyMsgHandler {
         logger.info("LogoutMsgHandler [msgHanlder] response imMsg is {}", respMsg);
         //理想情况下，客户端断线的时候，会发送一个断线消息包
         ChannelHandlerContextCache.remove(userId);
+        stringRedisTemplate.delete(ImCoreServerConstants.IM_BIND_IP_KEY+appId+":"+userId);
         ImContextUtils.remove(ctx);
         ctx.close();
     }

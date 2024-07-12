@@ -1,5 +1,7 @@
 package org.lmy.live.im.router.provider.service;
 
+import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
+
 public interface ImRouterService {
     /**
      * 发送消息
@@ -7,5 +9,5 @@ public interface ImRouterService {
      * @param msgBody
      * @return
      */
-    boolean sendMsg(Long userId,String msgBody);
+    boolean sendMsg(Long userId, ImMsgBodyDTO msgBody);
 }

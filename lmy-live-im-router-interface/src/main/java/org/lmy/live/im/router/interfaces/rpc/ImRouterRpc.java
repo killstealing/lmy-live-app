@@ -1,5 +1,7 @@
 package org.lmy.live.im.router.interfaces.rpc;
 
+import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
+
 public interface ImRouterRpc {
     /**
      * 发送消息
@@ -7,5 +9,5 @@ public interface ImRouterRpc {
      * @param msgBody
      * @return
      */
-    boolean sendMsg(Long userId,String msgBody);
+    boolean sendMsg(Long userId, ImMsgBodyDTO msgBody);
 }

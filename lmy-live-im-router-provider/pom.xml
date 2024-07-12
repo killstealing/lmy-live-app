@@ -14,6 +14,7 @@
         <lmy-live-common-interface.version>1.0-SNAPSHOT</lmy-live-common-interface.version>
         <lmy-live-im-core-server-interface.version>1.0-SNAPSHOT</lmy-live-im-core-server-interface.version>
         <lmy-live-im-interface.version>1.0-SNAPSHOT</lmy-live-im-interface.version>
+        <lmy-live-framework-redis-starter.version>1.0-SNAPSHOT</lmy-live-framework-redis-starter.version>
     </properties>
     <dependencies>
         <dependency>
@@ -53,6 +54,11 @@
             <groupId>org.idea</groupId>
             <artifactId>lmy-live-im-interface</artifactId>
             <version>${lmy-live-im-interface.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.idea</groupId>
+            <artifactId>lmy-live-framework-redis-starter</artifactId>
+            <version>${lmy-live-framework-redis-starter.version}</version>
         </dependency>
     </dependencies>
 </project>

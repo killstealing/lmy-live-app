@@ -7,6 +7,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import jakarta.annotation.Resource;
+import org.lmy.live.im.core.server.common.ChannelHandlerContextCache;
 import org.lmy.live.im.core.server.common.ImMsgDecoder;
 import org.lmy.live.im.core.server.common.ImMsgEncoder;
 import org.lmy.live.im.core.server.handler.ImServerCoreHandler;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.util.StringUtils;
 
 
 @Configuration
@@ -27,6 +30,9 @@ public class NettyImServerStarter implements InitializingBean {
 
     @Resource
     private ApplicationContext applicationContext;
+
+    @Resource
+    private Environment environment;
 
 
     public void startApplication() throws InterruptedException {
@@ -57,7 +63,15 @@ public class NettyImServerStarter implements InitializingBean {
             workerGroup.shutdownGracefully();
         }));
 
-        //
+        // JVM 参数
+        // - DUBBO_IP_TO_REGISTRY=192.168.3.26 DUBBO_PORT_TO_REGISTRY=9099
+        //获取im服务的注册ip和暴露端口
+        String registryIp=environment.getProperty("DUBBO_IP_TO_REGISTRY");
+        String registryPort=environment.getProperty("DUBBO_PORT_TO_REGISTRY");
+        if(StringUtils.isEmpty(registryIp)||StringUtils.isEmpty(registryPort)){
+            throw new IllegalArgumentException("启动参数中的注册端口和注册IP不能为空");
+        }
+        ChannelHandlerContextCache.setServerIpAddress(registryIp+":"+registryPort);
         ChannelFuture channelFuture=serverBootstrap.bind(port).sync();
         logger.info("服务启动成功，监听端口为 {}",port);
         //这里会阻塞掉主线程，实现服务长期开启的效果
