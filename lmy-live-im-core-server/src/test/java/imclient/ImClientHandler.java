@@ -1,7 +1,6 @@
 package imclient;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -18,26 +17,26 @@ import org.lmy.live.im.interfaces.constants.AppIdEnum;
 import org.lmy.live.im.interfaces.constants.ImMsgCodeEnum;
 import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
 import org.lmy.live.im.interfaces.rpc.ImTokenRpc;
+import org.lmy.live.msg.dto.MessageDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Scanner;
 
 @Service
 public class ImClientHandler implements InitializingBean {
-    private static final Logger logger= LoggerFactory.getLogger(ImClientHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImClientHandler.class);
 
     @DubboReference
     private ImTokenRpc imTokenRpc;
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        Thread clientThread=new Thread(() -> {
-            EventLoopGroup eventLoopGroup=new NioEventLoopGroup();
-            Bootstrap bootstrap=new Bootstrap();
+        Thread clientThread = new Thread(() -> {
+            EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
+            Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(eventLoopGroup);
             bootstrap.channel(NioSocketChannel.class);
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
@@ -49,64 +48,82 @@ public class ImClientHandler implements InitializingBean {
                     channel.pipeline().addLast(new ClientHandler());
                 }
             });
-            Map<Long, Channel> userIdChannelMap=new HashMap<>();
-            //先登录
-            for (int i = 0; i < 10; i++) {
-                Long userId=100000L+i;
-                String imLoginToken = imTokenRpc.createImLoginToken(userId, AppIdEnum.LMY_LIVE_BIZ.getCode());
-                ChannelFuture channelFuture=null;
-                try {
-                    channelFuture = bootstrap.connect("localhost", 8085).sync();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                Channel channel = channelFuture.channel();
-                ImMsgBodyDTO imMsgBodyDTO=new ImMsgBodyDTO();
+            logger.info("请输入userId");
+            Scanner scanner = new Scanner(System.in);
+            long userId = scanner.nextLong();
+            logger.info("请输入objectId");
+            long objectId = scanner.nextLong();
+            String imLoginToken = imTokenRpc.createImLoginToken(userId, AppIdEnum.LMY_LIVE_BIZ.getCode());
+            ChannelFuture channelFuture = null;
+            try {
+                channelFuture = bootstrap.connect("localhost", 8085).sync();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            Channel channel = channelFuture.channel();
+            {
+                //先登录
+                ImMsgBodyDTO imMsgBodyDTO = new ImMsgBodyDTO();
                 imMsgBodyDTO.setUserId(userId);
                 imMsgBodyDTO.setAppId(AppIdEnum.LMY_LIVE_BIZ.getCode());
                 imMsgBodyDTO.setToken(imLoginToken);
                 imMsgBodyDTO.setData("true");
-                ImMsg imMsg=ImMsg.buildMsg(ImMsgCodeEnum.IM_LOGIN_MSG.getCode(), JSON.toJSONString(imMsgBodyDTO));
+                ImMsg imMsg = ImMsg.buildMsg(ImMsgCodeEnum.IM_LOGIN_MSG.getCode(), JSON.toJSONString(imMsgBodyDTO));
                 channel.writeAndFlush(imMsg);
-                userIdChannelMap.put(userId,channel);
+                //心跳包机制
+                sendHeartBeat(userId, channel);
             }
-            //发送心跳
-            while (true){
-                for (Long userId :userIdChannelMap.keySet()) {
-                    ImMsgBodyDTO imMsgBodyDTO=new ImMsgBodyDTO();
-                    imMsgBodyDTO.setUserId(userId);
-                    imMsgBodyDTO.setAppId(AppIdEnum.LMY_LIVE_BIZ.getCode());
-//                    JSONObject jsonObject=new JSONObject();
-//                    jsonObject.put("userId",userId);
-//                    jsonObject.put("objectId",1012312L);
-//                    jsonObject.put("content","你好，我是"+userId);
-////                    imMsgBodyDTO.setData("true");
-//                    imMsgBodyDTO.setData(JSON.toJSONString(jsonObject));
-//                    ImMsg imMsg=ImMsg.buildMsg(ImMsgCodeEnum.IM_HEART_BEAT_MSG.getCode(), JSON.toJSONString(imMsgBodyDTO));
-//                    logger.info("[ImClientHandler] send message imMsg is {}",imMsg);
-//                    Channel channel = userIdChannelMap.get(userId);
-//                    channel.writeAndFlush(imMsg);
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", userId);
-                    jsonObject.put("objectId", 1001101L);
-                    jsonObject.put("content", "你好,我是" + userId);
-                    Map<String,Object> map=new HashMap<>();
-                    map.put("userId", userId);
-                    map.put("objectId", 1001101L);
-                    map.put("content", "你好,我是" + userId);
-//                    imMsgBodyDTO.setData(JSON.toJSONString(map));
-                    imMsgBodyDTO.setData("fasdfasdfasdfasfasfsaf1233333333333333");
-                    ImMsg heartBeatMsg = ImMsg.buildMsg(ImMsgCodeEnum.IM_BIZ_MSG.getCode(), JSON.toJSONString(imMsgBodyDTO));
-                    userIdChannelMap.get(userId).writeAndFlush(heartBeatMsg);
-                    logger.info("[ImClientHandler] send message imMsg is {}",heartBeatMsg);
-                }
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+
+            //开始聊天
+            {
+                //客户端连接
+                ImMsgBodyDTO imMsgBodyDTO1 = new ImMsgBodyDTO();
+                imMsgBodyDTO1.setUserId(userId);
+                imMsgBodyDTO1.setAppId(AppIdEnum.LMY_LIVE_BIZ.getCode());
+                MessageDTO messageDTO=new MessageDTO();
+                messageDTO.setUserId(userId);
+                messageDTO.setObjectId(objectId);
+                messageDTO.setContent("开始聊天");
+                imMsgBodyDTO1.setData(JSON.toJSONString(messageDTO));
+                ImMsg bizMsg = ImMsg.buildMsg(ImMsgCodeEnum.IM_BIZ_MSG.getCode(), JSON.toJSONString(imMsgBodyDTO1));
+                channel.writeAndFlush(bizMsg);
+            }
+            {
+                while (true){
+                    System.out.println("请输入消息");
+                    String content = scanner.nextLine();
+                    //开始聊天
+                    ImMsgBodyDTO imMsgBodyDTO1 = new ImMsgBodyDTO();
+                    imMsgBodyDTO1.setAppId(AppIdEnum.LMY_LIVE_BIZ.getCode());
+                    imMsgBodyDTO1.setUserId(userId);
+                    imMsgBodyDTO1.setBizCode(5555);
+                    MessageDTO messageDTO=new MessageDTO();
+                    messageDTO.setUserId(userId);
+                    messageDTO.setObjectId(objectId);
+                    messageDTO.setContent(content);
+                    imMsgBodyDTO1.setData(JSON.toJSONString(messageDTO));
+                    ImMsg bizMsg = ImMsg.buildMsg(ImMsgCodeEnum.IM_BIZ_MSG.getCode(), JSON.toJSONString(imMsgBodyDTO1));
+                    channel.writeAndFlush(bizMsg);
                 }
             }
         });
         clientThread.start();
+    }
+
+    private void sendHeartBeat(Long userId,Channel channel){
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(30000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                ImMsgBodyDTO imMsgBody = new ImMsgBodyDTO();
+                imMsgBody.setAppId(AppIdEnum.LMY_LIVE_BIZ.getCode());
+                imMsgBody.setUserId(userId);
+                ImMsg loginMsg = ImMsg.buildMsg(ImMsgCodeEnum.IM_HEART_BEAT_MSG.getCode(), JSON.toJSONString(imMsgBody));
+                channel.writeAndFlush(loginMsg);
+            }
+        }).start();
     }
 }

@@ -1,7 +1,7 @@
 package org.lmy.live.msg.provider.consumer.handler.impl;
 
 import com.alibaba.fastjson.JSON;
-import jakarta.annotation.Resource;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.lmy.live.im.interfaces.constants.AppIdEnum;
 import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
 import org.lmy.live.im.router.interfaces.rpc.ImRouterRpc;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SingleMessageHandlerImpl implements MessageHandler {
 
-    @Resource
+    @DubboReference
     private ImRouterRpc routerRpc;
 
     @Override
@@ -27,7 +27,7 @@ public class SingleMessageHandlerImpl implements MessageHandler {
             respMsg.setUserId(messageDTO.getObjectId());
             respMsg.setAppId(AppIdEnum.LMY_LIVE_BIZ.getCode());
             respMsg.setBizCode(ImMsgBizCodeEnum.LIVING_ROOM_IM_CHAT_MSG_BIZ.getCode());
-            respMsg.setData("hello  test1!!!!!!!");
+            respMsg.setData(messageDTO.getContent());
             routerRpc.sendMsg(respMsg);
         }
     }

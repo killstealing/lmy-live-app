@@ -92,5 +92,11 @@
             <artifactId>lmy-live-im-core-server-interface</artifactId>
             <version>${lmy-live-im-core-server-interface.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.idea</groupId>
+            <artifactId>lmy-live-msg-interface</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
