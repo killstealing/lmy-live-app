@@ -1,6 +1,5 @@
 package org.lmy.live.im.core.server.handler.impl;
 
-import com.alibaba.fastjson2.JSON;
 import io.netty.channel.ChannelHandlerContext;
 import jakarta.annotation.Resource;
 import org.apache.rocketmq.client.producer.MQProducer;
@@ -10,8 +9,6 @@ import org.lmy.live.common.interfaces.topic.ImCoreServerProviderTopicNames;
 import org.lmy.live.im.core.server.common.ImContextUtils;
 import org.lmy.live.im.core.server.common.ImMsg;
 import org.lmy.live.im.core.server.handler.SimplyMsgHandler;
-import org.lmy.live.im.interfaces.constants.ImMsgCodeEnum;
-import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -37,12 +34,6 @@ public class BizMsgHandler implements SimplyMsgHandler {
             logger.error("BizMsgHandler [msgHandler] body error, imMsg is {}", imMsg);
             throw new IllegalArgumentException("body error");
         }
-        ImMsgBodyDTO imMsgBodyDTO=new ImMsgBodyDTO();
-        imMsgBodyDTO.setUserId(userId);
-        imMsgBodyDTO.setAppId(appId);
-        imMsgBodyDTO.setData("true");
-        ImMsg respMsg=ImMsg.buildMsg(ImMsgCodeEnum.IM_BIZ_MSG.getCode(), JSON.toJSONString(imMsgBodyDTO));
-        ctx.writeAndFlush(respMsg);
         Message message=new Message();
         message.setTopic(ImCoreServerProviderTopicNames.LMY_LIVE_IM_BIZ_MSG_TOPIC);
         message.setBody(body);

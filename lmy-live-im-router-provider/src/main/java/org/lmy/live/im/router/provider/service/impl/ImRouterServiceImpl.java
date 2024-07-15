@@ -26,7 +26,6 @@ public class ImRouterServiceImpl implements ImRouterService {
     @Override
     public boolean sendMsg(ImMsgBodyDTO imMsgBodyDTO) {
         logger.info("[ImRouterServiceImpl] send Msg, userid is {},msgBody is {}",imMsgBodyDTO.getUserId(),imMsgBodyDTO);
-        String objectImServerIp="192.168.6.1:9096";
         String ipAddress = stringRedisTemplate.opsForValue().get(ImCoreServerConstants.IM_BIND_IP_KEY + imMsgBodyDTO.getAppId() + ":" + imMsgBodyDTO.getUserId());
         if(StringUtils.isEmpty(ipAddress)){
             return false;

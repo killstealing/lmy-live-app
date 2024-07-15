@@ -16,6 +16,7 @@ public class ImRouterClusterInvoker<T> extends AbstractClusterInvoker<T> {
 
     @Override
     protected Result doInvoke(Invocation invocation, List<Invoker<T>> invokers, LoadBalance loadbalance) throws RpcException {
+        checkWhetherDestroyed();
         String ip= (String) RpcContext.getContext().get("ip");
         if(StringUtils.isEmpty(ip)){
             throw new RuntimeException("ip can not be null");
