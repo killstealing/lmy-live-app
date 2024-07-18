@@ -3,7 +3,6 @@ package org.lmy.live.im.core.server.common;
 import org.lmy.live.im.interfaces.constants.ImConstants;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 public class ImMsg implements Serializable {
     //魔数 用于校验
@@ -63,7 +62,6 @@ public class ImMsg implements Serializable {
                 "magic=" + magic +
                 ", code=" + code +
                 ", len=" + len +
-                ", body=" + Arrays.toString(body) +
                 '}';
     }
 }

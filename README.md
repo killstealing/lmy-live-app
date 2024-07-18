@@ -16,3 +16,7 @@ https://cloud.tencent.com/developer/article/1650086
 2. body.getByte("UTF-8").length
 *** 
 ## issue2
+
+## 启动MS的顺序
+7-25 节: ImProviderApplication=> ImCoreServerApplication=>
+ImRouterProviderApplication=>MsgProviderApplication=>ImClientApplication1

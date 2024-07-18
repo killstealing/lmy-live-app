@@ -75,19 +75,19 @@ public class ImClientHandler implements InitializingBean {
             }
 
             //开始聊天
-            {
-                //客户端连接
-                ImMsgBodyDTO imMsgBodyDTO1 = new ImMsgBodyDTO();
-                imMsgBodyDTO1.setUserId(userId);
-                imMsgBodyDTO1.setAppId(AppIdEnum.LMY_LIVE_BIZ.getCode());
-                MessageDTO messageDTO=new MessageDTO();
-                messageDTO.setUserId(userId);
-                messageDTO.setObjectId(objectId);
-                messageDTO.setContent("开始聊天");
-                imMsgBodyDTO1.setData(JSON.toJSONString(messageDTO));
-                ImMsg bizMsg = ImMsg.buildMsg(ImMsgCodeEnum.IM_BIZ_MSG.getCode(), JSON.toJSONString(imMsgBodyDTO1));
-                channel.writeAndFlush(bizMsg);
-            }
+//            {
+//                //客户端连接
+//                ImMsgBodyDTO imMsgBodyDTO1 = new ImMsgBodyDTO();
+//                imMsgBodyDTO1.setUserId(userId);
+//                imMsgBodyDTO1.setAppId(AppIdEnum.LMY_LIVE_BIZ.getCode());
+//                MessageDTO messageDTO=new MessageDTO();
+//                messageDTO.setUserId(userId);
+//                messageDTO.setObjectId(objectId);
+//                messageDTO.setContent("开始聊天");
+//                imMsgBodyDTO1.setData(JSON.toJSONString(messageDTO));
+//                ImMsg bizMsg = ImMsg.buildMsg(ImMsgCodeEnum.IM_BIZ_MSG.getCode(), JSON.toJSONString(imMsgBodyDTO1));
+//                channel.writeAndFlush(bizMsg);
+//            }
             {
                 while (true){
                     System.out.println("请输入消息");

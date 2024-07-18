@@ -7,4 +7,6 @@ public interface IRouterHandlerService {
      * 当收到业务服务的请求 进行处理
      */
     void onReceive(ImMsgBodyDTO imMsgBodyDTO);
+
+    boolean sendMessageToClient(ImMsgBodyDTO imMsgBodyDTO);
 }
