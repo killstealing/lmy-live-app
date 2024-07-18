@@ -33,9 +33,11 @@ public class ImMsgHandlerFactoryImpl implements ImMsgHandlerFactory, Initializin
         //等出消息包，正常断开im连接的时候发送的
         //业务消息包，最常用的消息类型，例如我们的im发送数据，或者接收数据的时候会用到
         //心跳消息包，定时会给im发送，汇报功能
+        //ack消息包, 每次发送业务消息需要发送一次
         msgHandlerMap.put(ImMsgCodeEnum.IM_LOGIN_MSG.getCode(), applicationContext.getBean(LoginMsgHandler.class));
         msgHandlerMap.put(ImMsgCodeEnum.IM_LOGOUT_MSG.getCode(), applicationContext.getBean(LogoutMsgHandler.class));
         msgHandlerMap.put(ImMsgCodeEnum.IM_BIZ_MSG.getCode(), applicationContext.getBean(BizMsgHandler.class));
         msgHandlerMap.put(ImMsgCodeEnum.IM_HEART_BEAT_MSG.getCode(), applicationContext.getBean(HeartBeatMsgHandler.class));
+        msgHandlerMap.put(ImMsgCodeEnum.IM_ACK_MSG.getCode(), applicationContext.getBean(ImAckMsgHandler.class));
     }
 }
