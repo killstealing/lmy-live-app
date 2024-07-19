@@ -26,26 +26,19 @@
       <directory url="file://$PROJECT_DIR$/lmy-live-im-core-server-interface/src/main/resources/archetype-resources" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/lmy-live-im-router-interface/src/main/resources/archetype-resources" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/lmy-live-im-router-provider/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/lmy-live-living-provider/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/lmy-live-living-interface/src/main/resources/archetype-resources" includeSubdirectories="true" />
     </excludeFromCompile>
     <annotationProcessing>
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="lmy-live-user-provider" />
-        <module name="lmy-live-framework-datasource-starter" />
-        <module name="lmy-live-im-provider" />
         <module name="lmy-live-user-interface" />
         <module name="lmy-live-gateway" />
-        <module name="lmy-live-common-interface" />
-        <module name="lmy-live-im-core-server-interface" />
-        <module name="lmy-live-im-router-interface" />
-        <module name="lmy-live-account-provider" />
         <module name="lmy-live-im-router-provider" />
         <module name="lmy-live-id-generate-provider" />
         <module name="lmy-live-account-provider1" />
-        <module name="lmy-live-framework-web-starter" />
-        <module name="lmy-live-api" />
         <module name="lmy-live-framework-mq-starter" />
         <module name="lmy-live-framework-redis-starter" />
         <module name="lmy-live-msg-provider" />
@@ -54,8 +47,19 @@
         <module name="lmy-test" />
         <module name="lmy-live-id-generate-interface" />
         <module name="lmy-live-im-core-server" />
-        <module name="lmy-live-im-interface" />
         <module name="lmy-live-account-interface" />
+        <module name="lmy-live-user-provider" />
+        <module name="lmy-live-framework-datasource-starter" />
+        <module name="lmy-live-im-provider" />
+        <module name="lmy-live-common-interface" />
+        <module name="lmy-live-im-core-server-interface" />
+        <module name="lmy-live-im-router-interface" />
+        <module name="lmy-live-account-provider" />
+        <module name="lmy-live-framework-web-starter" />
+        <module name="lmy-live-api" />
+        <module name="lmy-live-living-interface" />
+        <module name="lmy-live-living-provider" />
+        <module name="lmy-live-im-interface" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -87,6 +91,8 @@
       <module name="lmy-live-im-router-interface" options="-parameters" />
       <module name="lmy-live-im-router-provider" options="-parameters" />
       <module name="lmy-live-ism-interface" options="-parameters" />
+      <module name="lmy-live-living-interface" options="-parameters" />
+      <module name="lmy-live-living-provider" options="-parameters" />
       <module name="lmy-live-msg-interface" options="-parameters" />
       <module name="lmy-live-msg-provider" options="-parameters" />
       <module name="lmy-live-user-interface" options="-parameters" />

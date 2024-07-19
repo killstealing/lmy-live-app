@@ -25,6 +25,8 @@
     <file url="file://$PROJECT_DIR$/lmy-live-im-router-provider/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lmy-live-im-router-provider/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lmy-live-ism-interface/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lmy-live-living-interface/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lmy-live-living-provider/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lmy-live-msg-interface/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lmy-live-msg-provider/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lmy-live-user-interface/src/main/java" charset="UTF-8" />

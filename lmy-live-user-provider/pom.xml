@@ -24,7 +24,6 @@
         <spring-cloud-alibaba.version>2022.0.0.0-RC1</spring-cloud-alibaba.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <rocketmq.client.version>5.1.3</rocketmq.client.version>
         <maven.compiler.compilerVersion>17</maven.compiler.compilerVersion>
     </properties>
     <dependencies>
@@ -75,16 +74,10 @@
             <version>${mybatis-plus.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.rocketmq</groupId>
-            <artifactId>rocketmq-client-java</artifactId>
-            <version>5.0.5</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
-
         <dependency>
             <groupId>org.idea</groupId>
             <artifactId>lmy-live-user-interface</artifactId>
@@ -103,6 +96,11 @@
         <dependency>
             <groupId>org.idea</groupId>
             <artifactId>lmy-live-framework-redis-starter</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.idea</groupId>
+            <artifactId>lmy-live-framework-mq-starter</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

@@ -12,11 +12,8 @@ import com.lmy.live.user.provider.dao.po.UserTagPO;
 import com.lmy.live.user.provider.service.IUserTagService;
 import com.lmy.live.user.provider.utils.TagInfoUtils;
 import jakarta.annotation.Resource;
-import org.apache.rocketmq.client.apis.ClientException;
-import org.apache.rocketmq.client.apis.ClientServiceProvider;
-import org.apache.rocketmq.client.apis.message.Message;
-import org.apache.rocketmq.client.apis.producer.Producer;
-import org.apache.rocketmq.client.apis.producer.SendReceipt;
+import org.apache.rocketmq.client.producer.MQProducer;
+import org.apache.rocketmq.common.message.Message;
 import org.idea.lmy.live.framework.redis.starter.key.UserProviderCacheKeyBuilder;
 import org.lmy.live.common.interfaces.utils.ConvertBeanUtils;
 import org.slf4j.Logger;
@@ -29,7 +26,6 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -47,7 +43,7 @@ public class UserTagServiceImpl implements IUserTagService {
     @Resource
     private UserProviderCacheKeyBuilder userProviderCacheKeyBuilder;
     @Resource
-    private Producer producer;
+    private MQProducer mqProducer;
 
     @Override
     public boolean setTag(Long userId, UserTagsEnum userTagsEnum) {
@@ -136,36 +132,30 @@ public class UserTagServiceImpl implements IUserTagService {
         return userTagDTO;
     }
 
-    private void deleteUserTagDTOFromRedis(Long userId){
-        String redisKey=userProviderCacheKeyBuilder.buildUserTagKey(userId);
+    /**
+     * 从redis中删除用户标签对象
+     *
+     * @param userId
+     */
+    private void deleteUserTagDTOFromRedis(Long userId) {
+        String redisKey = userProviderCacheKeyBuilder.buildUserTagKey(userId);
         redisTemplate.delete(redisKey);
 
-        ClientServiceProvider provider = ClientServiceProvider.loadService();
-        Duration messageDelayTime = Duration.ofSeconds(1);
-
-        UserCacheAsyncDeleteDTO userCacheAsyncDeleteDTO=new UserCacheAsyncDeleteDTO();
+        UserCacheAsyncDeleteDTO userCacheAsyncDeleteDTO = new UserCacheAsyncDeleteDTO();
         userCacheAsyncDeleteDTO.setCode(CacheAsyncDeleteCode.USER_TAG_DELETE.getCode());
-        Map<String, Object> jsonParam=new HashMap<>();
+        Map<String,Object> jsonParam = new HashMap<>();
         jsonParam.put("userId",userId);
         userCacheAsyncDeleteDTO.setJson(JSON.toJSONString(jsonParam));
-        Message message = provider.newMessageBuilder()
-                .setTopic(UserProviderTopicNames.CACHE_ASYNC_DELETE_TOPIC)
-                // 设置消息索引键，可根据关键字精确查找某条消息。
-//                .setKeys("messageKey")
-                // 设置消息Tag，用于消费端根据指定Tag过滤消息。
-                .setTag("*")
-                // Set expected delivery timestamp of message.
-                .setDeliveryTimestamp(System.currentTimeMillis() + messageDelayTime.toMillis())
-                // 消息体。
-                .setBody(JSON.toJSONBytes(userCacheAsyncDeleteDTO))
-                .build();
-        SendReceipt sendReceipt = null;
+
+        Message message = new Message();
+        message.setTopic(UserProviderTopicNames.CACHE_ASYNC_DELETE_TOPIC);
+        message.setBody(JSON.toJSONString(userCacheAsyncDeleteDTO).getBytes());
+        //延迟一秒进行缓存的二次删除
+        message.setDelayTimeLevel(1);
         try {
-            sendReceipt = producer.send(message);
-        } catch (ClientException e) {
+            mqProducer.send(message);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        logger.info("延迟双删user tag, 发送成功",sendReceipt.getMessageId());
     }
-
 }
