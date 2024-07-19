@@ -3,14 +3,11 @@ package com.lmy.live.user.provider.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-@ConfigurationProperties(prefix = "lmy.rmq.producer")
+@ConfigurationProperties(prefix = "lmy.rmq.consumer")
 @Configuration
-public class RockerMQProducerProperties {
-
+public class RocketMQConsumerProperties {
     private String nameSrv;
     private String groupName;
-    private int retryTimes;
-    private int sendTimeout;
 
     public String getNameSrv() {
         return nameSrv;
@@ -28,29 +25,11 @@ public class RockerMQProducerProperties {
         this.groupName = groupName;
     }
 
-    public int getRetryTimes() {
-        return retryTimes;
-    }
-
-    public void setRetryTimes(int retryTimes) {
-        this.retryTimes = retryTimes;
-    }
-
-    public int getSendTimeout() {
-        return sendTimeout;
-    }
-
-    public void setSendTimeout(int sendTimeout) {
-        this.sendTimeout = sendTimeout;
-    }
-
     @Override
     public String toString() {
-        return "RockerMQProducerProperties{" +
+        return "RockerMQConsumerProperties{" +
                 "nameSrv='" + nameSrv + '\'' +
                 ", groupName='" + groupName + '\'' +
-                ", retryTimes=" + retryTimes +
-                ", sendTimeout=" + sendTimeout +
                 '}';
     }
 }
