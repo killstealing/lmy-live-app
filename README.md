@@ -23,7 +23,8 @@ ImRouterProviderApplication=>MsgProviderApplication=>ImClientApplication1
 
 08-02节:
 启动顺序
-
+ImProvider,ImCoreServer,ImRouterProvider,MsgProvider,IdGenerate,UserProvider,AccountProvider,LivingProvider,
+Gateway,ApiWeb
 头像设置：
 需要找到手机号对应的user， 找到对应的表， 手动把图片地址加上
 到对应的user_tag表， 加上吧tag_info02 改成2
