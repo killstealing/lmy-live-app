@@ -1,8 +1,12 @@
 package org.lmy.live.living.interfaces.rpc;
 
+import org.lmy.live.common.interfaces.dto.PageWrapper;
 import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
+import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 
 public interface ILivingRoomRpc {
+
+    PageWrapper<LivingRoomRespDTO> list(LivingRoomReqDTO livingRoomReqDTO);
 
     /**
      * 开启直播间

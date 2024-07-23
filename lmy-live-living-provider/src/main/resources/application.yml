@@ -11,8 +11,8 @@
 ##    url: jdbc:shardingsphere:nacos:192.168.3.24:8848:lmy-live-user-shardingjdbc.yaml?username=lmy&&password=lmy&&namespace=lmy-live-test
 #    hikari:
 #      pool-name: lmy-user-pool
-#      minimum-idle: 150
-#      maximum-pool-size: 300
+#      minimum-idle: 5
+#      maximum-pool-size: 20
 ##      connection-init-sql: select 1
 #      connection-timeout: 4000
 #      max-lifetime: 60000
@@ -42,6 +42,6 @@
 #  server: true
 #  protocol:
 #    name: dubbo
-#    port: 9095
+#    port: 9097
 #server:
-#  port: 8085
+#  port: 8087

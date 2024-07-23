@@ -1,10 +1,13 @@
 package org.lmy.live.living.provider.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jakarta.annotation.Resource;
+import org.lmy.live.common.interfaces.dto.PageWrapper;
 import org.lmy.live.common.interfaces.enums.CommonStatusEum;
 import org.lmy.live.common.interfaces.utils.ConvertBeanUtils;
 import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
+import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 import org.lmy.live.living.provider.dao.mapper.LivingRoomMapper;
 import org.lmy.live.living.provider.dao.mapper.LivingRoomRecordMapper;
 import org.lmy.live.living.provider.dao.po.LivingRoomPO;
@@ -63,6 +66,17 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
         queryWrapper.eq(LivingRoomPO::getStatus, CommonStatusEum.VALID_STATUS.getCode());
         queryWrapper.last("limit 1");
         return ConvertBeanUtils.convert(livingRoomMapper.selectOne(queryWrapper), LivingRoomReqDTO.class);
+    }
 
+    @Override
+    public PageWrapper<LivingRoomRespDTO> list(LivingRoomReqDTO livingRoomReqDTO) {
+        LambdaQueryWrapper<LivingRoomPO> queryWrapper = new LambdaQueryWrapper();
+        queryWrapper.eq(LivingRoomPO::getType,livingRoomReqDTO.getType());
+        queryWrapper.eq(LivingRoomPO::getStatus,CommonStatusEum.VALID_STATUS.getCode());
+        Page<LivingRoomPO> pageResult=livingRoomMapper.selectPage(new Page<>(livingRoomReqDTO.getPage(),livingRoomReqDTO.getPageSize()),queryWrapper);
+        PageWrapper<LivingRoomRespDTO> pageWrapper=new PageWrapper<>();
+        pageWrapper.setList(ConvertBeanUtils.convertList(pageResult.getRecords(),LivingRoomRespDTO.class));
+        pageWrapper.setHasNext(livingRoomReqDTO.getPage()*livingRoomReqDTO.getPageSize()<pageResult.getTotal());
+        return pageWrapper;
     }
 }

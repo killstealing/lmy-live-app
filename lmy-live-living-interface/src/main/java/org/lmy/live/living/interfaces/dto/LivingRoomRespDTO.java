@@ -2,7 +2,7 @@ package org.lmy.live.living.interfaces.dto;
 
 import java.io.Serializable;
 
-public class LivingRoomReqDTO implements Serializable {
+public class LivingRoomRespDTO implements Serializable {
 
     private Integer id;
     private Long anchorId;
@@ -10,8 +10,8 @@ public class LivingRoomReqDTO implements Serializable {
     private Integer roomId;
     private String covertImg;
     private Integer type;
-    private int page;
-    private int pageSize;
+    private Integer watchNum;
+    private Integer goodNum;
 
     public Integer getId() {
         return id;
@@ -61,33 +61,33 @@ public class LivingRoomReqDTO implements Serializable {
         this.type = type;
     }
 
-    public int getPage() {
-        return page;
+    public Integer getWatchNum() {
+        return watchNum;
     }
 
-    public void setPage(int page) {
-        this.page = page;
+    public void setWatchNum(Integer watchNum) {
+        this.watchNum = watchNum;
     }
 
-    public int getPageSize() {
-        return pageSize;
+    public Integer getGoodNum() {
+        return goodNum;
     }
 
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
+    public void setGoodNum(Integer goodNum) {
+        this.goodNum = goodNum;
     }
 
     @Override
     public String toString() {
-        return "LivingRoomReqDTO{" +
+        return "LivingRoomRespDTO{" +
                 "id=" + id +
                 ", anchorId=" + anchorId +
                 ", roomName='" + roomName + '\'' +
                 ", roomId=" + roomId +
                 ", covertImg='" + covertImg + '\'' +
                 ", type=" + type +
-                ", page=" + page +
-                ", pageSize=" + pageSize +
+                ", watchNum=" + watchNum +
+                ", goodNum=" + goodNum +
                 '}';
     }
 }

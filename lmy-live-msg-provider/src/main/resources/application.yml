@@ -8,8 +8,8 @@
 #    url: jdbc:mysql://192.168.3.24:8808/lmy_live_msg?useUnicode=true&characterEncoding=utf8
 #    hikari:
 #      pool-name: lmy-live-msg-pool
-#      minimum-idle: 10
-#      maximum-pool-size: 200
+#      minimum-idle: 5
+#      maximum-pool-size: 20
 #      connection-init-sql: select 1
 #      connection-timeout: 4000
 #      max-lifetime: 60000

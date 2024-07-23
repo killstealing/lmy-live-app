@@ -1,8 +1,12 @@
 package org.idea.lmy.live.api.service;
 
 import org.idea.lmy.live.api.vo.LivingRoomInitVO;
+import org.idea.lmy.live.api.vo.req.LivingRoomReqVO;
+import org.lmy.live.common.interfaces.dto.PageWrapper;
+import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 
 public interface ILivingRoomService {
+    PageWrapper<LivingRoomRespDTO> list(LivingRoomReqVO livingRoomReqVO);
 
     /**
      * 开启直播间

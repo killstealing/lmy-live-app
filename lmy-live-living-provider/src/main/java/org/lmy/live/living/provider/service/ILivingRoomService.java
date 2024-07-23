@@ -1,8 +1,12 @@
 package org.lmy.live.living.provider.service;
 
+import org.lmy.live.common.interfaces.dto.PageWrapper;
 import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
+import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 
 public interface ILivingRoomService {
+
+    PageWrapper<LivingRoomRespDTO> list(LivingRoomReqDTO livingRoomReqDTO);
     /**
      * 开启直播间
      * @param livingRoomReqDTO

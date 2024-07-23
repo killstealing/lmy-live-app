@@ -2,7 +2,9 @@ package org.lmy.live.living.provider.rpc;
 
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.lmy.live.common.interfaces.dto.PageWrapper;
 import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
+import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 import org.lmy.live.living.interfaces.rpc.ILivingRoomRpc;
 import org.lmy.live.living.provider.service.ILivingRoomService;
 
@@ -11,6 +13,11 @@ public class ILivingRoomRpcImpl implements ILivingRoomRpc {
 
     @Resource
     private ILivingRoomService iLivingRoomService;
+
+    @Override
+    public PageWrapper<LivingRoomRespDTO> list(LivingRoomReqDTO livingRoomReqDTO) {
+        return iLivingRoomService.list(livingRoomReqDTO);
+    }
 
     @Override
     public Integer startLivingRoom(LivingRoomReqDTO livingRoomReqDTO) {

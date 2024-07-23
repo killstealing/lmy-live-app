@@ -5,7 +5,11 @@ import com.lmy.live.user.interfaces.IUserRpc;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.idea.lmy.live.api.service.ILivingRoomService;
 import org.idea.lmy.live.api.vo.LivingRoomInitVO;
+import org.idea.lmy.live.api.vo.req.LivingRoomReqVO;
+import org.lmy.live.common.interfaces.dto.PageWrapper;
+import org.lmy.live.common.interfaces.utils.ConvertBeanUtils;
 import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
+import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 import org.lmy.live.living.interfaces.rpc.ILivingRoomRpc;
 import org.lmy.live.web.starter.LmyRequestContext;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,12 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
 
     @DubboReference
     private IUserRpc iUserRpc;
+
+    @Override
+    public PageWrapper<LivingRoomRespDTO> list(LivingRoomReqVO livingRoomReqVO) {
+        LivingRoomReqDTO livingRoomReqDTO = ConvertBeanUtils.convert(livingRoomReqVO, LivingRoomReqDTO.class);
+        return iLivingRoomRpc.list(livingRoomReqDTO);
+    }
 
     @Override
     public Integer startingLiving(Integer type) {
