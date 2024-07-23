@@ -4,8 +4,17 @@ import org.lmy.live.common.interfaces.dto.PageWrapper;
 import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
 import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 
+import java.util.List;
+
 public interface ILivingRoomService {
 
+    /**
+     * 查询所有的直播间类型
+     *
+     * @param type
+     * @return
+     */
+    List<LivingRoomRespDTO> listAllLivingRoomFromDB(Integer type);
     PageWrapper<LivingRoomRespDTO> list(LivingRoomReqDTO livingRoomReqDTO);
     /**
      * 开启直播间
@@ -27,6 +36,6 @@ public interface ILivingRoomService {
      * @param roomId
      * @return
      */
-    LivingRoomReqDTO queryByRoomId(Integer roomId);
+    LivingRoomRespDTO queryByRoomId(Integer roomId);
 
 }

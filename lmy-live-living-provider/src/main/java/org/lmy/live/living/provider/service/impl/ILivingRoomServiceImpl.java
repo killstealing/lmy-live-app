@@ -1,8 +1,8 @@
 package org.lmy.live.living.provider.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jakarta.annotation.Resource;
+import org.idea.lmy.live.framework.redis.starter.key.LivingProviderCacheKeyBuilder;
 import org.lmy.live.common.interfaces.dto.PageWrapper;
 import org.lmy.live.common.interfaces.enums.CommonStatusEum;
 import org.lmy.live.common.interfaces.utils.ConvertBeanUtils;
@@ -15,20 +15,27 @@ import org.lmy.live.living.provider.dao.po.LivingRoomRecordPO;
 import org.lmy.live.living.provider.service.ILivingRoomService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ILivingRoomServiceImpl implements ILivingRoomService {
     private static final Logger logger= LoggerFactory.getLogger(ILivingRoomServiceImpl.class);
-
     @Resource
     private LivingRoomMapper livingRoomMapper;
-
     @Resource
     private LivingRoomRecordMapper livingRoomRecordMapper;
+    @Resource
+    private RedisTemplate<String,Object> redisTemplate;
+    @Resource
+    private LivingProviderCacheKeyBuilder livingProviderCacheKeyBuilder;
 
     @Override
     public Integer startLivingRoom(LivingRoomReqDTO livingRoomReqDTO) {
@@ -38,6 +45,9 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
         livingRoomMapper.insert(livingRoomPO);
         Integer id = livingRoomPO.getId();
         logger.info("[ILivingRoomServiceImpl] id is {}",id);
+        //防止之前有空值缓存，这里做移除操作
+        String cacheKey = livingProviderCacheKeyBuilder.buildLivingRoomObj(livingRoomPO.getId());
+        redisTemplate.delete(cacheKey);
         return id;
     }
 
@@ -56,27 +66,65 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
         livingRoomRecordPO.setStatus(CommonStatusEum.INVALID_STATUS.getCode());
         livingRoomRecordMapper.insert(livingRoomRecordPO);
         livingRoomMapper.deleteById(livingRoomReqDTO.getRoomId());
+        //移除掉直播间cache
+        String cacheKey = livingProviderCacheKeyBuilder.buildLivingRoomObj(livingRoomReqDTO.getRoomId());
+        redisTemplate.delete(cacheKey);
         return true;
     }
 
     @Override
-    public LivingRoomReqDTO queryByRoomId(Integer roomId) {
+    public LivingRoomRespDTO queryByRoomId(Integer roomId) {
+        String cacheKey = livingProviderCacheKeyBuilder.buildLivingRoomObj(roomId);
+        LivingRoomRespDTO queryResult = (LivingRoomRespDTO) redisTemplate.opsForValue().get(cacheKey);
+        if(queryResult!=null){
+            //空值缓存
+            if(queryResult.getId()==null){
+                return null;
+            }
+            return queryResult;
+        }
+
         LambdaQueryWrapper<LivingRoomPO> queryWrapper = new LambdaQueryWrapper();
         queryWrapper.eq(LivingRoomPO::getId, roomId);
         queryWrapper.eq(LivingRoomPO::getStatus, CommonStatusEum.VALID_STATUS.getCode());
         queryWrapper.last("limit 1");
-        return ConvertBeanUtils.convert(livingRoomMapper.selectOne(queryWrapper), LivingRoomReqDTO.class);
+        queryResult= ConvertBeanUtils.convert(livingRoomMapper.selectOne(queryWrapper), LivingRoomRespDTO.class);
+        if(queryResult==null){
+            //防止缓存击穿
+            redisTemplate.opsForValue().set(cacheKey,new LivingRoomRespDTO(),1, TimeUnit.MINUTES);
+            return null;
+        }
+        redisTemplate.opsForValue().set(cacheKey,queryResult,30,TimeUnit.MINUTES);
+        return queryResult;
+    }
+
+    @Override
+    public List<LivingRoomRespDTO> listAllLivingRoomFromDB(Integer type) {
+        LambdaQueryWrapper<LivingRoomPO> queryWrapper = new LambdaQueryWrapper();
+        queryWrapper.eq(LivingRoomPO::getType,type);
+        queryWrapper.eq(LivingRoomPO::getStatus,CommonStatusEum.VALID_STATUS.getCode());
+        queryWrapper.orderByDesc(LivingRoomPO::getId);
+        queryWrapper.last("limit 1000");
+        List<LivingRoomPO> livingRoomPOS = livingRoomMapper.selectList(queryWrapper);
+        List<LivingRoomRespDTO> livingRoomRespDTOS = ConvertBeanUtils.convertList(livingRoomPOS, LivingRoomRespDTO.class);
+        return livingRoomRespDTOS;
     }
 
     @Override
     public PageWrapper<LivingRoomRespDTO> list(LivingRoomReqDTO livingRoomReqDTO) {
-        LambdaQueryWrapper<LivingRoomPO> queryWrapper = new LambdaQueryWrapper();
-        queryWrapper.eq(LivingRoomPO::getType,livingRoomReqDTO.getType());
-        queryWrapper.eq(LivingRoomPO::getStatus,CommonStatusEum.VALID_STATUS.getCode());
-        Page<LivingRoomPO> pageResult=livingRoomMapper.selectPage(new Page<>(livingRoomReqDTO.getPage(),livingRoomReqDTO.getPageSize()),queryWrapper);
+        String cacheKey = livingProviderCacheKeyBuilder.buildLivingRoomList(livingRoomReqDTO.getType());
+        int page = livingRoomReqDTO.getPage();
+        int pageSize = livingRoomReqDTO.getPageSize();
+        Long size = redisTemplate.opsForList().size(cacheKey);
+        List<Object> resultList = redisTemplate.opsForList().range(cacheKey, (page - 1) * pageSize, (page * pageSize));
         PageWrapper<LivingRoomRespDTO> pageWrapper=new PageWrapper<>();
-        pageWrapper.setList(ConvertBeanUtils.convertList(pageResult.getRecords(),LivingRoomRespDTO.class));
-        pageWrapper.setHasNext(livingRoomReqDTO.getPage()*livingRoomReqDTO.getPageSize()<pageResult.getTotal());
+        if(CollectionUtils.isEmpty(resultList)){
+            pageWrapper.setList(Collections.emptyList());
+            pageWrapper.setHasNext(false);
+        }else{
+            pageWrapper.setList(ConvertBeanUtils.convertList(resultList,LivingRoomRespDTO.class));
+            pageWrapper.setHasNext(page*pageSize<size);
+        }
         return pageWrapper;
     }
 }

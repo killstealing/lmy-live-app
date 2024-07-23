@@ -50,11 +50,14 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
 
     @Override
     public LivingRoomInitVO anchorConfig(Long userId, Integer roomId) {
-        LivingRoomReqDTO respDTO = iLivingRoomRpc.queryByRoomId(roomId);
+        LivingRoomRespDTO respDTO = iLivingRoomRpc.queryByRoomId(roomId);
         LivingRoomInitVO respVO = new LivingRoomInitVO();
         if (respDTO == null || respDTO.getAnchorId() == null || userId == null) {
-            respVO.setAnchor(false);
+            //这种情况是属于直播间已经不存在了
+            respVO.setRoomId(-1);
         } else {
+            respVO.setRoomId(respDTO.getId());
+            respVO.setAnchorId(respDTO.getAnchorId());
             respVO.setAnchor(respDTO.getAnchorId().equals(userId));
         }
         return respVO;
