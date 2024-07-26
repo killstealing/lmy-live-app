@@ -30,7 +30,7 @@ public class ILivingRoomRpcImpl implements ILivingRoomRpc {
     }
 
     @Override
-    public LivingRoomReqDTO queryByRoomId(Integer roomId) {
+    public LivingRoomRespDTO queryByRoomId(Integer roomId) {
         return iLivingRoomService.queryByRoomId(roomId);
     }
 }

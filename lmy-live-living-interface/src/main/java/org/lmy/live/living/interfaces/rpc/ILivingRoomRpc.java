@@ -28,6 +28,6 @@ public interface ILivingRoomRpc {
      * @param roomId
      * @return
      */
-    LivingRoomReqDTO queryByRoomId(Integer roomId);
+    LivingRoomRespDTO queryByRoomId(Integer roomId);
 
 }
