@@ -9,7 +9,6 @@ import org.lmy.live.im.core.server.common.ImContextUtils;
 import org.lmy.live.im.core.server.common.ImMsg;
 import org.lmy.live.im.core.server.handler.SimplyMsgHandler;
 import org.lmy.live.im.core.server.interfaces.constants.ImCoreServerConstants;
-import org.lmy.live.im.interfaces.constants.AppIdEnum;
 import org.lmy.live.im.interfaces.constants.ImConstants;
 import org.lmy.live.im.interfaces.constants.ImMsgCodeEnum;
 import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
@@ -56,22 +55,34 @@ public class LoginMsgHandler implements SimplyMsgHandler {
         }
         Long userId = imTokenRpc.getUserIdByToken(token);
         if (userId!=null && userId.equals(imMsgBodyDTO.getUserId())){
-            ChannelHandlerContextCache.put(userId,ctx);
-            ImContextUtils.setUserId(ctx,userId);
-            ImContextUtils.setAppId(ctx,appIdFromMsg);
-            ImMsgBodyDTO respBody=new ImMsgBodyDTO();
-            respBody.setAppId(AppIdEnum.LMY_LIVE_BIZ.getCode());
-            respBody.setUserId(userId);
-            respBody.setData("true");
-            ImMsg respMsg=ImMsg.buildMsg(ImMsgCodeEnum.IM_LOGIN_MSG.getCode(),JSON.toJSONString(respBody));
-            logger.info("login successfully , userId is {}, appId is {}", userId,appIdFromMsg);
-            stringRedisTemplate.opsForValue().set(ImCoreServerConstants.IM_BIND_IP_KEY+appIdFromMsg+":"+userId,
-                    ChannelHandlerContextCache.getServerIpAddress(), ImConstants.DEFAULT_HEART_BEAT_GAP*2, TimeUnit.SECONDS);
-            ctx.writeAndFlush(respMsg);
+            loginSuccessHandler(ctx,userId,appIdFromMsg);
             return;
         }
         ctx.close();
         logger.error("token check error, imMsg is {}", imMsg);
         throw new IllegalArgumentException("token check error");
+    }
+
+    /**
+     * 如果用户登录成功，则处理相关记录
+     * @param ctx
+     * @param userId
+     * @param appId
+     */
+    public void loginSuccessHandler(ChannelHandlerContext ctx,Long userId,Integer appId){
+        //按照userId保存好相关的channel对象信息
+        ChannelHandlerContextCache.put(userId,ctx);
+        ImContextUtils.setUserId(ctx,userId);
+        ImContextUtils.setAppId(ctx,appId);
+        //将IM消息回写给客户端
+        ImMsgBodyDTO imMsgBodyDTO=new ImMsgBodyDTO();
+        imMsgBodyDTO.setAppId(appId);
+        imMsgBodyDTO.setUserId(userId);
+        imMsgBodyDTO.setData("true");
+        ImMsg imMsg=ImMsg.buildMsg(ImMsgCodeEnum.IM_LOGIN_MSG.getCode(), JSON.toJSONString(imMsgBodyDTO));
+        stringRedisTemplate.opsForValue().set(ImCoreServerConstants.IM_BIND_IP_KEY+appId+":"+userId,
+                ChannelHandlerContextCache.getServerIpAddress(),ImConstants.DEFAULT_HEART_BEAT_GAP*2,TimeUnit.SECONDS);
+        logger.info("[LoginMsgHandler] login success,userId is {},appId is {}",userId,appId);
+        ctx.writeAndFlush(imMsg);
     }
 }

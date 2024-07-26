@@ -29,6 +29,11 @@
 #    host: 192.168.3.26
 #lmy:
 #  im:
+#    ws:
+#      ip: 192.168.3.26
+#      port: 8055
+#    tcp:
+#      port: 8056
 #    port: 8085
 #  rmq:
 #    consumer:
