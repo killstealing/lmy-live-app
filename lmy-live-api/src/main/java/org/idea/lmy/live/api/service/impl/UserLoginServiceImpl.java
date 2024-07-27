@@ -6,6 +6,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.dubbo.common.utils.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.idea.lmy.live.api.error.ApiErrorEnum;
 import org.idea.lmy.live.api.service.IUserLoginService;
 import org.idea.lmy.live.api.vo.UserLoginVO;
 import org.lmy.live.account.interfaces.IAccountTokenRPC;
@@ -14,6 +15,7 @@ import org.lmy.live.common.interfaces.vo.WebResponseVO;
 import org.lmy.live.msg.dto.MsgCheckDTO;
 import org.lmy.live.msg.enums.MsgSendResultEnum;
 import org.lmy.live.msg.interfaces.ISmsRpc;
+import org.lmy.live.web.starter.error.ErrorAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -35,9 +37,7 @@ public class UserLoginServiceImpl implements IUserLoginService {
 
     @Override
     public WebResponseVO sendLoginCode(String phone) {
-        if(StringUtils.isEmpty(phone)){
-            return WebResponseVO.errorParam("手机号不能为空");
-        }
+        ErrorAssert.isNotBlank(phone, ApiErrorEnum.PHONE_IS_EMPTY);
         if(!Pattern.matches(PHONE_REG,phone)){
             return WebResponseVO.errorParam("手机号格式异常");
         }
