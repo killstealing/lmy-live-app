@@ -1,0 +1,36 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : master_mysql_inDocker
+ Source Server Type    : MySQL
+ Source Server Version : 80035
+ Source Host           : 192.168.3.24:8808
+ Source Schema         : lmy_live_living
+
+ Target Server Type    : MySQL
+ Target Server Version : 80035
+ File Encoding         : 65001
+
+ Date: 27/07/2024 15:58:52
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for t_gift_config
+-- ----------------------------
+DROP TABLE IF EXISTS `t_gift_config`;
+CREATE TABLE `t_gift_config`  (
+  `gift_id` int NOT NULL AUTO_INCREMENT COMMENT '礼物id',
+  `price` int NULL DEFAULT NULL COMMENT '虚拟货币价格',
+  `gift_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '礼物名称',
+  `status` tinyint NULL DEFAULT NULL COMMENT '状态(0无效1有效)',
+  `cover_img_url` varchar(500) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL COMMENT '礼物封面地址',
+  `svga_url` varchar(500) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL COMMENT 'svga资源地址',
+  `create_time` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`gift_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb3 COLLATE = utf8mb3_bin ROW_FORMAT = Dynamic;
+
+SET FOREIGN_KEY_CHECKS = 1;

@@ -15,6 +15,9 @@
     <file url="file://$PROJECT_DIR$/lmy-live-framework/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lmy-live-framework/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lmy-live-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lmy-live-gift-interface/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lmy-live-gift-interface/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lmy-live-gift-provider/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lmy-live-id-generate-interface/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lmy-live-id-generate-provider/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lmy-live-im-core-server-interface/src/main/java" charset="UTF-8" />

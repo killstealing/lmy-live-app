@@ -28,6 +28,8 @@
       <directory url="file://$PROJECT_DIR$/lmy-live-im-router-provider/src/main/resources/archetype-resources" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/lmy-live-living-provider/src/main/resources/archetype-resources" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/lmy-live-living-interface/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/lmy-live-gift-provider/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/lmy-live-gift-interface/src/main/resources/archetype-resources" includeSubdirectories="true" />
     </excludeFromCompile>
     <annotationProcessing>
       <profile name="Maven default annotation processors profile" enabled="true">
@@ -36,6 +38,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="lmy-live-user-interface" />
         <module name="lmy-live-gateway" />
+        <module name="lmy-live-gift-provider" />
         <module name="lmy-live-im-router-provider" />
         <module name="lmy-live-id-generate-provider" />
         <module name="lmy-live-account-provider1" />
@@ -43,6 +46,7 @@
         <module name="lmy-live-framework-redis-starter" />
         <module name="lmy-live-msg-provider" />
         <module name="lmy-live-msg-interface" />
+        <module name="lmy-live-gift-interface" />
         <module name="lmy-live-framework-datasource-starter1" />
         <module name="lmy-test" />
         <module name="lmy-live-id-generate-interface" />
@@ -82,6 +86,8 @@
       <module name="lmy-live-framework-redis-starter" options="-parameters" />
       <module name="lmy-live-framework-web-starter" options="-parameters" />
       <module name="lmy-live-gateway" options="-parameters" />
+      <module name="lmy-live-gift-interface" options="-parameters" />
+      <module name="lmy-live-gift-provider" options="-parameters" />
       <module name="lmy-live-id-generate-interface" options="-parameters" />
       <module name="lmy-live-id-generate-provider" options="-parameters" />
       <module name="lmy-live-im-core-server" options="-parameters" />

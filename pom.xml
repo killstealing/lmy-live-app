@@ -29,6 +29,8 @@
         <module>lmy-live-im-router-provider</module>
         <module>lmy-live-living-interface</module>
         <module>lmy-live-living-provider</module>
+        <module>lmy-live-gift-provider</module>
+        <module>lmy-live-gift-interface</module>
     </modules>
     <packaging>pom</packaging>
 
