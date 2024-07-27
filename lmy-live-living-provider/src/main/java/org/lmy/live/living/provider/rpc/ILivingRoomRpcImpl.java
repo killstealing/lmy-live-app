@@ -8,6 +8,8 @@ import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 import org.lmy.live.living.interfaces.rpc.ILivingRoomRpc;
 import org.lmy.live.living.provider.service.ILivingRoomService;
 
+import java.util.List;
+
 @DubboService
 public class ILivingRoomRpcImpl implements ILivingRoomRpc {
 
@@ -32,5 +34,10 @@ public class ILivingRoomRpcImpl implements ILivingRoomRpc {
     @Override
     public LivingRoomRespDTO queryByRoomId(Integer roomId) {
         return iLivingRoomService.queryByRoomId(roomId);
+    }
+
+    @Override
+    public List<Long> queryUserIdByRoomId(LivingRoomReqDTO livingRoomReqDTO) {
+        return iLivingRoomService.queryUserIdByRoomId(livingRoomReqDTO);
     }
 }

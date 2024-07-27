@@ -4,6 +4,8 @@ import org.lmy.live.common.interfaces.dto.PageWrapper;
 import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
 import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 
+import java.util.List;
+
 public interface ILivingRoomRpc {
 
     PageWrapper<LivingRoomRespDTO> list(LivingRoomReqDTO livingRoomReqDTO);
@@ -29,5 +31,13 @@ public interface ILivingRoomRpc {
      * @return
      */
     LivingRoomRespDTO queryByRoomId(Integer roomId);
+
+    /**
+     * 支持根据roomId查询出批量的userId（set）存储，3000个人，元素非常多，O(n)
+     *
+     * @param livingRoomReqDTO
+     * @return
+     */
+    List<Long> queryUserIdByRoomId(LivingRoomReqDTO livingRoomReqDTO);
 
 }

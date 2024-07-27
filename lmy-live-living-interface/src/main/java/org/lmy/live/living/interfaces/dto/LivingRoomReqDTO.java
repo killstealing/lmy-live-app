@@ -10,6 +10,7 @@ public class LivingRoomReqDTO implements Serializable {
     private Integer roomId;
     private String covertImg;
     private Integer type;
+    private Integer appId;
     private int page;
     private int pageSize;
 
@@ -77,6 +78,14 @@ public class LivingRoomReqDTO implements Serializable {
         this.pageSize = pageSize;
     }
 
+    public Integer getAppId() {
+        return appId;
+    }
+
+    public void setAppId(Integer appId) {
+        this.appId = appId;
+    }
+
     @Override
     public String toString() {
         return "LivingRoomReqDTO{" +
@@ -86,6 +95,7 @@ public class LivingRoomReqDTO implements Serializable {
                 ", roomId=" + roomId +
                 ", covertImg='" + covertImg + '\'' +
                 ", type=" + type +
+                ", appId=" + appId +
                 ", page=" + page +
                 ", pageSize=" + pageSize +
                 '}';

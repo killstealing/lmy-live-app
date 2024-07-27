@@ -58,11 +58,13 @@ public class WsSharkHandler extends ChannelInboundHandlerAdapter {
         String webSockerUrl="ws://"+serverIp+":"+port;
         //构造握手响应返回
         WebSocketServerHandshakerFactory wsFactory=new WebSocketServerHandshakerFactory(webSockerUrl,null,false);
-        String uri=msg.uri();
-        String token=uri.substring(uri.indexOf("token"),uri.indexOf("&")).replaceAll("token=","");
-        Long userId=Long.valueOf(uri.substring(uri.indexOf("userId")).replaceAll("userId=",""));
-        Long queryUserId=imTokenRpc.getUserIdByToken(token);
-//        Integer appId = Integer.parseInt(token.substring(token.lastIndexOf("%") + 1));
+        String uri = msg.uri();
+        String[] paramArr = uri.split("/");
+        String token = paramArr[1];
+        Long userId = Long.valueOf(paramArr[2]);
+        Long queryUserId = imTokenRpc.getUserIdByToken(token);
+        //token的尾部就是appId
+//        Integer appId = Integer.valueOf(token.substring(token.lastIndexOf("%") + 1));
         //token的尾部就是appId
         if(queryUserId==null||!queryUserId.equals(userId)){
             logger.error("[WsSharkHandler] token 校验不通过!");
@@ -79,8 +81,33 @@ public class WsSharkHandler extends ChannelInboundHandlerAdapter {
         ChannelFuture channelFuture = webSocketServerHandshaker.handshake(ctx.channel(), msg);
         //首次握手建立ws连接后，返回一定的内容给到客户端
         if (channelFuture.isSuccess()){
-            loginMsgHandler.loginSuccessHandler(ctx,userId, AppIdEnum.LMY_LIVE_BIZ.getCode());
+            Integer code= Integer.valueOf(paramArr[3]);
+            Integer roomId=null;
+            if(code==ParamCodeEnum.LIVING_ROOM_LOGIN.getCode()){
+                roomId= Integer.valueOf(paramArr[4]);
+            }
+            loginMsgHandler.loginSuccessHandler(ctx,userId, AppIdEnum.LMY_LIVE_BIZ.getCode(),roomId);
             logger.info("[WsSharkHandler] channel is connect!");
+        }
+    }
+
+    enum ParamCodeEnum {
+        LIVING_ROOM_LOGIN(1001, "直播间登录");
+
+        int code;
+        String desc;
+
+        ParamCodeEnum(int code, String desc) {
+            this.code = code;
+            this.desc = desc;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public String getDesc() {
+            return desc;
         }
     }
 }

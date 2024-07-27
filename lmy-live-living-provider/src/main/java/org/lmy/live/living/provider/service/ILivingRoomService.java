@@ -1,6 +1,8 @@
 package org.lmy.live.living.provider.service;
 
 import org.lmy.live.common.interfaces.dto.PageWrapper;
+import org.lmy.live.im.core.server.interfaces.dto.ImOfflineDTO;
+import org.lmy.live.im.core.server.interfaces.dto.ImOnlineDTO;
 import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
 import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 
@@ -38,4 +40,24 @@ public interface ILivingRoomService {
      */
     LivingRoomRespDTO queryByRoomId(Integer roomId);
 
+    /**
+     * 用户上线处理
+     *
+     * @param imOnlineDTO
+     */
+    void userOnlineHandler(ImOnlineDTO imOnlineDTO);
+    /**
+     * 用户下线处理
+     *
+     * @param imOfflineDTO
+     */
+    void userOfflineHandler(ImOfflineDTO imOfflineDTO);
+
+    /**
+     * 支持根据roomId查询出批量的userId（set）存储，3000个人，元素非常多，O(n)
+     *
+     * @param livingRoomReqDTO
+     * @return
+     */
+    List<Long> queryUserIdByRoomId(LivingRoomReqDTO livingRoomReqDTO);
 }
