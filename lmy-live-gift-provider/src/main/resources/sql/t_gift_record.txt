@@ -1,0 +1,37 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : master_mysql_inDocker
+ Source Server Type    : MySQL
+ Source Server Version : 80035
+ Source Host           : 192.168.3.24:8808
+ Source Schema         : lmy_live_living
+
+ Target Server Type    : MySQL
+ Target Server Version : 80035
+ File Encoding         : 65001
+
+ Date: 27/07/2024 16:04:30
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for t_gift_record
+-- ----------------------------
+DROP TABLE IF EXISTS `t_gift_record`;
+CREATE TABLE `t_gift_record`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` bigint NULL DEFAULT NULL COMMENT '发送人',
+  `object_id` bigint NULL DEFAULT NULL COMMENT '收礼人',
+  `gift_id` int NULL DEFAULT NULL COMMENT '礼物id',
+  `price` int NULL DEFAULT NULL COMMENT '送礼金额',
+  `price_unit` tinyint NULL DEFAULT NULL COMMENT '送礼金额的单位',
+  `source` tinyint NULL DEFAULT NULL COMMENT '礼物来源',
+  `send_time` datetime NULL DEFAULT NULL COMMENT '发送时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb3 COLLATE = utf8mb3_bin ROW_FORMAT = Dynamic;
+
+SET FOREIGN_KEY_CHECKS = 1;
