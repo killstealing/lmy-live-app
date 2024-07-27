@@ -2,6 +2,7 @@ package org.idea.lmy.live.api.controller;
 
 import com.lmy.live.user.dto.UserDTO;
 import com.lmy.live.user.interfaces.IUserRpc;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +15,7 @@ public class UserController {
 
     private static final Logger logger= LoggerFactory.getLogger(UserController.class);
 
-//    @DubboReference
+    @DubboReference
     private IUserRpc userRpc;
 
     @GetMapping(value = "/getUserInfo")
