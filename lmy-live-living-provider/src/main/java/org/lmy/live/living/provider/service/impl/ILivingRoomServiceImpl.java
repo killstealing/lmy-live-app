@@ -6,6 +6,8 @@ import org.idea.lmy.live.framework.redis.starter.key.LivingProviderCacheKeyBuild
 import org.lmy.live.common.interfaces.dto.PageWrapper;
 import org.lmy.live.common.interfaces.enums.CommonStatusEum;
 import org.lmy.live.common.interfaces.utils.ConvertBeanUtils;
+import org.lmy.live.im.core.server.interfaces.dto.ImOfflineDTO;
+import org.lmy.live.im.core.server.interfaces.dto.ImOnlineDTO;
 import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
 import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 import org.lmy.live.living.provider.dao.mapper.LivingRoomMapper;
@@ -15,11 +17,14 @@ import org.lmy.live.living.provider.dao.po.LivingRoomRecordPO;
 import org.lmy.live.living.provider.service.ILivingRoomService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -126,5 +131,30 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
             pageWrapper.setHasNext(page*pageSize<size);
         }
         return pageWrapper;
+    }
+
+    @Override
+    public void userOnlineHandler(ImOnlineDTO imOnlineDTO) {
+        String cacheKey= livingProviderCacheKeyBuilder.buildLivingRoomUserSet(imOnlineDTO.getRoomId(), imOnlineDTO.getAppId());
+        redisTemplate.opsForSet().add(cacheKey,imOnlineDTO.getUserId());
+        redisTemplate.expire(cacheKey,12,TimeUnit.HOURS);
+    }
+
+    @Override
+    public void userOfflineHandler(ImOfflineDTO imOfflineDTO) {
+        String cacheKey= livingProviderCacheKeyBuilder.buildLivingRoomUserSet(imOfflineDTO.getRoomId(), imOfflineDTO.getAppId());
+        redisTemplate.opsForSet().remove(cacheKey,imOfflineDTO.getUserId());
+    }
+
+    @Override
+    public List<Long> queryUserIdByRoomId(LivingRoomReqDTO livingRoomReqDTO) {
+        String cacheKey= livingProviderCacheKeyBuilder.buildLivingRoomUserSet(livingRoomReqDTO.getRoomId(), livingRoomReqDTO.getAppId());
+        Cursor<Object> scan = redisTemplate.opsForSet().scan(cacheKey, ScanOptions.scanOptions().match("*").count(100).build());
+        List<Long> userIdList=new ArrayList<>();
+        while (scan.hasNext()){
+            Integer userId= (Integer) scan.next();
+            userIdList.add(userId.longValue());
+        }
+        return userIdList;
     }
 }

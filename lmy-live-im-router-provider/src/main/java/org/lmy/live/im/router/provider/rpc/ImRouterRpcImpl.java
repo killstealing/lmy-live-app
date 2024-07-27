@@ -6,6 +6,8 @@ import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
 import org.lmy.live.im.router.interfaces.rpc.ImRouterRpc;
 import org.lmy.live.im.router.provider.service.ImRouterService;
 
+import java.util.List;
+
 @DubboService
 public class ImRouterRpcImpl implements ImRouterRpc {
 
@@ -15,5 +17,10 @@ public class ImRouterRpcImpl implements ImRouterRpc {
     @Override
     public boolean sendMsg(ImMsgBodyDTO msgBody) {
         return imRouterService.sendMsg(msgBody);
+    }
+
+    @Override
+    public void batchSendMsg(List<ImMsgBodyDTO> msgBodyDTOS) {
+        imRouterService.batchSendMsg(msgBodyDTOS);
     }
 }

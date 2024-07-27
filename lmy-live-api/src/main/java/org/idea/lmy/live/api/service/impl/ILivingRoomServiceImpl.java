@@ -13,6 +13,7 @@ import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 import org.lmy.live.living.interfaces.rpc.ILivingRoomRpc;
 import org.lmy.live.web.starter.LmyRequestContext;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class ILivingRoomServiceImpl implements ILivingRoomService {
@@ -51,7 +52,12 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
     @Override
     public LivingRoomInitVO anchorConfig(Long userId, Integer roomId) {
         LivingRoomRespDTO respDTO = iLivingRoomRpc.queryByRoomId(roomId);
+        UserDTO userDTO = iUserRpc.getByUserId(userId);
         LivingRoomInitVO respVO = new LivingRoomInitVO();
+        respVO.setNickName(userDTO.getNickName());
+        respVO.setUserId(userId);
+        //给定一个默认的头像
+        respVO.setAvatar(StringUtils.isEmpty(userDTO.getAvatar())?"https://s1.ax1x.com/2022/12/18/zb6q6f.png":userDTO.getAvatar());
         if (respDTO == null || respDTO.getAnchorId() == null || userId == null) {
             //这种情况是属于直播间已经不存在了
             respVO.setRoomId(-1);

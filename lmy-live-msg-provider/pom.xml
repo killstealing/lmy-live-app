@@ -100,7 +100,13 @@
             <artifactId>lmy-live-im-router-interface</artifactId>
             <version>${lmy-live-im-router-interface.version}</version>
         </dependency>
-<!--        <dependency>-->
+        <dependency>
+            <groupId>org.idea</groupId>
+            <artifactId>lmy-live-living-interface</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--        <dependency>-->
 <!--            <groupId>org.idea</groupId>-->
 <!--            <artifactId>lmy-live-im-core-server</artifactId>-->
 <!--            <version>${lmy-live-im-core-server.version}</version>-->

@@ -3,11 +3,16 @@ package org.lmy.live.im.core.server.handler.impl;
 import com.alibaba.fastjson2.JSON;
 import io.netty.channel.ChannelHandlerContext;
 import jakarta.annotation.Resource;
+import org.apache.rocketmq.client.producer.MQProducer;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.common.message.Message;
+import org.lmy.live.common.interfaces.topic.ImCoreServerProviderTopicNames;
 import org.lmy.live.im.core.server.common.ChannelHandlerContextCache;
 import org.lmy.live.im.core.server.common.ImContextUtils;
 import org.lmy.live.im.core.server.common.ImMsg;
 import org.lmy.live.im.core.server.handler.SimplyMsgHandler;
 import org.lmy.live.im.core.server.interfaces.constants.ImCoreServerConstants;
+import org.lmy.live.im.core.server.interfaces.dto.ImOfflineDTO;
 import org.lmy.live.im.interfaces.constants.ImMsgCodeEnum;
 import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
 import org.slf4j.Logger;
@@ -20,6 +25,9 @@ public class LogoutMsgHandler implements SimplyMsgHandler {
     private static final Logger logger= LoggerFactory.getLogger(LogoutMsgHandler.class);
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+
+    @Resource
+    private MQProducer mqProducer;
 
     @Override
     public void msgHandler(ChannelHandlerContext ctx, ImMsg imMsg) {
@@ -37,6 +45,10 @@ public class LogoutMsgHandler implements SimplyMsgHandler {
             logger.error("LogoutMsgHandler [msgHanlder] userId empty, appID empty, imMsg is {}", imMsg);
             throw new IllegalArgumentException("userId 为空， 不做处理");
         }
+        logoutSuccessfhandler(ctx,userId,appId);
+    }
+
+    public void logoutSuccessfhandler(ChannelHandlerContext ctx,Long userId,Integer appId){
         ImMsgBodyDTO imMsgBodyDTO=new ImMsgBodyDTO();
         imMsgBodyDTO.setUserId(userId);
         imMsgBodyDTO.setAppId(appId);
@@ -49,5 +61,23 @@ public class LogoutMsgHandler implements SimplyMsgHandler {
         stringRedisTemplate.delete(ImCoreServerConstants.IM_BIND_IP_KEY+appId+":"+userId);
         ImContextUtils.remove(ctx);
         ctx.close();
+        sendLogoutMQ(userId,appId);
+    }
+
+    private void sendLogoutMQ(Long userId,Integer appId){
+        ImOfflineDTO imOfflineDTO=new ImOfflineDTO();
+        imOfflineDTO.setUserId(userId);
+        imOfflineDTO.setAppId(appId);
+//        imOfflineDTO.setRoomId(roomId);
+        imOfflineDTO.setLoginTime(System.currentTimeMillis());
+        Message message=new Message();
+        message.setTopic(ImCoreServerProviderTopicNames.IM_ONLINE_TOPIC);
+        message.setBody(JSON.toJSONString(imOfflineDTO).getBytes());
+        try {
+            SendResult sendResult = mqProducer.send(message);
+            logger.info("[LogoutMsgHandler] sendLogoutMQ sendResult is {}",sendResult);
+        } catch (Exception e) {
+            logger.error("[LogoutMsgHandler] sendLogoutMQ exception is"+e);
+        }
     }
 }

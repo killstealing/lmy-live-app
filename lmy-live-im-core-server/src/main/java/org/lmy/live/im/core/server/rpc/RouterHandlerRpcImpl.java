@@ -8,6 +8,8 @@ import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 @DubboService
 public class RouterHandlerRpcImpl implements IRouterHandlerRpc {
     private static final Logger logger= LoggerFactory.getLogger(RouterHandlerRpcImpl.class);
@@ -19,5 +21,12 @@ public class RouterHandlerRpcImpl implements IRouterHandlerRpc {
         logger.info("this is im-core-server");
         routerHandlerService.onReceive(msgBody);
         return false;
+    }
+
+    @Override
+    public void batchSendMsg(List<ImMsgBodyDTO> msgBodyDTOS) {
+        msgBodyDTOS.forEach(msgBodyDTO->{
+            routerHandlerService.onReceive(msgBodyDTO);
+        });
     }
 }

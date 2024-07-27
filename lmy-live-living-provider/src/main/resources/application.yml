@@ -45,3 +45,13 @@
 #    port: 9097
 #server:
 #  port: 8087
+#lmy:
+#  rmq:
+#    consumer:
+#      nameSrv: 192.168.3.24:9876
+#      groupName: ${spring.application.name}
+#    producer:
+#      nameSrv: 192.168.3.24:9876
+#      groupName: ${spring.application.name}
+#      retryTimes: 3
+#      sendTimeout: 3000

@@ -9,9 +9,11 @@ import java.util.Date;
 public class MessageDTO implements Serializable {
 
     private Long userId;
-    private Long objectId;
+    private Integer roomId;
+    private String senderName;
+    private String senderAvtar;
     /**
-     *消息类型
+     * 消息类型
      */
     private Integer type;
     /**
@@ -21,6 +23,22 @@ public class MessageDTO implements Serializable {
     private Date createTime;
     private Date updateTime;
 
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
+
+    public String getSenderAvtar() {
+        return senderAvtar;
+    }
+
+    public void setSenderAvtar(String senderAvtar) {
+        this.senderAvtar = senderAvtar;
+    }
+
     public Long getUserId() {
         return userId;
     }
@@ -29,12 +47,12 @@ public class MessageDTO implements Serializable {
         this.userId = userId;
     }
 
-    public Long getObjectId() {
-        return objectId;
+    public Integer getRoomId() {
+        return roomId;
     }
 
-    public void setObjectId(Long objectId) {
-        this.objectId = objectId;
+    public void setRoomId(Integer roomId) {
+        this.roomId = roomId;
     }
 
     public Integer getType() {
@@ -73,7 +91,9 @@ public class MessageDTO implements Serializable {
     public String toString() {
         return "MessageDTO{" +
                 "userId=" + userId +
-                ", objectId=" + objectId +
+                ", roomId=" + roomId +
+                ", senderName='" + senderName + '\'' +
+                ", senderAvtar='" + senderAvtar + '\'' +
                 ", type=" + type +
                 ", content='" + content + '\'' +
                 ", createTime=" + createTime +
