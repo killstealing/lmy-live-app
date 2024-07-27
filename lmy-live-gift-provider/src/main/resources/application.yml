@@ -1,6 +1,6 @@
 #spring:
 #  application:
-#    name: lmy-live-living-provider
+#    name: lmy-live-gift-provider
 #  datasource:
 #    driver-class-name: com.mysql.cj.jdbc.Driver
 #    #    driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
