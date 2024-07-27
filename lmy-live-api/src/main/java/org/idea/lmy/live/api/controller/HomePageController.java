@@ -4,7 +4,7 @@ import jakarta.annotation.Resource;
 import org.idea.lmy.live.api.service.IHomePageService;
 import org.idea.lmy.live.api.vo.HomePageVO;
 import org.lmy.live.common.interfaces.vo.WebResponseVO;
-import org.lmy.live.web.starter.LmyRequestContext;
+import org.lmy.live.web.starter.context.LmyRequestContext;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

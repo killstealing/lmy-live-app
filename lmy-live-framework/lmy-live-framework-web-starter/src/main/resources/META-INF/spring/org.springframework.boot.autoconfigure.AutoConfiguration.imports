@@ -1,1 +1,2 @@
-org.lmy.live.web.starter.WebConfig
+org.lmy.live.web.starter.config.WebConfig
+org.lmy.live.web.starter.error.GlobalExceptionHandler

@@ -11,7 +11,7 @@ import org.lmy.live.common.interfaces.utils.ConvertBeanUtils;
 import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
 import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 import org.lmy.live.living.interfaces.rpc.ILivingRoomRpc;
-import org.lmy.live.web.starter.LmyRequestContext;
+import org.lmy.live.web.starter.context.LmyRequestContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 

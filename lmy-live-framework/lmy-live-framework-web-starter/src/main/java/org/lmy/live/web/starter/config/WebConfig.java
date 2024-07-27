@@ -1,5 +1,6 @@
-package org.lmy.live.web.starter;
+package org.lmy.live.web.starter.config;
 
+import org.lmy.live.web.starter.context.LmyUserInfoInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

@@ -6,7 +6,7 @@ import org.idea.lmy.live.api.service.IImService;
 import org.idea.lmy.live.api.vo.resp.ImConfigVO;
 import org.lmy.live.im.interfaces.constants.AppIdEnum;
 import org.lmy.live.im.interfaces.rpc.ImTokenRpc;
-import org.lmy.live.web.starter.LmyRequestContext;
+import org.lmy.live.web.starter.context.LmyRequestContext;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Service;
