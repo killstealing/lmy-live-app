@@ -107,7 +107,11 @@
             <groupId>org.idea</groupId>
             <artifactId>lmy-live-id-generate-interface</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-client-java</artifactId>
+            <version>5.0.5</version>
         </dependency>
     </dependencies>
     <build>

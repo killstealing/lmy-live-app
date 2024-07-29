@@ -99,7 +99,7 @@ public class ImClientHandler implements InitializingBean {
                     imMsgBodyDTO1.setBizCode(5555);
                     MessageDTO messageDTO=new MessageDTO();
                     messageDTO.setUserId(userId);
-                    messageDTO.setObjectId(objectId);
+//                    messageDTO.setObjectId(objectId);
                     messageDTO.setContent(content);
                     imMsgBodyDTO1.setData(JSON.toJSONString(messageDTO));
                     ImMsg bizMsg = ImMsg.buildMsg(ImMsgCodeEnum.IM_BIZ_MSG.getCode(), JSON.toJSONString(imMsgBodyDTO1));
