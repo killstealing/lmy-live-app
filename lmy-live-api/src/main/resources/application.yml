@@ -11,3 +11,13 @@
 #spring:
 #  application:
 #    name: lmy-live-api
+#  data:
+#    redis:
+#      port: 6379
+#      host: 192.168.3.24
+#      password: redis
+#      lettuce:
+#        pool:
+#          min-idle: 10
+#          max-active: 100
+#          max-idle: 10

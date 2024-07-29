@@ -1,5 +1,6 @@
 package org.idea.lmy.live.api.controller;
 
+import org.lmy.live.web.starter.config.RequestLimit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +13,7 @@ public class TestController {
 
     private static final Logger logger= LoggerFactory.getLogger(TestController.class);
 
+    @RequestLimit(limit = 1,second = 10)
     @PostMapping("/testPost1")
     public String testPost1(String id){
         logger.info("[testPost1] id is{}",id);
