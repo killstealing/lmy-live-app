@@ -31,6 +31,8 @@
         <module>lmy-live-living-provider</module>
         <module>lmy-live-gift-provider</module>
         <module>lmy-live-gift-interface</module>
+        <module>lmy-live-bank-interface</module>
+        <module>lmy-live-bank-provider</module>
     </modules>
     <packaging>pom</packaging>
 
