@@ -1,0 +1,38 @@
+#spring:
+#  application:
+#    name: lmy-live-bank-provider
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://192.168.3.24:8808/lmy_live_bank?useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
+#    username: root
+#    password: root
+#    hikari:
+#      pool-name: lmy-user-pool
+#      minimum-idle: 5
+#      maximum-pool-size: 20
+##      connection-init-sql: select 1
+#      connection-timeout: 4000
+#      max-lifetime: 60000
+#  data:
+#    redis:
+#      port: 6379
+#      host: 192.168.3.24
+#      lettuce:
+#        pool:
+#          min-idle: 10
+#          max-active: 50
+#          max-idle: 20
+#      connect-timeout: 5000
+#      password: redis
+#dubbo:
+#  application:
+#    name: ${spring.application.name}
+#    qos-enable: false
+#  registry:
+#    address: nacos://192.168.3.24:8848?namespace=lmy-live-test&&username=lmy&&password=lmy
+#  server: true
+#  protocol:
+#    name: dubbo
+#    port: 9070
+#server:
+#  port: 8070

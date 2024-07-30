@@ -1,0 +1,34 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : master_mysql_inDocker
+ Source Server Type    : MySQL
+ Source Server Version : 80035
+ Source Host           : 192.168.3.24:8808
+ Source Schema         : lmy_live_bank
+
+ Target Server Type    : MySQL
+ Target Server Version : 80035
+ File Encoding         : 65001
+
+ Date: 30/07/2024 22:24:39
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for t_lmy_currency_account
+-- ----------------------------
+DROP TABLE IF EXISTS `t_lmy_currency_account`;
+CREATE TABLE `t_lmy_currency_account`  (
+  `user_id` bigint NOT NULL COMMENT '用户id',
+  `current_balance` int NULL DEFAULT NULL COMMENT '当前余额',
+  `total_charged` int NULL DEFAULT NULL COMMENT '累计充值',
+  `status` tinyint NULL DEFAULT NULL COMMENT '账户状态（0无效1有效2冻结)',
+  `create_time` datetime NULL DEFAULT NULL,
+  `update_time` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`user_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+SET FOREIGN_KEY_CHECKS = 1;
