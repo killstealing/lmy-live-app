@@ -3,6 +3,7 @@ package org.idea.lmy.live.api.controller;
 
 import jakarta.annotation.Resource;
 import org.idea.lmy.live.api.service.IGiftService;
+import org.idea.lmy.live.api.vo.req.GiftReqVO;
 import org.lmy.live.common.interfaces.vo.WebResponseVO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,8 +32,8 @@ public class GiftController {
      * @return
      */
     @PostMapping("/send")
-    public WebResponseVO send() {
-        return WebResponseVO.success();
+    public WebResponseVO send(GiftReqVO giftReqVO) {
+        return WebResponseVO.success(giftService.sendGift(giftReqVO));
     }
 
 }

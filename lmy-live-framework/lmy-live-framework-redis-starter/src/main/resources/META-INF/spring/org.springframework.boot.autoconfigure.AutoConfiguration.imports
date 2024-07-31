@@ -7,3 +7,4 @@ org.idea.lmy.live.framework.redis.starter.key.ImProviderCacheKeyBuilder
 org.idea.lmy.live.framework.redis.starter.key.ImCoreServerProviderCacheKeyBuilder
 org.idea.lmy.live.framework.redis.starter.key.LivingProviderCacheKeyBuilder
 org.idea.lmy.live.framework.redis.starter.key.GiftProviderCacheKeyBuilder
+org.idea.lmy.live.framework.redis.starter.key.BankProviderCacheKeyBuilder

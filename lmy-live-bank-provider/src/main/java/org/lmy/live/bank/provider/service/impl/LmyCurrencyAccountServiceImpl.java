@@ -1,21 +1,42 @@
 package org.lmy.live.bank.provider.service.impl;
 
 import jakarta.annotation.Resource;
+import org.idea.lmy.live.framework.redis.starter.key.BankProviderCacheKeyBuilder;
+import org.lmy.live.bank.interfaces.constants.TradeTypeEnum;
 import org.lmy.live.bank.interfaces.dto.AccountTradeReqDTO;
 import org.lmy.live.bank.interfaces.dto.AccountTradeRespDTO;
 import org.lmy.live.bank.interfaces.dto.LmyCurrencyAccountDTO;
 import org.lmy.live.bank.provider.dao.mapper.LmyCurrencyAccountMapper;
 import org.lmy.live.bank.provider.dao.po.LmyCurrencyAccountPO;
 import org.lmy.live.bank.provider.service.ILmyCurrencyAccountService;
+import org.lmy.live.bank.provider.service.ILmyCurrencyTradeService;
 import org.lmy.live.common.interfaces.enums.CommonStatusEum;
 import org.lmy.live.common.interfaces.utils.ConvertBeanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class LmyCurrencyAccountServiceImpl implements ILmyCurrencyAccountService {
+    private static final Logger logger= LoggerFactory.getLogger(LmyCurrencyAccountServiceImpl.class);
+    private static ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(2, 4, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<>(1000));
 
     @Resource
     private LmyCurrencyAccountMapper currencyAccountMapper;
+    @Resource
+    private ILmyCurrencyTradeService iLmyCurrencyTradeService;
+
+    @Resource
+    private RedisTemplate<String,Object> redisTemplate;
+
+    @Resource
+    private BankProviderCacheKeyBuilder cacheKeyBuilder;
 
     @Override
     public boolean insertOne(Long userId) {
@@ -25,6 +46,7 @@ public class LmyCurrencyAccountServiceImpl implements ILmyCurrencyAccountService
             currencyAccountMapper.insert(accountPO);
             return true;
         } catch (Exception e) {
+            logger.error("[LmyCurrencyAccountServiceImpl] insertOne has exception:",e);
         }
         return false;
     }
@@ -36,7 +58,22 @@ public class LmyCurrencyAccountServiceImpl implements ILmyCurrencyAccountService
 
     @Override
     public void decr(Long userId, int num) {
+        String cacheKey = cacheKeyBuilder.buildGiftListCacheKey(userId);
+        redisTemplate.opsForValue().decrement(cacheKey,num);
+        threadPoolExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                //分布式架构下，cap理论，可用性和性能，强一致性，柔弱的一致性处理
+                //在异步线程池中完成数据库层的扣减和流水记录插入操作，带有事务
+                consumeDBHandler(userId,num);
+            }
+        });
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void consumeDBHandler(long userId,int num){
         currencyAccountMapper.decr(userId,num);
+        iLmyCurrencyTradeService.insertOne(userId,num*-1, TradeTypeEnum.SEND_GIFT_TRADE.getCode());
     }
 
     @Override
@@ -75,5 +112,22 @@ public class LmyCurrencyAccountServiceImpl implements ILmyCurrencyAccountService
         //扣减余额
         this.decr(userId,num);
         return AccountTradeRespDTO.buildSuccess(userId,"扣费成功");
+    }
+
+    @Override
+    public AccountTradeRespDTO consumerForSendGift(AccountTradeReqDTO accountTradeReqDTO) {
+        long userId = accountTradeReqDTO.getUserId();
+        int num = accountTradeReqDTO.getNum();
+        Integer balance = this.getBalance(userId);
+        if(balance==null||balance<num){
+            return AccountTradeRespDTO.buildFail(userId,"账户余额不足",1);
+        }
+        this.decr(userId,num);
+        return AccountTradeRespDTO.buildSuccess(userId,"扣费成功");
+    }
+
+    @Override
+    public Integer getBalance(Long userId) {
+        return currencyAccountMapper.getBalance(userId);
     }
 }

@@ -33,4 +33,14 @@ public class LmyCurrencyAccountRpcImpl implements ILmyCurrencyAccountRpc {
     public AccountTradeRespDTO consume(AccountTradeReqDTO accountTradeReqDTO) {
         return lmyCurrencyAccountService.consume(accountTradeReqDTO);
     }
+
+    @Override
+    public AccountTradeRespDTO consumeForSendGift(AccountTradeReqDTO accountTradeReqDTO) {
+        return lmyCurrencyAccountService.consumerForSendGift(accountTradeReqDTO);
+    }
+
+    @Override
+    public Integer getBalance(long userId) {
+        return lmyCurrencyAccountService.getBalance(userId);
+    }
 }

@@ -35,4 +35,19 @@ public interface ILmyCurrencyAccountRpc {
      * @param accountTradeReqDTO
      */
     AccountTradeRespDTO consume(AccountTradeReqDTO accountTradeReqDTO);
+
+    /**
+     * 专门给送礼业务调用的扣减库存逻辑
+     *
+     * @param accountTradeReqDTO
+     */
+    AccountTradeRespDTO consumeForSendGift(AccountTradeReqDTO accountTradeReqDTO);
+    /**
+     * 查询余额
+     *
+     * @param userId
+     * @return
+     */
+    Integer getBalance(long userId);
+
 }
