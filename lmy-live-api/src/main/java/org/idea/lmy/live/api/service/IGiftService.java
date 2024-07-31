@@ -1,5 +1,6 @@
 package org.idea.lmy.live.api.service;
 
+import org.idea.lmy.live.api.vo.req.GiftReqVO;
 import org.idea.lmy.live.api.vo.resp.GiftConfigVO;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface IGiftService {
      * @return
      */
     List<GiftConfigVO> listGift();
+
+    boolean sendGift(GiftReqVO giftReqVO);
 }
