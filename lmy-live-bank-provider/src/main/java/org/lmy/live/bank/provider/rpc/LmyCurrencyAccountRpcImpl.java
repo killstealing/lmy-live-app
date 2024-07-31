@@ -2,6 +2,8 @@ package org.lmy.live.bank.provider.rpc;
 
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.lmy.live.bank.interfaces.dto.AccountTradeReqDTO;
+import org.lmy.live.bank.interfaces.dto.AccountTradeRespDTO;
 import org.lmy.live.bank.interfaces.dto.LmyCurrencyAccountDTO;
 import org.lmy.live.bank.interfaces.rpc.ILmyCurrencyAccountRpc;
 import org.lmy.live.bank.provider.service.ILmyCurrencyAccountService;
@@ -25,5 +27,10 @@ public class LmyCurrencyAccountRpcImpl implements ILmyCurrencyAccountRpc {
     @Override
     public LmyCurrencyAccountDTO getByUserId(long userId) {
         return lmyCurrencyAccountService.getByUserId(userId);
+    }
+
+    @Override
+    public AccountTradeRespDTO consume(AccountTradeReqDTO accountTradeReqDTO) {
+        return lmyCurrencyAccountService.consume(accountTradeReqDTO);
     }
 }
