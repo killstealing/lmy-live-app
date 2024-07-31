@@ -11,4 +11,7 @@ public interface ILmyCurrencyAccountService {
     LmyCurrencyAccountDTO getByUserId(Long userId);
 
     AccountTradeRespDTO consume(AccountTradeReqDTO accountTradeReqDTO);
+    AccountTradeRespDTO consumerForSendGift(AccountTradeReqDTO accountTradeReqDTO);
+    Integer getBalance(Long userId);
+
 }
