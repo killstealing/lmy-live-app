@@ -8,11 +8,14 @@ import org.idea.lmy.live.api.vo.req.PayProductReqVO;
 import org.idea.lmy.live.api.vo.resp.PayProductItemVO;
 import org.idea.lmy.live.api.vo.resp.PayProductRespVO;
 import org.idea.lmy.live.api.vo.resp.PayProductVO;
+import org.lmy.live.bank.interfaces.constants.OrderStatusEnum;
 import org.lmy.live.bank.interfaces.dto.LmyCurrencyAccountDTO;
+import org.lmy.live.bank.interfaces.dto.PayOrderDTO;
 import org.lmy.live.bank.interfaces.dto.PayProductDTO;
 import org.lmy.live.bank.interfaces.rpc.ILmyCurrencyAccountRpc;
+import org.lmy.live.bank.interfaces.rpc.IPayOrderRpc;
 import org.lmy.live.bank.interfaces.rpc.IPayProductRpc;
-import org.lmy.live.common.interfaces.enums.PaySourceEnum;
+import org.lmy.live.bank.interfaces.constants.PaySourceEnum;
 import org.lmy.live.web.starter.context.LmyRequestContext;
 import org.lmy.live.web.starter.error.BizBaseErrorEnum;
 import org.lmy.live.web.starter.error.ErrorAssert;
@@ -29,6 +32,9 @@ public class BankServiceImpl implements IBankService {
 
     @DubboReference
     private ILmyCurrencyAccountRpc currencyAccountRpc;
+
+    @DubboReference
+    private IPayOrderRpc payOrderRpc;
 
     @Override
     public PayProductVO getProductList(Integer type) {
@@ -58,9 +64,19 @@ public class BankServiceImpl implements IBankService {
         ErrorAssert.isNotNull(productById,BizBaseErrorEnum.PARAM_ERROR);
 
         //插入一条订单，待支付状态
-
+        PayOrderDTO payOrderDTO=new PayOrderDTO();
+        payOrderDTO.setUserId(LmyRequestContext.getUserId());
+        payOrderDTO.setProductId(payProductReqVO.getProductId());
+        payOrderDTO.setSource(payProductReqVO.getPaySource());
+        payOrderDTO.setPayChannel(payProductReqVO.getPayChanne());
+        String orderId = payOrderRpc.insertOne(payOrderDTO);
         //更新订单为支付中状态
-
-        return null;
+        PayOrderDTO updateDTO=new PayOrderDTO();
+        updateDTO.setStatus(OrderStatusEnum.PAYING.getCode());
+        updateDTO.setOrderId(orderId);
+        payOrderRpc.updateOrder(updateDTO);
+        PayProductRespVO payProductRespVO=new PayProductRespVO();
+        payProductRespVO.setOrderId(orderId);
+        return payProductRespVO;
     }
 }

@@ -1,0 +1,38 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : master_mysql_inDocker
+ Source Server Type    : MySQL
+ Source Server Version : 80035
+ Source Host           : 192.168.3.24:8808
+ Source Schema         : lmy_live_bank
+
+ Target Server Type    : MySQL
+ Target Server Version : 80035
+ File Encoding         : 65001
+
+ Date: 01/08/2024 20:40:41
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for t_pay_order
+-- ----------------------------
+DROP TABLE IF EXISTS `t_pay_order`;
+CREATE TABLE `t_pay_order`  (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `order_id` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '订单id',
+  `product_id` int NOT NULL COMMENT '产品id',
+  `status` tinyint NULL DEFAULT 0 COMMENT '状态（0待支付，1支付中，2已支付，3撤销，4无效）',
+  `user_id` bigint NOT NULL COMMENT '用户id',
+  `pay_channel` tinyint NULL DEFAULT NULL COMMENT '支付渠道（0支付宝 1微信 2银联 3收银台）',
+  `source` tinyint NULL DEFAULT NULL COMMENT '来源',
+  `pay_time` datetime NULL DEFAULT NULL COMMENT '支付成功时间（以回调处理为准）',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+SET FOREIGN_KEY_CHECKS = 1;

@@ -1,4 +1,4 @@
-package org.lmy.live.common.interfaces.enums;
+package org.lmy.live.bank.interfaces.constants;
 
 public enum PaySourceEnum {
 

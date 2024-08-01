@@ -8,9 +8,10 @@ public class PayProductReqVO {
 
     /**
      * 支付渠道 (直播间，个人中心，聊天页面，第三方宣传页面，广告弹窗引导)
-     * @see PaySourceEnum
+     * @see org.lmy.live.bank.interfaces.constants.PaySourceEnum
      */
     private Integer paySource;
+    private Integer payChanne;
 
     public Integer getProductId() {
         return productId;
@@ -33,6 +34,15 @@ public class PayProductReqVO {
         return "PayProductReqVO{" +
                 "productId=" + productId +
                 ", paySource=" + paySource +
+                ", payChanne=" + payChanne +
                 '}';
+    }
+
+    public Integer getPayChanne() {
+        return payChanne;
+    }
+
+    public void setPayChanne(Integer payChanne) {
+        this.payChanne = payChanne;
     }
 }
