@@ -33,6 +33,7 @@
         <module>lmy-live-gift-interface</module>
         <module>lmy-live-bank-interface</module>
         <module>lmy-live-bank-provider</module>
+        <module>lmy-live-bank-api</module>
     </modules>
     <packaging>pom</packaging>
 
