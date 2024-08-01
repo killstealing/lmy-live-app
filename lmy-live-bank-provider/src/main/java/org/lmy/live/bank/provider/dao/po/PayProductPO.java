@@ -20,6 +20,7 @@ public class PayProductPO {
 
     @TableId(type = IdType.AUTO)
     private Long id;
+    private String name;
     private Integer price;
     private String extra;
     private Integer type;
@@ -81,5 +82,13 @@ public class PayProductPO {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

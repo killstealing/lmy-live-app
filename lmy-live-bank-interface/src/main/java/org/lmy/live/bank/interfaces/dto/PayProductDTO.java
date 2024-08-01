@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class PayProductDTO {
     private Long id;
+    private String name;
     private Integer price;
     private String extra;
     private Integer type;
@@ -67,10 +68,19 @@ public class PayProductDTO {
         this.updateTime = updateTime;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return "PayProductDTO{" +
                 "id=" + id +
+                ", name='" + name + '\'' +
                 ", price=" + price +
                 ", extra='" + extra + '\'' +
                 ", type=" + type +
