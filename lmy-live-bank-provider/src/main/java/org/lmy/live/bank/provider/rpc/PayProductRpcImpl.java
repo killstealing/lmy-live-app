@@ -21,6 +21,6 @@ public class PayProductRpcImpl implements IPayProductRpc {
 
     @Override
     public PayProductDTO getProductById(Integer id) {
-        return null;
+        return payProductService.getProductById(id);
     }
 }

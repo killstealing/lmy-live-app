@@ -33,8 +33,6 @@ public class BankController {
     // 可以根据业务标识去回调不同的业务服务（自定义参数组成中，塞入一个业务code，根据业务code去回调不同的业务服务）
     @PostMapping("/payProduct")
     public WebResponseVO payProduct(PayProductReqVO payProductReqVO){
-        ErrorAssert.isNotNull(payProductReqVO, BizBaseErrorEnum.PARAM_ERROR);
-        ErrorAssert.isTure(payProductReqVO.getProductId()!=null&&payProductReqVO.getProductId()!=null,BizBaseErrorEnum.PARAM_ERROR);
         return WebResponseVO.success(bankService.payProduct(payProductReqVO));
     }
 }

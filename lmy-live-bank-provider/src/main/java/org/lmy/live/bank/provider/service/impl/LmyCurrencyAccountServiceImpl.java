@@ -53,27 +53,46 @@ public class LmyCurrencyAccountServiceImpl implements ILmyCurrencyAccountService
 
     @Override
     public void incr(Long userId, int num) {
-        currencyAccountMapper.incr(userId,num);
-    }
-
-    @Override
-    public void decr(Long userId, int num) {
         String cacheKey = cacheKeyBuilder.buildGiftListCacheKey(userId);
-        redisTemplate.opsForValue().decrement(cacheKey,num);
+        if(redisTemplate.hasKey(cacheKey)){
+            redisTemplate.opsForValue().decrement(cacheKey,num);
+        }
         threadPoolExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 //分布式架构下，cap理论，可用性和性能，强一致性，柔弱的一致性处理
                 //在异步线程池中完成数据库层的扣减和流水记录插入操作，带有事务
-                consumeDBHandler(userId,num);
+                consumeIncrDBHandler(userId,num);
+            }
+        });
+    }
+
+    @Override
+    public void decr(Long userId, int num) {
+        String cacheKey = cacheKeyBuilder.buildGiftListCacheKey(userId);
+        if(redisTemplate.hasKey(cacheKey)){
+            redisTemplate.opsForValue().decrement(cacheKey,num);
+        }
+        threadPoolExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                //分布式架构下，cap理论，可用性和性能，强一致性，柔弱的一致性处理
+                //在异步线程池中完成数据库层的扣减和流水记录插入操作，带有事务
+                consumeDecrDBHandler(userId,num);
             }
         });
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void consumeDBHandler(long userId,int num){
+    public void consumeDecrDBHandler(long userId, int num){
         currencyAccountMapper.decr(userId,num);
         iLmyCurrencyTradeService.insertOne(userId,num*-1, TradeTypeEnum.SEND_GIFT_TRADE.getCode());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void consumeIncrDBHandler(long userId, int num){
+        currencyAccountMapper.incr(userId,num);
+        iLmyCurrencyTradeService.insertOne(userId,num, TradeTypeEnum.SEND_GIFT_TRADE.getCode());
     }
 
     @Override
