@@ -29,3 +29,8 @@ Gateway,ApiWeb
 需要找到手机号对应的user， 找到对应的表， 手动把图片地址加上
 到对应的user_tag表， 加上吧tag_info02 改成2
 ![img_1.png](img_1.png)
+
+11-09节
+启动顺序
+ImProvider,ImCoreServer,ImRouterProvider,LivingProvider,MsgProvider,IdGenerate,UserProvider,AccountProvider,BankProvider,GiftProvider,
+Gateway,ApiWeb

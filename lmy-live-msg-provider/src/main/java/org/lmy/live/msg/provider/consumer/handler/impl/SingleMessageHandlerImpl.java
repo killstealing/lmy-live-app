@@ -7,7 +7,7 @@ import org.lmy.live.im.router.interfaces.rpc.ImRouterRpc;
 import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
 import org.lmy.live.living.interfaces.rpc.ILivingRoomRpc;
 import org.lmy.live.msg.dto.MessageDTO;
-import org.lmy.live.msg.enums.ImMsgBizCodeEnum;
+import org.lmy.live.im.router.interfaces.constants.ImMsgBizCodeEnum;
 import org.lmy.live.msg.provider.consumer.handler.MessageHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
