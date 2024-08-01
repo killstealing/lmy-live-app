@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface IPayProductService {
     List<PayProductDTO> getProductList(Integer type);
+
+    PayProductDTO getProductById(Integer id);
 }
