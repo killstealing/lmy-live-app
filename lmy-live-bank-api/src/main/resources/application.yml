@@ -6,7 +6,7 @@
 #    address: nacos://192.168.3.24:8848?namespace=lmy-live-test&&username=lmy&&password=lmy
 #server:
 #  servlet:
-#    context-path: /live/bank/api
+#    context-path: /live/api
 #  port: 8071
 #spring:
 #  application:

@@ -26,30 +26,32 @@ public class RequestLimitInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        HandlerMethod handlerMethod= (HandlerMethod) handler;
-        boolean hasLimit=handlerMethod.getMethod().isAnnotationPresent(RequestLimit.class);
-        if(hasLimit){
-            //是否进行拦截
-            RequestLimit requestLimit=handlerMethod.getMethodAnnotation(RequestLimit.class);
-            Long userId = LmyRequestContext.getUserId();
-            userId=12132123L;
-            if(userId==null){
-                return true;
-            }
-            int limit = requestLimit.limit();
-            int second = requestLimit.second();
-            String requestURI = request.getRequestURI();
-            String cacheKey=applicationName+":"+requestURI+":"+userId;
-            Integer requestTime = (Integer) Optional.ofNullable(redisTemplate.opsForValue().get(cacheKey)).orElse(0);
-            if(requestTime==0){
-                redisTemplate.opsForValue().set(cacheKey,1,second, TimeUnit.SECONDS);
-                return true;
-            }else if(requestTime<limit){
-                redisTemplate.opsForValue().increment(cacheKey,1);
-                return true;
-            }else{
-                logger.info("[RequestLimitInterceptor] userId is {}, req two muuch,",userId);
-                return false;
+        if(handler instanceof HandlerMethod){
+            HandlerMethod handlerMethod= (HandlerMethod) handler;
+            boolean hasLimit=handlerMethod.getMethod().isAnnotationPresent(RequestLimit.class);
+            if(hasLimit){
+                //是否进行拦截
+                RequestLimit requestLimit=handlerMethod.getMethodAnnotation(RequestLimit.class);
+                Long userId = LmyRequestContext.getUserId();
+                userId=12132123L;
+                if(userId==null){
+                    return true;
+                }
+                int limit = requestLimit.limit();
+                int second = requestLimit.second();
+                String requestURI = request.getRequestURI();
+                String cacheKey=applicationName+":"+requestURI+":"+userId;
+                Integer requestTime = (Integer) Optional.ofNullable(redisTemplate.opsForValue().get(cacheKey)).orElse(0);
+                if(requestTime==0){
+                    redisTemplate.opsForValue().set(cacheKey,1,second, TimeUnit.SECONDS);
+                    return true;
+                }else if(requestTime<limit){
+                    redisTemplate.opsForValue().increment(cacheKey,1);
+                    return true;
+                }else{
+                    logger.info("[RequestLimitInterceptor] userId is {}, req two muuch,",userId);
+                    return false;
+                }
             }
         }
         return true;

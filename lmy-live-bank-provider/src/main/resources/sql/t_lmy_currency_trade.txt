@@ -11,7 +11,7 @@
  Target Server Version : 80035
  File Encoding         : 65001
 
- Date: 31/07/2024 20:44:55
+ Date: 01/08/2024 23:23:10
 */
 
 SET NAMES utf8mb4;
@@ -27,9 +27,9 @@ CREATE TABLE `t_lmy_currency_trade`  (
   `num` int NULL DEFAULT NULL COMMENT '流水金额（单位：分）',
   `type` tinyint NULL DEFAULT NULL COMMENT '流水类型',
   `status` tinyint NULL DEFAULT NULL COMMENT '状态0无效1有效',
-  `create_time` datetime NULL DEFAULT NULL,
-  `udpate_time` datetime NULL DEFAULT NULL,
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `udpate_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

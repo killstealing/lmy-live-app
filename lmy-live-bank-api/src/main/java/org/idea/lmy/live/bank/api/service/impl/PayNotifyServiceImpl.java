@@ -25,7 +25,7 @@ public class PayNotifyServiceImpl implements IPayNotifyService {
         payOrderDTO.setOrderId(payNotifyVO.getOrderId());
         payOrderDTO.setBizCode(payNotifyVO.getBizCode());
         payOrderDTO.setStatus(OrderStatusEnum.PAID.getCode());
-        boolean updateSuccess = payOrderRpc.updateOrder(payOrderDTO);
+        boolean updateSuccess = payOrderRpc.payNotify(payOrderDTO);
         return updateSuccess?"success":"fail";
     }
 }

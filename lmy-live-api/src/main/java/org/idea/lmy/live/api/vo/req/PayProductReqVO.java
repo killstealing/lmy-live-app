@@ -11,7 +11,7 @@ public class PayProductReqVO {
      * @see org.lmy.live.bank.interfaces.constants.PaySourceEnum
      */
     private Integer paySource;
-    private Integer payChanne;
+    private Integer payChannel;
 
     public Integer getProductId() {
         return productId;
@@ -34,15 +34,15 @@ public class PayProductReqVO {
         return "PayProductReqVO{" +
                 "productId=" + productId +
                 ", paySource=" + paySource +
-                ", payChanne=" + payChanne +
+                ", payChanne=" + payChannel +
                 '}';
     }
 
-    public Integer getPayChanne() {
-        return payChanne;
+    public Integer getPayChannel() {
+        return payChannel;
     }
 
-    public void setPayChanne(Integer payChanne) {
-        this.payChanne = payChanne;
+    public void setPayChannel(Integer payChannel) {
+        this.payChannel = payChannel;
     }
 }

@@ -1,0 +1,34 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : master_mysql_inDocker
+ Source Server Type    : MySQL
+ Source Server Version : 80035
+ Source Host           : 192.168.3.24:8808
+ Source Schema         : lmy_live_bank
+
+ Target Server Type    : MySQL
+ Target Server Version : 80035
+ File Encoding         : 65001
+
+ Date: 01/08/2024 21:55:40
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for t_pay_topic
+-- ----------------------------
+DROP TABLE IF EXISTS `t_pay_topic`;
+CREATE TABLE `t_pay_topic`  (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `topic` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'mq主题',
+  `status` tinyint NULL DEFAULT 1 COMMENT '状态(0无效1有效)',
+  `code` int NULL DEFAULT NULL COMMENT '业务code',
+  `remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '描述',
+  `create_time` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+SET FOREIGN_KEY_CHECKS = 1;
