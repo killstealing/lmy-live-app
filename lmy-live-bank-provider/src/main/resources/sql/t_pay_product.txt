@@ -1,0 +1,45 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : master_mysql_inDocker
+ Source Server Type    : MySQL
+ Source Server Version : 80035
+ Source Host           : 192.168.3.24:8808
+ Source Schema         : lmy_live_bank
+
+ Target Server Type    : MySQL
+ Target Server Version : 80035
+ File Encoding         : 65001
+
+ Date: 01/08/2024 17:06:24
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for t_pay_product
+-- ----------------------------
+DROP TABLE IF EXISTS `t_pay_product`;
+CREATE TABLE `t_pay_product`  (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `name` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '产品名称',
+  `price` int NULL DEFAULT NULL COMMENT '产品价格(单位分)',
+  `extra` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '扩展字段',
+  `type` tinyint NULL DEFAULT NULL COMMENT '类型(0直播间礼物)',
+  `valid_status` tinyint NULL DEFAULT NULL COMMENT '状态（0无效1有效）',
+  `create_time` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of t_pay_product
+-- ----------------------------
+INSERT INTO `t_pay_product` VALUES (1, '30元旗鱼币', 3000, '{\"coin\":300,\"url\":\"www.ttt.com\"}', 0, 1, '2024-08-01 16:45:10', '2024-08-01 16:45:14');
+INSERT INTO `t_pay_product` VALUES (2, '40元旗鱼币', 4000, '{\"coin\":400,\"url\":\"www.ttt.com\"}', 0, 1, '2024-08-01 16:45:10', '2024-08-01 16:45:14');
+INSERT INTO `t_pay_product` VALUES (3, '50元旗鱼币', 5000, '{\"coin\":500,\"url\":\"www.ttt.com\"}', 0, 1, '2024-08-01 16:45:10', '2024-08-01 16:45:14');
+INSERT INTO `t_pay_product` VALUES (4, '60元旗鱼币', 6000, '{\"coin\":600,\"url\":\"www.ttt.com\"}', 0, 1, '2024-08-01 16:45:10', '2024-08-01 16:45:14');
+INSERT INTO `t_pay_product` VALUES (5, '90元旗鱼币', 9000, '{\"coin\":900,\"url\":\"www.ttt.com\"}', 0, 1, '2024-08-01 16:45:10', '2024-08-01 16:45:14');
+
+SET FOREIGN_KEY_CHECKS = 1;
