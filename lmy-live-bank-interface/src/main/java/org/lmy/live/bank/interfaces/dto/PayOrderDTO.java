@@ -6,6 +6,7 @@ public class PayOrderDTO {
     private Long id;
     private String orderId;
     private Integer productId;
+    private Integer bizCode;
     private Long userId;
     private Integer source;
     private Integer payChannel;
@@ -76,12 +77,21 @@ public class PayOrderDTO {
         this.payTime = payTime;
     }
 
+    public Integer getBizCode() {
+        return bizCode;
+    }
+
+    public void setBizCode(Integer bizCode) {
+        this.bizCode = bizCode;
+    }
+
     @Override
     public String toString() {
         return "PayOrderDTO{" +
                 "id=" + id +
                 ", orderId='" + orderId + '\'' +
                 ", productId=" + productId +
+                ", bizCode=" + bizCode +
                 ", userId=" + userId +
                 ", source=" + source +
                 ", payChannel=" + payChannel +

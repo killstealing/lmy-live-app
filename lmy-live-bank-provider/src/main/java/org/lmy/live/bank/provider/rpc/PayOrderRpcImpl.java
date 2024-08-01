@@ -21,4 +21,12 @@ public class PayOrderRpcImpl implements IPayOrderRpc {
     public boolean updateOrder(PayOrderDTO payOrderDTO) {
         return payOrderService.updateOrder(payOrderDTO);
     }
+
+    @Override
+    public boolean payNotify(PayOrderDTO payOrderDTO) {
+
+
+
+        return false;
+    }
 }
