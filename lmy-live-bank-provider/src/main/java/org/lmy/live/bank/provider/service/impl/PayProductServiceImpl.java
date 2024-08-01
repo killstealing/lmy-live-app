@@ -57,4 +57,9 @@ public class PayProductServiceImpl implements IPayProductService {
         }
         return productDbResult;
     }
+
+    @Override
+    public PayProductDTO getProductById(Integer id) {
+        return ConvertBeanUtils.convert(payProductMapper.selectById(id),PayProductDTO.class);
+    }
 }
