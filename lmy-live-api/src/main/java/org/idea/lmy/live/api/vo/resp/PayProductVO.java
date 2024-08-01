@@ -1,40 +1,24 @@
 package org.idea.lmy.live.api.vo.resp;
 
+import java.util.List;
+
 public class PayProductVO {
-    private Long id;
-    private String name;
-    private Integer coinNum;
+    private Integer currentBalance;
+    private List<PayProductItemVO> payProductItemVOList;
 
-    public Long getId() {
-        return id;
+    public Integer getCurrentBalance() {
+        return currentBalance;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCurrentBalance(Integer currentBalance) {
+        this.currentBalance = currentBalance;
     }
 
-    public String getName() {
-        return name;
+    public List<PayProductItemVO> getPayProductItemVOList() {
+        return payProductItemVOList;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getCoinNum() {
-        return coinNum;
-    }
-
-    public void setCoinNum(Integer coinNum) {
-        this.coinNum = coinNum;
-    }
-
-    @Override
-    public String toString() {
-        return "PayProductVO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", coinNum=" + coinNum +
-                '}';
+    public void setPayProductItemVOList(List<PayProductItemVO> payProductItemVOList) {
+        this.payProductItemVOList = payProductItemVOList;
     }
 }
