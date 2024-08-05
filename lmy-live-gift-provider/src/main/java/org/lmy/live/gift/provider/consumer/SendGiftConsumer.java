@@ -43,6 +43,10 @@ import java.util.stream.Collectors;
 @Configuration
 public class SendGiftConsumer implements InitializingBean {
 
+    private static final Long MAX_PK_NUM=1000l;
+    private static final Long MIN_PK_NUM=0l;
+
+
     private static final Logger LOGGER = LoggerFactory.getLogger(SendGiftConsumer.class);
 
     @Resource
@@ -95,6 +99,30 @@ public class SendGiftConsumer implements InitializingBean {
                         //pk类型的送礼 要通知什么给直播间的用户
                         //url 礼物特效全直播间可见
                         //todo 进度条全直播间可见
+                        // 1000,进度条长度一共是1000，每个礼物对于进度条的影响就是一个数值（500（A）：500（B），550：450）
+                        // 直播pk进度是不是以roomId为维度，string，送礼（A）incr，送礼给（B）就是decr。
+                        long pkUserId=0l;
+                        long objUserId=1l;
+                        Long pkNum=0l;
+                        String pkNumCacheKey = cacheKeyBuilder.buildPKNumCacheKey(sendGiftMq.getRoomId());
+                        String pkNumSeqCacheKey = cacheKeyBuilder.buildPKNumSeqCacheKey(sendGiftMq.getRoomId());
+                        Long pkNumSeqVal = redisTemplate.opsForValue().increment(pkNumSeqCacheKey);
+                        if(sendGiftMq.getReceiverId().equals(pkUserId)){
+                            // increase ,   500/500,   一个礼物50， 550/450
+                            pkNum = redisTemplate.opsForValue().increment(pkNumCacheKey, sendGiftMq.getPrice());
+                            if(pkNum>=MAX_PK_NUM){
+                                jsonObject.put("winnerId", pkUserId);
+                                pkNum=MAX_PK_NUM;
+                            }
+                        }else if(sendGiftMq.getUserId().equals(objUserId)){
+                            pkNum= redisTemplate.opsForValue().decrement(pkNumCacheKey, sendGiftMq.getPrice());
+                            if(pkNum<=MIN_PK_NUM){
+                                jsonObject.put("winnerId", objUserId);
+                                pkNum=MIN_PK_NUM;
+                            }
+                        }
+                        jsonObject.put("sendGiftSeqNum",pkNumSeqVal);
+                        jsonObject.put("pkNum",pkNum);
                         LivingRoomReqDTO livingRoomReqDTO=new LivingRoomReqDTO();
                         livingRoomReqDTO.setRoomId(sendGiftMq.getRoomId());
                         List<Long> userIdList = livingRoomRpc.queryUserIdByRoomId(livingRoomReqDTO);
