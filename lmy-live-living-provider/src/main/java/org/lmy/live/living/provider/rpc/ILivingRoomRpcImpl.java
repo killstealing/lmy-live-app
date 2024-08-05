@@ -40,4 +40,20 @@ public class ILivingRoomRpcImpl implements ILivingRoomRpc {
     public List<Long> queryUserIdByRoomId(LivingRoomReqDTO livingRoomReqDTO) {
         return iLivingRoomService.queryUserIdByRoomId(livingRoomReqDTO);
     }
+
+    @Override
+    public boolean onlinePk(LivingRoomReqDTO livingRoomReqDTO) {
+        return iLivingRoomService.onlinePk(livingRoomReqDTO);
+    }
+
+    @Override
+    public Long queryOnlinePkUserId(Integer roomId) {
+        return iLivingRoomService.queryOnlinePkUserId(roomId);
+    }
+
+    @Override
+    public boolean offlinePk(LivingRoomReqDTO livingRoomReqDTO) {
+        return iLivingRoomService.offlinePk(livingRoomReqDTO);
+    }
+
 }

@@ -4,6 +4,7 @@ import jakarta.annotation.Resource;
 import org.idea.lmy.live.api.service.ILivingRoomService;
 import org.idea.lmy.live.api.vo.LivingRoomInitVO;
 import org.idea.lmy.live.api.vo.req.LivingRoomReqVO;
+import org.idea.lmy.live.api.vo.req.OnlinePkReqVO;
 import org.lmy.live.common.interfaces.vo.WebResponseVO;
 import org.lmy.live.web.starter.context.LmyRequestContext;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,5 +63,10 @@ public class LivingRoomController {
     public WebResponseVO anchorConfig(Integer roomId) {
         long userId = LmyRequestContext.getUserId();
         return WebResponseVO.success(livingRoomService.anchorConfig(userId,roomId));
+    }
+
+    @PostMapping("/onlinePk")
+    public WebResponseVO onlinePK(OnlinePkReqVO onlinePkReqVO){
+        return WebResponseVO.success(livingRoomService.onlinePk(onlinePkReqVO));
     }
 }

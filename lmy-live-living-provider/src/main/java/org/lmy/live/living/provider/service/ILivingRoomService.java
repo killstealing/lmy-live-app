@@ -60,4 +60,27 @@ public interface ILivingRoomService {
      * @return
      */
     List<Long> queryUserIdByRoomId(LivingRoomReqDTO livingRoomReqDTO);
+
+    /**
+     * 用户在pk直播间中，连上线请求
+     *
+     * @param livingRoomReqDTO
+     * @return
+     */
+    boolean onlinePk(LivingRoomReqDTO livingRoomReqDTO);
+    /**
+     * 根据roomId查询当前pk人是谁
+     *
+     * @param roomId
+     * @return
+     */
+    Long queryOnlinePkUserId(Integer roomId);
+
+    /**
+     * 用户在pk直播间中，下线请求
+     *
+     * @param livingRoomReqDTO
+     * @return
+     */
+    boolean offlinePk(LivingRoomReqDTO livingRoomReqDTO);
 }
