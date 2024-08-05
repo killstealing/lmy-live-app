@@ -16,17 +16,22 @@ import org.lmy.live.bank.interfaces.rpc.ILmyCurrencyAccountRpc;
 import org.lmy.live.common.interfaces.dto.SendGiftMq;
 import org.lmy.live.common.interfaces.topic.GiftProviderTopicNames;
 import org.lmy.live.framework.mq.starter.properties.RocketMQConsumerProperties;
+import org.lmy.live.gift.interfaces.constants.SendGiftTypeEnum;
 import org.lmy.live.im.interfaces.constants.AppIdEnum;
 import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
 import org.lmy.live.im.router.interfaces.constants.ImMsgBizCodeEnum;
 import org.lmy.live.im.router.interfaces.rpc.ImRouterRpc;
+import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
+import org.lmy.live.living.interfaces.rpc.ILivingRoomRpc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * 发送礼物消费者
@@ -48,6 +53,8 @@ public class SendGiftConsumer implements InitializingBean {
     private GiftProviderCacheKeyBuilder cacheKeyBuilder;
     @DubboReference
     private ILmyCurrencyAccountRpc accountRpc;
+    @DubboReference
+    private ILivingRoomRpc livingRoomRpc;
     @DubboReference
     private ImRouterRpc imRouterRpc;
 
@@ -75,29 +82,55 @@ public class SendGiftConsumer implements InitializingBean {
                 AccountTradeReqDTO tradeReqDTO = new AccountTradeReqDTO();
                 tradeReqDTO.setUserId(sendGiftMq.getUserId());
                 tradeReqDTO.setNum(sendGiftMq.getPrice());
+                Integer type = sendGiftMq.getType();
                 AccountTradeRespDTO accountTradeRespDTO = accountRpc.consumeForSendGift(tradeReqDTO);
-                ImMsgBodyDTO imMsgBody=new ImMsgBodyDTO();
                 JSONObject jsonObject=new JSONObject();
-                imMsgBody.setAppId(AppIdEnum.LMY_LIVE_BIZ.getCode());
                 //如果余额扣减成功
                 if (accountTradeRespDTO.isSuccess()) {
-                    //todo 出发礼物特效推送功能
-                    imMsgBody.setBizCode(ImMsgBizCodeEnum.LIVING_ROOM_SEND_GIFT_SUCCESS.getCode());
-                    imMsgBody.setUserId(sendGiftMq.getReceiverId());
-                    jsonObject.put("url",sendGiftMq.getUrl());
+                    if (type== SendGiftTypeEnum.DEFAULT_SEND_GIFT.getCode()){
+                        //todo 出发礼物特效推送功能
+                        jsonObject.put("url",sendGiftMq.getUrl());
+                        sendGiftSingleton(sendGiftMq.getReceiverId(), ImMsgBizCodeEnum.LIVING_ROOM_SEND_GIFT_SUCCESS.getCode(),jsonObject);
+                    }else{
+                        //pk类型的送礼 要通知什么给直播间的用户
+                        //url 礼物特效全直播间可见
+                        //todo 进度条全直播间可见
+                        LivingRoomReqDTO livingRoomReqDTO=new LivingRoomReqDTO();
+                        livingRoomReqDTO.setRoomId(sendGiftMq.getRoomId());
+                        List<Long> userIdList = livingRoomRpc.queryUserIdByRoomId(livingRoomReqDTO);
+                        jsonObject.put("url",sendGiftMq.getUrl());
+                        batchSendGift(userIdList,ImMsgBizCodeEnum.LIVING_ROOM_PK_SEND_GIFT_SUCCESS.getCode(), jsonObject);
+                    }
                 } else {
                     //todo 利用im将发送失败的消息告知用户
-                    imMsgBody.setBizCode(ImMsgBizCodeEnum.LIVING_ROOM_SEND_GIFT_FAIL.getCode());
-                    imMsgBody.setUserId(sendGiftMq.getUserId());
                     jsonObject.put("msg",accountTradeRespDTO.getMsg());
+                    sendGiftSingleton(sendGiftMq.getUserId(), ImMsgBizCodeEnum.LIVING_ROOM_SEND_GIFT_FAIL.getCode(),jsonObject);
                 }
-                imMsgBody.setData(JSON.toJSONString(jsonObject));
-                imRouterRpc.sendMsg(imMsgBody);
                 LOGGER.info("[SendGiftConsumer] msg is {}", msg);
             }
             return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
         });
         mqPushConsumer.start();
         LOGGER.info("mq消费者:SendGiftConsumer启动成功,namesrv is {}", rocketMQConsumerProperties.getNameSrv());
+    }
+
+    private void sendGiftSingleton(Long userId,int bizCode,JSONObject jsonObject){
+        ImMsgBodyDTO imMsgBody=new ImMsgBodyDTO();
+        imMsgBody.setAppId(AppIdEnum.LMY_LIVE_BIZ.getCode());
+        imMsgBody.setBizCode(bizCode);
+        imMsgBody.setUserId(userId);
+        imMsgBody.setData(JSON.toJSONString(jsonObject));
+        imRouterRpc.sendMsg(imMsgBody);
+    }
+    private void batchSendGift(List<Long> userIdList,int bizCode,JSONObject jsonObject){
+        List<ImMsgBodyDTO> imMsgBodyDTOList = userIdList.stream().map(userId -> {
+            ImMsgBodyDTO imMsgBody = new ImMsgBodyDTO();
+            imMsgBody.setAppId(AppIdEnum.LMY_LIVE_BIZ.getCode());
+            imMsgBody.setBizCode(bizCode);
+            imMsgBody.setUserId(userId);
+            imMsgBody.setData(JSON.toJSONString(jsonObject));
+            return imMsgBody;
+        }).collect(Collectors.toList());
+        imRouterRpc.batchSendMsg(imMsgBodyDTOList);
     }
 }
