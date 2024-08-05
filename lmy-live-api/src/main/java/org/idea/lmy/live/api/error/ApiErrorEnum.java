@@ -15,7 +15,8 @@ public enum ApiErrorEnum implements LmyBaseError {
     SMS_CODE_ERROR(3,"验证码格式异常"),
     USER_LOGIN_ERROR(4,"用户登录失败"),
     GIFT_CONFIG_ERROR(5,"礼物信息异常"),
-    SEND_GIFT_ERROR(6,"送礼失败");
+    SEND_GIFT_ERROR(6,"送礼失败"),
+    PK_ONLINE_BUSY(7,"目前正有人连线，请稍后再试");
 
     private String errorMsg;
     private int errorCode;

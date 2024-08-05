@@ -6,6 +6,7 @@ public class LivingRoomReqDTO implements Serializable {
 
     private Integer id;
     private Long anchorId;
+    private Long pkObjId;
     private String roomName;
     private Integer roomId;
     private String covertImg;
@@ -86,11 +87,20 @@ public class LivingRoomReqDTO implements Serializable {
         this.appId = appId;
     }
 
+    public Long getPkObjId() {
+        return pkObjId;
+    }
+
+    public void setPkObjId(Long pkObjId) {
+        this.pkObjId = pkObjId;
+    }
+
     @Override
     public String toString() {
         return "LivingRoomReqDTO{" +
                 "id=" + id +
                 ", anchorId=" + anchorId +
+                ", pkObjId=" + pkObjId +
                 ", roomName='" + roomName + '\'' +
                 ", roomId=" + roomId +
                 ", covertImg='" + covertImg + '\'' +

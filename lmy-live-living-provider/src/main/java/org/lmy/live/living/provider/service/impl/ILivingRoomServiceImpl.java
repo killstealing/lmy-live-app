@@ -144,6 +144,11 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
     public void userOfflineHandler(ImOfflineDTO imOfflineDTO) {
         String cacheKey= livingProviderCacheKeyBuilder.buildLivingRoomUserSet(imOfflineDTO.getRoomId(), imOfflineDTO.getAppId());
         redisTemplate.opsForSet().remove(cacheKey,imOfflineDTO.getUserId());
+        //监听pk主播下线行为
+        LivingRoomReqDTO roomReqDTO = new LivingRoomReqDTO();
+        roomReqDTO.setRoomId(imOfflineDTO.getRoomId());
+        roomReqDTO.setPkObjId(imOfflineDTO.getUserId());
+        this.offlinePk(roomReqDTO);
     }
 
     @Override
@@ -161,8 +166,7 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
     @Override
     public boolean onlinePk(LivingRoomReqDTO livingRoomReqDTO) {
         String pkRoomUserCacheKey = livingProviderCacheKeyBuilder.buildPKRoomUserCacheKey(livingRoomReqDTO.getRoomId());
-        redisTemplate.opsForValue().set(pkRoomUserCacheKey,livingRoomReqDTO.getAnchorId(),30,TimeUnit.HOURS);
-        return true;
+        return redisTemplate.opsForValue().setIfAbsent(pkRoomUserCacheKey, livingRoomReqDTO.getPkObjId(), 30, TimeUnit.HOURS);
     }
 
     @Override

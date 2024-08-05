@@ -3,6 +3,7 @@ package org.idea.lmy.live.api.service.impl;
 import com.lmy.live.user.dto.UserDTO;
 import com.lmy.live.user.interfaces.IUserRpc;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.idea.lmy.live.api.error.ApiErrorEnum;
 import org.idea.lmy.live.api.service.ILivingRoomService;
 import org.idea.lmy.live.api.vo.LivingRoomInitVO;
 import org.idea.lmy.live.api.vo.req.LivingRoomReqVO;
@@ -13,6 +14,7 @@ import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
 import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 import org.lmy.live.living.interfaces.rpc.ILivingRoomRpc;
 import org.lmy.live.web.starter.context.LmyRequestContext;
+import org.lmy.live.web.starter.error.ErrorAssert;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -73,7 +75,9 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
     @Override
     public boolean onlinePk(OnlinePkReqVO onlinePkReqVO) {
         LivingRoomReqDTO livingRoomReqDTO = ConvertBeanUtils.convert(onlinePkReqVO, LivingRoomReqDTO.class);
-        livingRoomReqDTO.setAnchorId(LmyRequestContext.getUserId());
-        return iLivingRoomRpc.onlinePk(livingRoomReqDTO);
+        livingRoomReqDTO.setPkObjId(LmyRequestContext.getUserId());
+        boolean tryOnlineStatus = iLivingRoomRpc.onlinePk(livingRoomReqDTO);
+        ErrorAssert.isTure(tryOnlineStatus, ApiErrorEnum.PK_ONLINE_BUSY);
+        return true;
     }
 }
