@@ -6,6 +6,7 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.idea.lmy.live.api.service.ILivingRoomService;
 import org.idea.lmy.live.api.vo.LivingRoomInitVO;
 import org.idea.lmy.live.api.vo.req.LivingRoomReqVO;
+import org.idea.lmy.live.api.vo.req.OnlinePkReqVO;
 import org.lmy.live.common.interfaces.dto.PageWrapper;
 import org.lmy.live.common.interfaces.utils.ConvertBeanUtils;
 import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
@@ -67,5 +68,12 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
             respVO.setAnchor(respDTO.getAnchorId().equals(userId));
         }
         return respVO;
+    }
+
+    @Override
+    public boolean onlinePk(OnlinePkReqVO onlinePkReqVO) {
+        LivingRoomReqDTO livingRoomReqDTO = ConvertBeanUtils.convert(onlinePkReqVO, LivingRoomReqDTO.class);
+        livingRoomReqDTO.setAnchorId(LmyRequestContext.getUserId());
+        return iLivingRoomRpc.onlinePk(livingRoomReqDTO);
     }
 }

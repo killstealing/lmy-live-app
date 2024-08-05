@@ -157,4 +157,25 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
         }
         return userIdList;
     }
+
+    @Override
+    public boolean onlinePk(LivingRoomReqDTO livingRoomReqDTO) {
+        String pkRoomUserCacheKey = livingProviderCacheKeyBuilder.buildPKRoomUserCacheKey(livingRoomReqDTO.getRoomId());
+        redisTemplate.opsForValue().set(pkRoomUserCacheKey,livingRoomReqDTO.getAnchorId(),30,TimeUnit.HOURS);
+        return true;
+    }
+
+    @Override
+    public Long queryOnlinePkUserId(Integer roomId) {
+        String pkRoomUserCacheKey = livingProviderCacheKeyBuilder.buildPKRoomUserCacheKey(roomId);
+        Object userId = redisTemplate.opsForValue().get(pkRoomUserCacheKey);
+        return userId!=null? (Long) userId :null;
+    }
+
+    @Override
+    public boolean offlinePk(LivingRoomReqDTO livingRoomReqDTO) {
+        String pkRoomUserCacheKey = livingProviderCacheKeyBuilder.buildPKRoomUserCacheKey(livingRoomReqDTO.getRoomId());
+        redisTemplate.delete(pkRoomUserCacheKey);
+        return true;
+    }
 }

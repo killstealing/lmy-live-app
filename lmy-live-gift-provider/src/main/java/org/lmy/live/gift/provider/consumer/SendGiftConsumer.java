@@ -22,6 +22,7 @@ import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
 import org.lmy.live.im.router.interfaces.constants.ImMsgBizCodeEnum;
 import org.lmy.live.im.router.interfaces.rpc.ImRouterRpc;
 import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
+import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 import org.lmy.live.living.interfaces.rpc.ILivingRoomRpc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,11 +102,16 @@ public class SendGiftConsumer implements InitializingBean {
                         //todo 进度条全直播间可见
                         // 1000,进度条长度一共是1000，每个礼物对于进度条的影响就是一个数值（500（A）：500（B），550：450）
                         // 直播pk进度是不是以roomId为维度，string，送礼（A）incr，送礼给（B）就是decr。
-                        long pkUserId=0l;
-                        long objUserId=1l;
+                        Integer roomId = sendGiftMq.getRoomId();
+                        LivingRoomRespDTO livingRoomRespDTO = livingRoomRpc.queryByRoomId(roomId);
+                        Long objUserId=livingRoomRpc.queryOnlinePkUserId(roomId);
+                        if(objUserId==null||livingRoomRespDTO==null||livingRoomRespDTO.getAnchorId()==null){
+                            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                        }
+                        Long pkUserId=livingRoomRespDTO.getAnchorId();
                         Long pkNum=0l;
-                        String pkNumCacheKey = cacheKeyBuilder.buildPKNumCacheKey(sendGiftMq.getRoomId());
-                        String pkNumSeqCacheKey = cacheKeyBuilder.buildPKNumSeqCacheKey(sendGiftMq.getRoomId());
+                        String pkNumCacheKey = cacheKeyBuilder.buildPKNumCacheKey(roomId);
+                        String pkNumSeqCacheKey = cacheKeyBuilder.buildPKNumSeqCacheKey(roomId);
                         Long pkNumSeqVal = redisTemplate.opsForValue().increment(pkNumSeqCacheKey);
                         if(sendGiftMq.getReceiverId().equals(pkUserId)){
                             // increase ,   500/500,   一个礼物50， 550/450
