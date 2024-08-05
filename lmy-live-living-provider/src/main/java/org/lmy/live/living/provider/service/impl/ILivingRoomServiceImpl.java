@@ -1,5 +1,6 @@
 package org.lmy.live.living.provider.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
 import org.idea.lmy.live.framework.redis.starter.key.LivingProviderCacheKeyBuilder;
@@ -8,6 +9,10 @@ import org.lmy.live.common.interfaces.enums.CommonStatusEum;
 import org.lmy.live.common.interfaces.utils.ConvertBeanUtils;
 import org.lmy.live.im.core.server.interfaces.dto.ImOfflineDTO;
 import org.lmy.live.im.core.server.interfaces.dto.ImOnlineDTO;
+import org.lmy.live.im.interfaces.constants.AppIdEnum;
+import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
+import org.lmy.live.im.router.interfaces.constants.ImMsgBizCodeEnum;
+import org.lmy.live.im.router.interfaces.rpc.ImRouterRpc;
 import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
 import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 import org.lmy.live.living.provider.dao.mapper.LivingRoomMapper;
@@ -29,6 +34,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class ILivingRoomServiceImpl implements ILivingRoomService {
@@ -41,6 +47,9 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
     private RedisTemplate<String,Object> redisTemplate;
     @Resource
     private LivingProviderCacheKeyBuilder livingProviderCacheKeyBuilder;
+
+    @Resource
+    private ImRouterRpc imRouterRpc;
 
     @Override
     public Integer startLivingRoom(LivingRoomReqDTO livingRoomReqDTO) {
@@ -166,7 +175,12 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
     @Override
     public boolean onlinePk(LivingRoomReqDTO livingRoomReqDTO) {
         String pkRoomUserCacheKey = livingProviderCacheKeyBuilder.buildPKRoomUserCacheKey(livingRoomReqDTO.getRoomId());
-        return redisTemplate.opsForValue().setIfAbsent(pkRoomUserCacheKey, livingRoomReqDTO.getPkObjId(), 30, TimeUnit.HOURS);
+        Boolean tryOnline = redisTemplate.opsForValue().setIfAbsent(pkRoomUserCacheKey, livingRoomReqDTO.getPkObjId(), 30, TimeUnit.HOURS);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("pkObjId",livingRoomReqDTO.getPkObjId());
+        List<Long> userIdList = this.queryUserIdByRoomId(livingRoomReqDTO);
+        batchSendImMsg(userIdList, ImMsgBizCodeEnum.LIVING_ROOM_PK_ONLINE.getCode(),jsonObject);
+        return tryOnline;
     }
 
     @Override
@@ -181,5 +195,17 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
         String pkRoomUserCacheKey = livingProviderCacheKeyBuilder.buildPKRoomUserCacheKey(livingRoomReqDTO.getRoomId());
         redisTemplate.delete(pkRoomUserCacheKey);
         return true;
+    }
+
+    private void batchSendImMsg(List<Long> userIdList, int bizCode, JSONObject jsonObject) {
+        List<ImMsgBodyDTO> imMsgBodies = userIdList.stream().map(userId -> {
+            ImMsgBodyDTO imMsgBody = new ImMsgBodyDTO();
+            imMsgBody.setAppId(AppIdEnum.LMY_LIVE_BIZ.getCode());
+            imMsgBody.setBizCode(bizCode);
+            imMsgBody.setUserId(userId);
+            imMsgBody.setData(jsonObject.toJSONString());
+            return imMsgBody;
+        }).collect(Collectors.toList());
+        imRouterRpc.batchSendMsg(imMsgBodies);
     }
 }
