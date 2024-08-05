@@ -6,7 +6,10 @@ import org.idea.lmy.live.api.vo.LivingRoomInitVO;
 import org.idea.lmy.live.api.vo.req.LivingRoomReqVO;
 import org.idea.lmy.live.api.vo.req.OnlinePkReqVO;
 import org.lmy.live.common.interfaces.vo.WebResponseVO;
+import org.lmy.live.web.starter.config.RequestLimit;
 import org.lmy.live.web.starter.context.LmyRequestContext;
+import org.lmy.live.web.starter.error.BizBaseErrorEnum;
+import org.lmy.live.web.starter.error.ErrorAssert;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,6 +46,7 @@ public class LivingRoomController {
     }
 
     @PostMapping("/closeLiving")
+    @RequestLimit(limit = 1, second = 10, msg = "关播请求过于频繁，请稍后再试")
     public WebResponseVO closeLiving(Integer roomId){
         if (roomId==null){
             return WebResponseVO.errorParam("需要给定直播间ID");
@@ -66,7 +70,9 @@ public class LivingRoomController {
     }
 
     @PostMapping("/onlinePk")
+    @RequestLimit(limit = 1,second = 3)
     public WebResponseVO onlinePK(OnlinePkReqVO onlinePkReqVO){
+        ErrorAssert.isNotNull(onlinePkReqVO.getRoomId(), BizBaseErrorEnum.PARAM_ERROR);
         return WebResponseVO.success(livingRoomService.onlinePk(onlinePkReqVO));
     }
 }
