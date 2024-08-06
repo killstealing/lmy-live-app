@@ -15,6 +15,10 @@ public class LivingRoomInitVO {
     private String avatar;
     private Integer roomId;
     private String nickName;
+    private String watcherAvatar;
+    //默认背景图，为了方便讲解使用
+    private String defaultBgImg;
+    private Long pkObjId;
 
     public Long getAnchorId() {
         return anchorId;
@@ -78,5 +82,29 @@ public class LivingRoomInitVO {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public String getWatcherAvatar() {
+        return watcherAvatar;
+    }
+
+    public void setWatcherAvatar(String watcherAvatar) {
+        this.watcherAvatar = watcherAvatar;
+    }
+
+    public String getDefaultBgImg() {
+        return defaultBgImg;
+    }
+
+    public void setDefaultBgImg(String defaultBgImg) {
+        this.defaultBgImg = defaultBgImg;
+    }
+
+    public Long getPkObjId() {
+        return pkObjId;
+    }
+
+    public void setPkObjId(Long pkObjId) {
+        this.pkObjId = pkObjId;
     }
 }

@@ -10,6 +10,11 @@ public class LmyErrorException extends RuntimeException{
     private int errorCode;
     private String errorMsg;
 
+    public LmyErrorException(int errorCode,String errorMsg) {
+        this.errorCode = errorCode;
+        this.errorMsg = errorMsg;
+    }
+
     public LmyErrorException(LmyBaseError lmyBaseError) {
         this.errorCode = lmyBaseError.getErrorCode();
         this.errorMsg = lmyBaseError.getErrorMsg();

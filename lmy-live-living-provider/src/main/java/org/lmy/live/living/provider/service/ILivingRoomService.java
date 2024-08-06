@@ -3,6 +3,7 @@ package org.lmy.live.living.provider.service;
 import org.lmy.live.common.interfaces.dto.PageWrapper;
 import org.lmy.live.im.core.server.interfaces.dto.ImOfflineDTO;
 import org.lmy.live.im.core.server.interfaces.dto.ImOnlineDTO;
+import org.lmy.live.living.interfaces.dto.LivingPkRespDTO;
 import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
 import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 
@@ -67,7 +68,7 @@ public interface ILivingRoomService {
      * @param livingRoomReqDTO
      * @return
      */
-    boolean onlinePk(LivingRoomReqDTO livingRoomReqDTO);
+    LivingPkRespDTO onlinePk(LivingRoomReqDTO livingRoomReqDTO);
     /**
      * 根据roomId查询当前pk人是谁
      *

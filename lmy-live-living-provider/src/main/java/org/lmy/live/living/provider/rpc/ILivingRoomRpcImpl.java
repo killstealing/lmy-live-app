@@ -3,6 +3,7 @@ package org.lmy.live.living.provider.rpc;
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.lmy.live.common.interfaces.dto.PageWrapper;
+import org.lmy.live.living.interfaces.dto.LivingPkRespDTO;
 import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
 import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 import org.lmy.live.living.interfaces.rpc.ILivingRoomRpc;
@@ -42,7 +43,7 @@ public class ILivingRoomRpcImpl implements ILivingRoomRpc {
     }
 
     @Override
-    public boolean onlinePk(LivingRoomReqDTO livingRoomReqDTO) {
+    public LivingPkRespDTO onlinePk(LivingRoomReqDTO livingRoomReqDTO) {
         return iLivingRoomService.onlinePk(livingRoomReqDTO);
     }
 

@@ -16,9 +16,14 @@ public class GiftProviderCacheKeyBuilder extends RedisKeyBuilder {
     private static String GIFT_CONFIG_CACHE = "gift_config_cache";
     private static String GIFT_LIST_CACHE = "gift_list_cache";
     private static String GIFT_CONSUME_KEY = "gift_consume_key";
+    private static String GIFT_LIST_LOCK = "gift_list_lock";
     private static String PK_NUM_KEY="pk_num_key";
     private static String PK_NUM_SEQ_KEY="pk_num_seq_key";
+    private static String LIVING_PK_IS_OVER = "living_pk_is over";
 
+    public String buildLivingPkIsOver(Integer roomId) {
+        return super.getPrefix() + LIVING_PK_IS_OVER + super.getSplitItem() + roomId;
+    }
     public String buildPKNumSeqCacheKey(Integer roomId){
         return super.getPrefix()+PK_NUM_SEQ_KEY+super.getSplitItem()+roomId;
     }
@@ -38,4 +43,8 @@ public class GiftProviderCacheKeyBuilder extends RedisKeyBuilder {
     public String buildGiftListCacheKey() {
         return super.getPrefix() + GIFT_LIST_CACHE;
     }
+    public String buildGiftListLockCacheKey() {
+        return super.getPrefix() + GIFT_LIST_LOCK;
+    }
+
 }
