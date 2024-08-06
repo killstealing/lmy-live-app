@@ -44,4 +44,16 @@ public class ErrorAssert {
             throw new LmyErrorException(lmyBaseError);
         }
     }
+
+    /**
+     * flag == true
+     *
+     * @param flag
+     * @param lmyErrorException
+     */
+    public static void isTure(boolean flag, LmyErrorException lmyErrorException) {
+        if (!flag) {
+            throw lmyErrorException;
+        }
+    }
 }

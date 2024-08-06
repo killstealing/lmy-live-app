@@ -96,9 +96,12 @@ public class GiftConfigServiceImpl implements IGiftConfigService {
         List<GiftConfigPO> giftConfigPOList = giftConfigMapper.selectList(queryWrapper);
         if (!CollectionUtils.isEmpty(giftConfigPOList)) {
             List<GiftConfigDTO> resultList = ConvertBeanUtils.convertList(giftConfigPOList, GiftConfigDTO.class);
-            redisTemplate.opsForList().leftPushAll(cacheKey, resultList.toArray());
-            //大部分情况下，一个直播间的有效时间大概就是60min以上
-            redisTemplate.expire(cacheKey, 60, TimeUnit.MINUTES);
+            boolean trySetToRedis = redisTemplate.opsForValue().setIfAbsent(cacheKeyBuilder.buildGiftListLockCacheKey(),1,3,TimeUnit.SECONDS);
+            if(trySetToRedis) {
+                redisTemplate.opsForList().leftPushAll(cacheKey, resultList.toArray());
+                //大部分情况下，一个直播间的有效时间大概就是60min以上
+                redisTemplate.expire(cacheKey, 60, TimeUnit.MINUTES);
+            }
             return resultList;
         }
         //存入一个空的list进入redis中

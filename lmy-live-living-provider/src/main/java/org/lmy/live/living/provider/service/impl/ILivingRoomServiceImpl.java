@@ -3,6 +3,7 @@ package org.lmy.live.living.provider.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.idea.lmy.live.framework.redis.starter.key.LivingProviderCacheKeyBuilder;
 import org.lmy.live.common.interfaces.dto.PageWrapper;
 import org.lmy.live.common.interfaces.enums.CommonStatusEum;
@@ -13,6 +14,7 @@ import org.lmy.live.im.interfaces.constants.AppIdEnum;
 import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
 import org.lmy.live.im.router.interfaces.constants.ImMsgBizCodeEnum;
 import org.lmy.live.im.router.interfaces.rpc.ImRouterRpc;
+import org.lmy.live.living.interfaces.dto.LivingPkRespDTO;
 import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
 import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 import org.lmy.live.living.provider.dao.mapper.LivingRoomMapper;
@@ -48,7 +50,7 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
     @Resource
     private LivingProviderCacheKeyBuilder livingProviderCacheKeyBuilder;
 
-    @Resource
+    @DubboReference
     private ImRouterRpc imRouterRpc;
 
     @Override
@@ -173,26 +175,40 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
     }
 
     @Override
-    public boolean onlinePk(LivingRoomReqDTO livingRoomReqDTO) {
-        String pkRoomUserCacheKey = livingProviderCacheKeyBuilder.buildPKRoomUserCacheKey(livingRoomReqDTO.getRoomId());
-        Boolean tryOnline = redisTemplate.opsForValue().setIfAbsent(pkRoomUserCacheKey, livingRoomReqDTO.getPkObjId(), 30, TimeUnit.HOURS);
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("pkObjId",livingRoomReqDTO.getPkObjId());
-        List<Long> userIdList = this.queryUserIdByRoomId(livingRoomReqDTO);
-        batchSendImMsg(userIdList, ImMsgBizCodeEnum.LIVING_ROOM_PK_ONLINE.getCode(),jsonObject);
-        return tryOnline;
+    public LivingPkRespDTO onlinePk(LivingRoomReqDTO livingRoomReqDTO) {
+        LivingRoomRespDTO currentLivingRoom = this.queryByRoomId(livingRoomReqDTO.getRoomId());
+        LivingPkRespDTO respDTO = new LivingPkRespDTO();
+        respDTO.setOnlineStatus(false);
+        if (currentLivingRoom.getAnchorId().equals(livingRoomReqDTO.getPkObjId())) {
+            respDTO.setMsg("主播不可以连线参与pk");
+            return respDTO;
+        }
+        String cacheKey = livingProviderCacheKeyBuilder.buildLivingOnlinePk(livingRoomReqDTO.getRoomId());
+        //TODO 为什么一直是false呢？？？ redis里面没有值
+        boolean tryOnline = redisTemplate.opsForValue().setIfAbsent(cacheKey, livingRoomReqDTO.getPkObjId(), 30, TimeUnit.HOURS);
+        if (tryOnline) {
+            List<Long> userIdList = this.queryUserIdByRoomId(livingRoomReqDTO);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("pkObjId", livingRoomReqDTO.getPkObjId());
+            jsonObject.put("pkObjAvatar", "https://pic.rmb.bdstatic.com/bjh/240321/news/d9be831b267207b1c63595fbc7f1fa4e9197.jpeg");
+            batchSendImMsg(userIdList, ImMsgBizCodeEnum.LIVING_ROOM_PK_ONLINE.getCode(), jsonObject);
+            respDTO.setMsg("连线成功");
+            respDTO.setOnlineStatus(false);
+        }
+        respDTO.setMsg("目前有人在线，请稍后再试");
+        return respDTO;
     }
 
     @Override
     public Long queryOnlinePkUserId(Integer roomId) {
-        String pkRoomUserCacheKey = livingProviderCacheKeyBuilder.buildPKRoomUserCacheKey(roomId);
+        String pkRoomUserCacheKey = livingProviderCacheKeyBuilder.buildLivingOnlinePk(roomId);
         Object userId = redisTemplate.opsForValue().get(pkRoomUserCacheKey);
-        return userId!=null? (Long) userId :null;
+        return userId!=null? Long.valueOf((int) userId) :null;
     }
 
     @Override
     public boolean offlinePk(LivingRoomReqDTO livingRoomReqDTO) {
-        String pkRoomUserCacheKey = livingProviderCacheKeyBuilder.buildPKRoomUserCacheKey(livingRoomReqDTO.getRoomId());
+        String pkRoomUserCacheKey = livingProviderCacheKeyBuilder.buildLivingOnlinePk(livingRoomReqDTO.getRoomId());
         redisTemplate.delete(pkRoomUserCacheKey);
         return true;
     }

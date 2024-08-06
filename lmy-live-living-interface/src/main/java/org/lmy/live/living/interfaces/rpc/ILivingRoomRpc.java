@@ -1,6 +1,7 @@
 package org.lmy.live.living.interfaces.rpc;
 
 import org.lmy.live.common.interfaces.dto.PageWrapper;
+import org.lmy.live.living.interfaces.dto.LivingPkRespDTO;
 import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
 import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 
@@ -46,7 +47,7 @@ public interface ILivingRoomRpc {
      * @param livingRoomReqDTO
      * @return
      */
-    boolean onlinePk(LivingRoomReqDTO livingRoomReqDTO);
+    LivingPkRespDTO onlinePk(LivingRoomReqDTO livingRoomReqDTO);
     /**
      * 根据roomId查询当前pk人是谁
      *

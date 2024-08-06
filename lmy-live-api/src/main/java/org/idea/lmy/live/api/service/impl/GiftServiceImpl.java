@@ -1,6 +1,8 @@
 package org.idea.lmy.live.api.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.rocketmq.client.producer.MQProducer;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class GiftServiceImpl implements IGiftService {
@@ -37,6 +40,8 @@ public class GiftServiceImpl implements IGiftService {
 
     @Resource
     private MQProducer producer;
+    private Cache<Integer,GiftConfigDTO> giftConfigDTOCache = Caffeine.newBuilder().maximumSize(1000).expireAfterWrite(90, TimeUnit.SECONDS).build();
+
 
     @Override
     public List<GiftConfigVO> listGift() {
@@ -48,7 +53,9 @@ public class GiftServiceImpl implements IGiftService {
     @Override
     public boolean sendGift(GiftReqVO giftReqVO) {
         int giftId = giftReqVO.getGiftId();
-        GiftConfigDTO giftConfigDTO = giftConfigRpc.getByGiftId(giftId);
+        //map集合，判断本地是否有对象，如果有就返回，如果没有就rpc调用，同时注入到本地map中
+        GiftConfigDTO giftConfigDTO = giftConfigDTOCache.get(giftId, id -> giftConfigRpc.getByGiftId(giftId));
+//        GiftConfigDTO giftConfigDTO = giftConfigRpc.getByGiftId(giftId);
         ErrorAssert.isNotNull(giftConfigDTO, ApiErrorEnum.GIFT_CONFIG_ERROR);
 //        AccountTradeReqDTO accountTradeReqDTO=new AccountTradeReqDTO();
 //        //TODO
