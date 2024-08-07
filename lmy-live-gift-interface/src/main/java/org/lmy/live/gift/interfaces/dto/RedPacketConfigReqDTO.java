@@ -14,6 +14,7 @@ public class RedPacketConfigReqDTO implements Serializable {
     private static final long serialVersionUID = -4845264552451489561L;
 
     private Long anchorId;
+    private Integer roomId;
     private Integer status;
     private Long userId;
     private String redPacketConfigCode;
@@ -75,6 +76,14 @@ public class RedPacketConfigReqDTO implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Integer getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(Integer roomId) {
+        this.roomId = roomId;
     }
 
     @Override

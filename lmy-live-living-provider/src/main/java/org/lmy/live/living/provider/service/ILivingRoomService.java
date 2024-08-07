@@ -84,4 +84,12 @@ public interface ILivingRoomService {
      * @return
      */
     boolean offlinePk(LivingRoomReqDTO livingRoomReqDTO);
+
+    /**
+     * 根据主播id查询直播间信息
+     *
+     * @param anchorId
+     * @return
+     */
+    LivingRoomRespDTO queryByAnchorId(Long anchorId);
 }

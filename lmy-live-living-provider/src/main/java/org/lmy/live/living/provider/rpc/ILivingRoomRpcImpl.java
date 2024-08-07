@@ -57,4 +57,8 @@ public class ILivingRoomRpcImpl implements ILivingRoomRpc {
         return iLivingRoomService.offlinePk(livingRoomReqDTO);
     }
 
+    @Override
+    public LivingRoomRespDTO queryByAnchorId(Long anchorId) {
+        return iLivingRoomService.queryByAnchorId(anchorId);
+    }
 }

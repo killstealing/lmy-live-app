@@ -38,4 +38,11 @@ public interface IRedPacketConfigService {
 
     //红包怎么领取
     RedPacketReceiveDTO receiveRedPacket(RedPacketConfigReqDTO reqDTO);
+
+    /**
+     * 广播直播间用户，开始抢红包
+     *
+     * @param reqDTO
+     */
+    Boolean startRedPacket(RedPacketConfigReqDTO reqDTO);
 }

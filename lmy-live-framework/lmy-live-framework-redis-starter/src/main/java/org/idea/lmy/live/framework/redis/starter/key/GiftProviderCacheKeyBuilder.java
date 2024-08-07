@@ -25,6 +25,22 @@ public class GiftProviderCacheKeyBuilder extends RedisKeyBuilder {
     private static String RED_PACKET_TOTAL_COUNT="red_packet_total_count";
     private static String RED_PACKET_TOTAL_PRICE="red_packet_total_price";
 
+    private static String MAX_GET_PRICE_CACHE = "max_get_price_cache";
+    private static String USER_TOTAL_GET_PRICE_CACHE = "user_total_get_price_cache";
+    private static String RED_PACKET_PREPARE_SUCCESS = "red_packet_prepare_success";
+    private static String RED_PACKET_NOTIFY = "red_packet_notify";
+    public String buildRedPacketNotify(String code) {
+        return super.getPrefix() + RED_PACKET_NOTIFY + super.getSplitItem() + code;
+    }
+
+    public String buildRedPacketPrepareSuccess(String code) {
+        return super.getPrefix() + RED_PACKET_PREPARE_SUCCESS + super.getSplitItem() + code;
+    }
+
+    public String buildUserTotalGetPriceCache(Long userId) {
+        return super.getPrefix() + USER_TOTAL_GET_PRICE_CACHE + super.getSplitItem() + userId;
+    }
+
     public String buildRedPacketInitLock(String code){
         return super.getPrefix()+RED_PACKET_INIT_LOCK+super.getSplitItem()+code;
     }
@@ -33,6 +49,9 @@ public class GiftProviderCacheKeyBuilder extends RedisKeyBuilder {
     }
     public String buildRedPacketTotalPrice(String code){
         return super.getPrefix()+RED_PACKET_TOTAL_PRICE+super.getSplitItem()+code;
+    }
+    public String buildRedPacketMaxGetPrice(String code) {
+        return super.getPrefix() + MAX_GET_PRICE_CACHE + super.getSplitItem() + code;
     }
     public String buildRedPacketList(String code){
         return super.getPrefix()+RED_PACKET_LIST+super.getSplitItem()+code;

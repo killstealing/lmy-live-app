@@ -11,6 +11,9 @@ import org.idea.lmy.live.api.vo.req.OnlinePkReqVO;
 import org.idea.lmy.live.api.vo.resp.RedPacketReceiveVO;
 import org.lmy.live.common.interfaces.dto.PageWrapper;
 import org.lmy.live.common.interfaces.utils.ConvertBeanUtils;
+import org.lmy.live.gift.interfaces.dto.RedPacketConfigReqDTO;
+import org.lmy.live.gift.interfaces.dto.RedPacketConfigRespDTO;
+import org.lmy.live.gift.interfaces.dto.RedPacketReceiveDTO;
 import org.lmy.live.gift.interfaces.rpc.IRedPacketConfigRpc;
 import org.lmy.live.im.interfaces.constants.AppIdEnum;
 import org.lmy.live.living.interfaces.dto.LivingPkRespDTO;
@@ -73,7 +76,8 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
         UserDTO anchor = userDTOMap.get(respDTO.getAnchorId());
         UserDTO watcher = userDTOMap.get(userId);
         LivingRoomInitVO respVO = new LivingRoomInitVO();
-        respVO.setNickName(anchor.getNickName());
+        respVO.setAnchorNickName(anchor.getNickName());
+        respVO.setWatcherNickName(watcher.getNickName());
         respVO.setUserId(userId);
         //给定一个默认的头像
         respVO.setAvatar(StringUtils.isEmpty(anchor.getAvatar())?"https://q7.itc.cn/q_70/images03/20240430/79ff85fc980544e7aa538f24b11fb2da.jpeg":anchor.getAvatar());
@@ -81,12 +85,19 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
         if (respDTO == null || respDTO.getAnchorId() == null || userId == null) {
             //这种就是属于直播间已经不存在的情况了
             respVO.setRoomId(-1);
-        } else {
-            respVO.setRoomId(respDTO.getId());
-            respVO.setAnchorId(respDTO.getAnchorId());
-            respVO.setAnchor(respDTO.getAnchorId().equals(userId));
+            return respVO;
         }
+        boolean ifAnchor = respDTO.getAnchorId().equals(userId);
+        respVO.setRoomId(respDTO.getId());
+        respVO.setAnchorId(respDTO.getAnchorId());
+        respVO.setAnchor(ifAnchor);
         respVO.setDefaultBgImg("https://c-https://q7.itc.cn/q_70/images03/20240430/79ff85fc980544e7aa538f24b11fb2da.jpeg");
+        if(ifAnchor){
+            RedPacketConfigRespDTO redPacketConfigRespDTO = redPacketConfigRpc.queryByAnchorId(userId);
+            if(redPacketConfigRespDTO!=null){
+                respVO.setRedPacketConfigCode(redPacketConfigRespDTO.getConfigCode());
+            }
+        }
         return respVO;
     }
 
@@ -110,11 +121,27 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
 
     @Override
     public Boolean startRedPacket(Long userId, String code) {
-        return null;
+        RedPacketConfigReqDTO reqDTO = new RedPacketConfigReqDTO();
+        reqDTO.setUserId(userId);
+        reqDTO.setRedPacketConfigCode(code);
+        LivingRoomRespDTO respDTO = iLivingRoomRpc.queryByAnchorId(userId);
+        ErrorAssert.isNotNull(respDTO,BizBaseErrorEnum.PARAM_ERROR);
+        reqDTO.setRoomId(respDTO.getId());
+        return redPacketConfigRpc.startRedPacket(reqDTO);
     }
 
     @Override
     public RedPacketReceiveVO getRedPacket(Long userId, String code) {
-        return null;
+        RedPacketConfigReqDTO reqDTO=new RedPacketConfigReqDTO();
+        reqDTO.setUserId(userId);
+        reqDTO.setRedPacketConfigCode(code);
+        RedPacketReceiveDTO redPacketReceiveDTO = redPacketConfigRpc.receiveRedPacket(reqDTO);
+        RedPacketReceiveVO redPacketReceiveVO=new RedPacketReceiveVO();
+        if(redPacketReceiveDTO==null){
+            redPacketReceiveVO.setMsg("红包已派发完毕");
+        }else{
+            redPacketReceiveVO.setPrice(redPacketReceiveDTO.getPrice());
+        }
+        return redPacketReceiveVO;
     }
 }

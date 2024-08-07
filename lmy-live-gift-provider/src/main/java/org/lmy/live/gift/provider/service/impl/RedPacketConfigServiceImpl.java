@@ -76,6 +76,7 @@ public class RedPacketConfigServiceImpl implements IRedPacketConfigService {
         }
         redPacketConfigPO.setStatus(CommonStatusEum.INVALID_STATUS.getCode());
         this.updateById(redPacketConfigPO);
+
         return true;
     }
 
@@ -100,22 +101,37 @@ public class RedPacketConfigServiceImpl implements IRedPacketConfigService {
 
     @Override
     public RedPacketReceiveDTO receiveRedPacket(RedPacketConfigReqDTO reqDTO) {
-        String configCode = reqDTO.getRedPacketConfigCode();
-        String redPacketListCacheKey = cacheKeyBuilder.buildRedPacketList(configCode);
-        Object redPacketObj = redisTemplate.opsForList().rightPop(redPacketListCacheKey);
-        if(redPacketObj==null){
+        String code = reqDTO.getRedPacketConfigCode();
+        String cacheKey = cacheKeyBuilder.buildRedPacketList(code);
+        Object cacheObj = redisTemplate.opsForList().rightPop(cacheKey);
+        if (cacheObj == null) {
             return null;
         }
-        RedPacketReceiveDTO redPacketReceiveDTO=new RedPacketReceiveDTO((Integer) redPacketObj);
-        String totalCountKey = cacheKeyBuilder.buildRedPacketTotalCount(configCode);
-        redisTemplate.opsForValue().increment(totalCountKey,1);
-        redisTemplate.expire(totalCountKey,1,TimeUnit.DAYS);
-        String totalPriceKey = cacheKeyBuilder.buildRedPacketTotalPrice(configCode);
-        redisTemplate.opsForValue().increment(totalPriceKey, (int) redPacketObj);
-        redisTemplate.expire(totalPriceKey,1,TimeUnit.DAYS);
+        Integer price = (Integer) cacheObj;
+        String totalGetPriceCacheKey = cacheKeyBuilder.buildRedPacketTotalPrice(code);
+        String totalGetCacheKey = cacheKeyBuilder.buildRedPacketTotalCount(code);
+        redisTemplate.opsForValue().increment(cacheKeyBuilder.buildUserTotalGetPriceCache(reqDTO.getUserId()),price);
+        redisTemplate.opsForValue().increment(totalGetCacheKey);
+        redisTemplate.expire(totalGetCacheKey, 1, TimeUnit.DAYS);
+        redisTemplate.opsForValue().increment(totalGetPriceCacheKey, price);
+        redisTemplate.expire(totalGetPriceCacheKey, 1, TimeUnit.DAYS);
         //todo lua脚本去记录最大值
-        logger.info("[receiveRedPacket] code is {},priceObj is {}", configCode, redPacketObj);
-        return redPacketReceiveDTO;
+        logger.info("[receiveRedPacket] code is {},price is {}", code, price);
+        return new RedPacketReceiveDTO(price);
+    }
+
+    @Override
+    public Boolean startRedPacket(RedPacketConfigReqDTO reqDTO) {
+        String code = reqDTO.getRedPacketConfigCode();
+        if (!redisTemplate.hasKey(cacheKeyBuilder.buildRedPacketPrepareSuccess(code))) {
+            return false;
+        }
+        String notifySuccessCache = cacheKeyBuilder.buildRedPacketNotify(code);
+        if (redisTemplate.hasKey(notifySuccessCache)) {
+            return false;
+        }
+
+        return true;
     }
 
 
