@@ -22,6 +22,23 @@ public class LivingRoomController {
     @Resource
     private ILivingRoomService livingRoomService;
 
+    @PostMapping("/prepareRedPacket")
+    @RequestLimit(limit = 1, second = 10, msg = "正在初始化中，请稍等")
+    public WebResponseVO prepareRedPacket(LivingRoomReqVO livingRoomReqVO) {
+        return WebResponseVO.success(livingRoomService.prepareRedPacket(LmyRequestContext.getUserId(),livingRoomReqVO.getRoomId()));
+    }
+
+    @PostMapping("/startRedPacket")
+    @RequestLimit(limit = 1, second = 10, msg = "正在广播直播间用户，请稍等")
+    public WebResponseVO startRedPacket(LivingRoomReqVO livingRoomReqVO) {
+        return WebResponseVO.success(livingRoomService.startRedPacket(LmyRequestContext.getUserId(),livingRoomReqVO.getRedPacketConfigCode()));
+    }
+
+    @PostMapping("/getRedPacket")
+    @RequestLimit(limit = 1, second = 7, msg = "")
+    public WebResponseVO getRedPacket(LivingRoomReqVO livingRoomReqVO) {
+        return WebResponseVO.success(livingRoomService.getRedPacket(LmyRequestContext.getUserId(),livingRoomReqVO.getRedPacketConfigCode()));
+    }
 
     @PostMapping("/list")
     public WebResponseVO list(LivingRoomReqVO livingRoomReqVO){
