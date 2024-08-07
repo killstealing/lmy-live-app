@@ -8,14 +8,17 @@ import org.idea.lmy.live.api.service.ILivingRoomService;
 import org.idea.lmy.live.api.vo.LivingRoomInitVO;
 import org.idea.lmy.live.api.vo.req.LivingRoomReqVO;
 import org.idea.lmy.live.api.vo.req.OnlinePkReqVO;
+import org.idea.lmy.live.api.vo.resp.RedPacketReceiveVO;
 import org.lmy.live.common.interfaces.dto.PageWrapper;
 import org.lmy.live.common.interfaces.utils.ConvertBeanUtils;
+import org.lmy.live.gift.interfaces.rpc.IRedPacketConfigRpc;
 import org.lmy.live.im.interfaces.constants.AppIdEnum;
 import org.lmy.live.living.interfaces.dto.LivingPkRespDTO;
 import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
 import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 import org.lmy.live.living.interfaces.rpc.ILivingRoomRpc;
 import org.lmy.live.web.starter.context.LmyRequestContext;
+import org.lmy.live.web.starter.error.BizBaseErrorEnum;
 import org.lmy.live.web.starter.error.ErrorAssert;
 import org.lmy.live.web.starter.error.LmyErrorException;
 import org.springframework.stereotype.Service;
@@ -33,6 +36,9 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
 
     @DubboReference
     private IUserRpc iUserRpc;
+
+    @DubboReference
+    private IRedPacketConfigRpc redPacketConfigRpc;
 
     @Override
     public PageWrapper<LivingRoomRespDTO> list(LivingRoomReqVO livingRoomReqVO) {
@@ -92,5 +98,23 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
         LivingPkRespDTO tryOnlineStatus = iLivingRoomRpc.onlinePk(livingRoomReqDTO);
         ErrorAssert.isTure(tryOnlineStatus.isOnlineStatus(), new LmyErrorException(-1,tryOnlineStatus.getMsg()));
         return true;
+    }
+
+    @Override
+    public Boolean prepareRedPacket(Long userId, Integer roomId) {
+        LivingRoomRespDTO respDTO = iLivingRoomRpc.queryByRoomId(roomId);
+        ErrorAssert.isNotNull(respDTO, BizBaseErrorEnum.PARAM_ERROR);
+        ErrorAssert.isNotNull(respDTO.getAnchorId().equals(userId), BizBaseErrorEnum.PARAM_ERROR);
+        return redPacketConfigRpc.prepareRedPacket(userId);
+    }
+
+    @Override
+    public Boolean startRedPacket(Long userId, String code) {
+        return null;
+    }
+
+    @Override
+    public RedPacketReceiveVO getRedPacket(Long userId, String code) {
+        return null;
     }
 }
