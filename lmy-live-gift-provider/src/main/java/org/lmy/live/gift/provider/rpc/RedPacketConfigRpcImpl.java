@@ -45,4 +45,9 @@ public class RedPacketConfigRpcImpl implements IRedPacketConfigRpc {
     public RedPacketReceiveDTO receiveRedPacket(RedPacketConfigReqDTO reqDTO) {
         return redPacketConfigService.receiveRedPacket(reqDTO);
     }
+
+    @Override
+    public Boolean startRedPacket(RedPacketConfigReqDTO reqDTO) {
+        return redPacketConfigService.startRedPacket(reqDTO);
+    }
 }
