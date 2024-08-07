@@ -15,7 +15,16 @@ public class RedPacketConfigRespDTO implements Serializable {
     private Integer id;
     private Integer totalPrice;
     private Integer totalCount;
+    private String configCode;
     private String remark;
+
+    public String getConfigCode() {
+        return configCode;
+    }
+
+    public void setConfigCode(String configCode) {
+        this.configCode = configCode;
+    }
 
     public Integer getId() {
         return id;

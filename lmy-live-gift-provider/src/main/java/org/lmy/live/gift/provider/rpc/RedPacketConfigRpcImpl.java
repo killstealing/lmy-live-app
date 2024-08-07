@@ -5,6 +5,7 @@ import org.apache.dubbo.config.annotation.DubboService;
 import org.lmy.live.common.interfaces.utils.ConvertBeanUtils;
 import org.lmy.live.gift.interfaces.dto.RedPacketConfigReqDTO;
 import org.lmy.live.gift.interfaces.dto.RedPacketConfigRespDTO;
+import org.lmy.live.gift.interfaces.dto.RedPacketReceiveDTO;
 import org.lmy.live.gift.interfaces.rpc.IRedPacketConfigRpc;
 import org.lmy.live.gift.provider.dao.po.RedPacketConfigPO;
 import org.lmy.live.gift.provider.service.IRedPacketConfigService;
@@ -33,5 +34,15 @@ public class RedPacketConfigRpcImpl implements IRedPacketConfigRpc {
     @Override
     public boolean updateById(RedPacketConfigReqDTO redPacketConfigReqDTO) {
         return redPacketConfigService.updateById(ConvertBeanUtils.convert(redPacketConfigReqDTO,RedPacketConfigPO.class));
+    }
+
+    @Override
+    public boolean prepareRedPacket(Long anchorId) {
+        return redPacketConfigService.prepareRedPacket(anchorId);
+    }
+
+    @Override
+    public RedPacketReceiveDTO receiveRedPacket(RedPacketConfigReqDTO reqDTO) {
+        return redPacketConfigService.receiveRedPacket(reqDTO);
     }
 }

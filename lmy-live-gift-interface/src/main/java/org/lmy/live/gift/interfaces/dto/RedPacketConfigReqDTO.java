@@ -15,9 +15,27 @@ public class RedPacketConfigReqDTO implements Serializable {
 
     private Long anchorId;
     private Integer status;
+    private Long userId;
+    private String redPacketConfigCode;
     private Integer totalPrice;
     private Integer totalCount;
     private String remark;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getRedPacketConfigCode() {
+        return redPacketConfigCode;
+    }
+
+    public void setRedPacketConfigCode(String redPacketConfigCode) {
+        this.redPacketConfigCode = redPacketConfigCode;
+    }
 
     public Long getAnchorId() {
         return anchorId;
@@ -57,5 +75,17 @@ public class RedPacketConfigReqDTO implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    @Override
+    public String toString() {
+        return "RedPacketConfigReqDTO{" +
+                "anchorId=" + anchorId +
+                ", status=" + status +
+                ", redPacketConfigCode='" + redPacketConfigCode + '\'' +
+                ", totalPrice=" + totalPrice +
+                ", totalCount=" + totalCount +
+                ", remark='" + remark + '\'' +
+                '}';
     }
 }

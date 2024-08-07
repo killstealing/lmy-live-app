@@ -5,9 +5,13 @@ import jakarta.annotation.Resource;
 import org.idea.lmy.live.framework.redis.starter.key.GiftProviderCacheKeyBuilder;
 import org.lmy.live.common.interfaces.enums.CommonStatusEum;
 import org.lmy.live.common.interfaces.utils.ListUtils;
+import org.lmy.live.gift.interfaces.dto.RedPacketConfigReqDTO;
+import org.lmy.live.gift.interfaces.dto.RedPacketReceiveDTO;
 import org.lmy.live.gift.provider.dao.mapper.RedPacketConfigMapper;
 import org.lmy.live.gift.provider.dao.po.RedPacketConfigPO;
 import org.lmy.live.gift.provider.service.IRedPacketConfigService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class RedPacketConfigServiceImpl implements IRedPacketConfigService {
+    private static final Logger logger = LoggerFactory.getLogger(RedPacketConfigServiceImpl.class);
 
     @Resource
     private RedPacketConfigMapper redPacketConfigMapper;
@@ -92,6 +97,27 @@ public class RedPacketConfigServiceImpl implements IRedPacketConfigService {
 //        System.out.println(sum);
         return redPacketList;
     }
+
+    @Override
+    public RedPacketReceiveDTO receiveRedPacket(RedPacketConfigReqDTO reqDTO) {
+        String configCode = reqDTO.getRedPacketConfigCode();
+        String redPacketListCacheKey = cacheKeyBuilder.buildRedPacketList(configCode);
+        Object redPacketObj = redisTemplate.opsForList().rightPop(redPacketListCacheKey);
+        if(redPacketObj==null){
+            return null;
+        }
+        RedPacketReceiveDTO redPacketReceiveDTO=new RedPacketReceiveDTO((Integer) redPacketObj);
+        String totalCountKey = cacheKeyBuilder.buildRedPacketTotalCount(configCode);
+        redisTemplate.opsForValue().increment(totalCountKey,1);
+        redisTemplate.expire(totalCountKey,1,TimeUnit.DAYS);
+        String totalPriceKey = cacheKeyBuilder.buildRedPacketTotalPrice(configCode);
+        redisTemplate.opsForValue().increment(totalPriceKey, (int) redPacketObj);
+        redisTemplate.expire(totalPriceKey,1,TimeUnit.DAYS);
+        //todo lua脚本去记录最大值
+        logger.info("[receiveRedPacket] code is {},priceObj is {}", configCode, redPacketObj);
+        return redPacketReceiveDTO;
+    }
+
 
 //    public static void main(String[] args) {
 //        System.out.println(createRedPacketPriceList(1000,100));;
