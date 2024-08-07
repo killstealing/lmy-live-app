@@ -53,6 +53,7 @@ public class RedPacketConfigPO {
      * 备注
      */
     private String remark;
+    private String configCode;
     private Date createTime;
     private Date updateTime;
 
@@ -152,6 +153,14 @@ public class RedPacketConfigPO {
         this.updateTime = updateTime;
     }
 
+    public String getConfigCode() {
+        return configCode;
+    }
+
+    public void setConfigCode(String configCode) {
+        this.configCode = configCode;
+    }
+
     @Override
     public String toString() {
         return "RedPacketConfigPO{" +
@@ -165,6 +174,7 @@ public class RedPacketConfigPO {
                 ", totalPrice=" + totalPrice +
                 ", totalCount=" + totalCount +
                 ", remark='" + remark + '\'' +
+                ", configCode='" + configCode + '\'' +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 '}';

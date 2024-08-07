@@ -20,6 +20,15 @@ public class GiftProviderCacheKeyBuilder extends RedisKeyBuilder {
     private static String PK_NUM_KEY="pk_num_key";
     private static String PK_NUM_SEQ_KEY="pk_num_seq_key";
     private static String LIVING_PK_IS_OVER = "living_pk_is over";
+    private static String RED_PACKET_LIST="red_packet_list";
+    private static String RED_PACKET_INIT_LOCK="red_packet_init_lock";
+
+    public String buildRedPacketInitLock(String code){
+        return super.getPrefix()+RED_PACKET_INIT_LOCK+super.getSplitItem()+code;
+    }
+    public String buildRedPacketList(String code){
+        return super.getPrefix()+RED_PACKET_LIST+super.getSplitItem()+code;
+    }
 
     public String buildLivingPkIsOver(Integer roomId) {
         return super.getPrefix() + LIVING_PK_IS_OVER + super.getSplitItem() + roomId;
