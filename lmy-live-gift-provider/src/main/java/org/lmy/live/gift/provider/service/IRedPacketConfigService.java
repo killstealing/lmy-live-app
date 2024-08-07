@@ -27,7 +27,12 @@ public interface IRedPacketConfigService {
     boolean updateById(RedPacketConfigPO redPacketConfigPO);
 
     //红包怎么生成
-
+    /**
+     * 提前生成红包雨的数据
+     *
+     * @param anchorId
+     */
+    boolean prepareRedPacket(Long anchorId);
 
     //红包怎么领取
 

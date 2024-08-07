@@ -11,7 +11,7 @@
  Target Server Version : 80035
  File Encoding         : 65001
 
- Date: 07/08/2024 21:12:41
+ Date: 07/08/2024 22:18:53
 */
 
 SET NAMES utf8mb4;
@@ -31,6 +31,7 @@ CREATE TABLE `t_red_packet_config`  (
   `status` tinyint NULL DEFAULT 1 COMMENT '状态(0无效1有效)',
   `total_price` int NULL DEFAULT 0 COMMENT '红包雨总金额数',
   `total_count` int NULL DEFAULT 0 COMMENT '红包雨总红宝数',
+  `config_code` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL COMMENT '红包config code',
   `remark` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL COMMENT '备注',
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP,
