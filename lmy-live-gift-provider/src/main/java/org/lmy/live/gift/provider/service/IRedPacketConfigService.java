@@ -1,5 +1,7 @@
 package org.lmy.live.gift.provider.service;
 
+import org.lmy.live.gift.interfaces.dto.RedPacketConfigReqDTO;
+import org.lmy.live.gift.interfaces.dto.RedPacketReceiveDTO;
 import org.lmy.live.gift.provider.dao.po.RedPacketConfigPO;
 
 public interface IRedPacketConfigService {
@@ -35,5 +37,5 @@ public interface IRedPacketConfigService {
     boolean prepareRedPacket(Long anchorId);
 
     //红包怎么领取
-
+    RedPacketReceiveDTO receiveRedPacket(RedPacketConfigReqDTO reqDTO);
 }

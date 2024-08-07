@@ -2,6 +2,7 @@ package org.lmy.live.gift.interfaces.rpc;
 
 import org.lmy.live.gift.interfaces.dto.RedPacketConfigReqDTO;
 import org.lmy.live.gift.interfaces.dto.RedPacketConfigRespDTO;
+import org.lmy.live.gift.interfaces.dto.RedPacketReceiveDTO;
 
 /**
  * @Author idea
@@ -32,5 +33,12 @@ public interface IRedPacketConfigRpc {
      * @return
      */
     boolean updateById(RedPacketConfigReqDTO redPacketConfigReqDTO);
-
+    //红包怎么生成
+    /**
+     * 提前生成红包雨的数据
+     *
+     * @param anchorId
+     */
+    boolean prepareRedPacket(Long anchorId);
+    RedPacketReceiveDTO receiveRedPacket(RedPacketConfigReqDTO reqDTO);
 }

@@ -22,9 +22,17 @@ public class GiftProviderCacheKeyBuilder extends RedisKeyBuilder {
     private static String LIVING_PK_IS_OVER = "living_pk_is over";
     private static String RED_PACKET_LIST="red_packet_list";
     private static String RED_PACKET_INIT_LOCK="red_packet_init_lock";
+    private static String RED_PACKET_TOTAL_COUNT="red_packet_total_count";
+    private static String RED_PACKET_TOTAL_PRICE="red_packet_total_price";
 
     public String buildRedPacketInitLock(String code){
         return super.getPrefix()+RED_PACKET_INIT_LOCK+super.getSplitItem()+code;
+    }
+    public String buildRedPacketTotalCount(String code){
+        return super.getPrefix()+RED_PACKET_TOTAL_COUNT+super.getSplitItem()+code;
+    }
+    public String buildRedPacketTotalPrice(String code){
+        return super.getPrefix()+RED_PACKET_TOTAL_PRICE+super.getSplitItem()+code;
     }
     public String buildRedPacketList(String code){
         return super.getPrefix()+RED_PACKET_LIST+super.getSplitItem()+code;
