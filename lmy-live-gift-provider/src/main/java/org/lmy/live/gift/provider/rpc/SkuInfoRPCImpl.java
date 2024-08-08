@@ -2,6 +2,7 @@ package org.lmy.live.gift.provider.rpc;
 
 import jakarta.annotation.Resource;
 import org.lmy.live.common.interfaces.utils.ConvertBeanUtils;
+import org.lmy.live.gift.interfaces.dto.SkuDetailInfoDTO;
 import org.lmy.live.gift.interfaces.dto.SkuInfoDTO;
 import org.lmy.live.gift.interfaces.rpc.ISkuInfoRPC;
 import org.lmy.live.gift.provider.dao.po.SkuInfoPO;
@@ -29,5 +30,11 @@ public class SkuInfoRPCImpl implements ISkuInfoRPC {
         List<Long> skuIdLIst = anchorShopInfoService.querySkuIdByAnchorId(anchorId);
         List<SkuInfoPO> skuInfoPOS = skuInfoService.queryBySkuIds(skuIdLIst);
         return ConvertBeanUtils.convertList(skuInfoPOS,SkuInfoDTO.class);
+    }
+
+    @Override
+    public SkuDetailInfoDTO queryBySkuId(Long skuId) {
+        SkuInfoPO skuInfoPO = skuInfoService.queryBySkuIdFromCache(skuId);
+        return ConvertBeanUtils.convert(skuInfoPO,SkuDetailInfoDTO.class);
     }
 }

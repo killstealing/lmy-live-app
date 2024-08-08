@@ -18,4 +18,20 @@ public interface ISkuInfoService {
      * @return
      */
     List<SkuInfoPO> queryBySkuIds(List<Long> skuIdList);
+
+    /**
+     * 查询商品详情
+     *
+     * @param skuId
+     * @return
+     */
+    SkuInfoPO queryBySkuId(Long skuId);
+
+    /**
+     * 查询商品详情
+     *
+     * @param skuId
+     * @return
+     */
+    SkuInfoPO queryBySkuIdFromCache(Long skuId);
 }
