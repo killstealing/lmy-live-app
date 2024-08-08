@@ -45,4 +45,10 @@ public interface IRedPacketConfigService {
      * @param reqDTO
      */
     Boolean startRedPacket(RedPacketConfigReqDTO reqDTO);
+    /**
+     * 根据红包雨配置code检索信息
+     *
+     * @param configCode
+     */
+    RedPacketConfigPO queryByConfigCode(String configCode);
 }
