@@ -30,6 +30,13 @@ public class GiftProviderCacheKeyBuilder extends RedisKeyBuilder {
 
     private static String RED_PACKET_PREPARE_SUCCESS = "red_packet_prepare_success";
     private static String RED_PACKET_NOTIFY = "red_packet_notify";
+
+    private static String SKU_DETAIL = "sku_detail";
+
+    public String buildSkuDetail(Long skuId) {
+        return super.getPrefix() + SKU_DETAIL + super.getSplitItem() + skuId;
+    }
+
     public String buildRedPacketNotify(String code) {
         return super.getPrefix() + RED_PACKET_NOTIFY + super.getSplitItem() + code;
     }

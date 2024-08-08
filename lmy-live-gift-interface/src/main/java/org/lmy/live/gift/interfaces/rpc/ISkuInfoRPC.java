@@ -1,5 +1,6 @@
 package org.lmy.live.gift.interfaces.rpc;
 
+import org.lmy.live.gift.interfaces.dto.SkuDetailInfoDTO;
 import org.lmy.live.gift.interfaces.dto.SkuInfoDTO;
 
 import java.util.List;
@@ -18,4 +19,12 @@ public interface ISkuInfoRPC {
      * @return
      */
     List<SkuInfoDTO> queryByAnchorId(Long anchorId);
+
+    /**
+     * 查询商品详情
+     *
+     * @param skuId
+     * @return
+     */
+    SkuDetailInfoDTO queryBySkuId(Long skuId);
 }
