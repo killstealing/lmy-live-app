@@ -1,17 +1,15 @@
-package org.lmy.live.gift.interfaces.dto;
+package org.idea.lmy.live.api.vo.resp;
 
-import java.io.Serial;
-import java.io.Serializable;
+import org.lmy.live.gift.interfaces.dto.ShopCarItemRespDTO;
+
 import java.util.List;
 
 /**
  * @Author idea
- * @Date: Created in 16:39 2023/10/4
- * @Description 商品购物车数据展示
+ * @Date: Created in 16:57 2023/10/4
+ * @Description
  */
-public class ShopCarRespDTO implements Serializable {
-    @Serial
-    private static final long serialVersionUID = -2333856134764035912L;
+public class ShopCarRespVO {
 
     private Long userId;
     private Integer roomId;

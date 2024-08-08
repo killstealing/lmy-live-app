@@ -5,13 +5,17 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.idea.lmy.live.api.service.IShopInfoService;
 import org.idea.lmy.live.api.vo.req.ShopCarReqVO;
 import org.idea.lmy.live.api.vo.req.SkuInfoReqVO;
+import org.idea.lmy.live.api.vo.resp.ShopCarRespVO;
 import org.idea.lmy.live.api.vo.resp.SkuDetailInfoVO;
 import org.idea.lmy.live.api.vo.resp.SkuInfoVO;
 import org.lmy.live.common.interfaces.utils.ConvertBeanUtils;
+import org.lmy.live.gift.interfaces.dto.ShopCarReqDTO;
 import org.lmy.live.gift.interfaces.dto.SkuInfoDTO;
+import org.lmy.live.gift.interfaces.rpc.IShopCarRPC;
 import org.lmy.live.gift.interfaces.rpc.ISkuInfoRPC;
 import org.lmy.live.living.interfaces.dto.LivingRoomRespDTO;
 import org.lmy.live.living.interfaces.rpc.ILivingRoomRpc;
+import org.lmy.live.web.starter.context.LmyRequestContext;
 import org.lmy.live.web.starter.error.BizBaseErrorEnum;
 import org.lmy.live.web.starter.error.ErrorAssert;
 import org.springframework.stereotype.Service;
@@ -30,6 +34,8 @@ public class ShopInfoServiceImpl implements IShopInfoService {
     private ILivingRoomRpc livingRoomRpc;
     @DubboReference
     private ISkuInfoRPC skuInfoRPC;
+    @DubboReference
+    private IShopCarRPC shopCarRPC;
 
     @Override
     public List<SkuInfoVO> queryByRoomId(Integer roomId) {
@@ -46,9 +52,31 @@ public class ShopInfoServiceImpl implements IShopInfoService {
         return ConvertBeanUtils.convert(skuInfoRPC.queryBySkuId(skuInfoReqVO.getSkuId()),SkuDetailInfoVO.class);
     }
 
-
     @Override
     public Boolean addCar(ShopCarReqVO shopCarReqVO) {
-        return null;
+        ShopCarReqDTO shopCarReqDTO = ConvertBeanUtils.convert(shopCarReqVO, ShopCarReqDTO.class);
+        shopCarReqDTO.setUserId(LmyRequestContext.getUserId());
+        return shopCarRPC.addCar(shopCarReqDTO);
+    }
+
+    @Override
+    public ShopCarRespVO getCarInfo(ShopCarReqVO shopCarReqVO) {
+        ShopCarReqDTO shopCarReqDTO = ConvertBeanUtils.convert(shopCarReqVO, ShopCarReqDTO.class);
+        shopCarReqDTO.setUserId(LmyRequestContext.getUserId());
+        return ConvertBeanUtils.convert(shopCarRPC.getCarInfo(shopCarReqDTO),ShopCarRespVO.class);
+    }
+
+    @Override
+    public Boolean removeFromCar(ShopCarReqVO shopCarReqVO) {
+        ShopCarReqDTO shopCarReqDTO = ConvertBeanUtils.convert(shopCarReqVO, ShopCarReqDTO.class);
+        shopCarReqDTO.setUserId(LmyRequestContext.getUserId());
+        return shopCarRPC.removeFromCar(shopCarReqDTO);
+    }
+
+    @Override
+    public Boolean clearShopCar(ShopCarReqVO shopCarReqVO) {
+        ShopCarReqDTO shopCarReqDTO = ConvertBeanUtils.convert(shopCarReqVO, ShopCarReqDTO.class);
+        shopCarReqDTO.setUserId(LmyRequestContext.getUserId());
+        return shopCarRPC.clearShopCar(shopCarReqDTO);
     }
 }
