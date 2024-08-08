@@ -19,6 +19,8 @@ public class SkuStockInfoPO {
     private Long skuId;
     private Integer stockNum;
     private Integer status;
+
+    private Integer version;
     private Date createTime;
     private Date updateTime;
 
@@ -70,6 +72,14 @@ public class SkuStockInfoPO {
         this.updateTime = updateTime;
     }
 
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
     @Override
     public String toString() {
         return "SkuStockInfoPO{" +
@@ -77,6 +87,7 @@ public class SkuStockInfoPO {
                 ", skuId=" + skuId +
                 ", stockNum=" + stockNum +
                 ", status=" + status +
+                ", version=" + version +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 '}';
