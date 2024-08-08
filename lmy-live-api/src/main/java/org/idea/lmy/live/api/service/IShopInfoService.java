@@ -1,5 +1,6 @@
 package org.idea.lmy.live.api.service;
 
+import org.idea.lmy.live.api.vo.req.ShopCarReqVO;
 import org.idea.lmy.live.api.vo.req.SkuInfoReqVO;
 import org.idea.lmy.live.api.vo.resp.SkuDetailInfoVO;
 import org.idea.lmy.live.api.vo.resp.SkuInfoVO;
@@ -26,4 +27,11 @@ public interface IShopInfoService {
      * @param skuInfoReqVO
      */
     SkuDetailInfoVO detail(SkuInfoReqVO skuInfoReqVO);
+
+    /**
+     * 添加商品到购物车
+     *
+     * @param shopCarReqVO
+     */
+    Boolean addCar(ShopCarReqVO shopCarReqVO);
 }

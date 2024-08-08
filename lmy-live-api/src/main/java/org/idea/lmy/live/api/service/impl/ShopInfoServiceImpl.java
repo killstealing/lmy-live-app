@@ -3,6 +3,7 @@ package org.idea.lmy.live.api.service.impl;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.idea.lmy.live.api.service.IShopInfoService;
+import org.idea.lmy.live.api.vo.req.ShopCarReqVO;
 import org.idea.lmy.live.api.vo.req.SkuInfoReqVO;
 import org.idea.lmy.live.api.vo.resp.SkuDetailInfoVO;
 import org.idea.lmy.live.api.vo.resp.SkuInfoVO;
@@ -43,5 +44,11 @@ public class ShopInfoServiceImpl implements IShopInfoService {
     @Override
     public SkuDetailInfoVO detail(SkuInfoReqVO skuInfoReqVO) {
         return ConvertBeanUtils.convert(skuInfoRPC.queryBySkuId(skuInfoReqVO.getSkuId()),SkuDetailInfoVO.class);
+    }
+
+
+    @Override
+    public Boolean addCar(ShopCarReqVO shopCarReqVO) {
+        return null;
     }
 }
