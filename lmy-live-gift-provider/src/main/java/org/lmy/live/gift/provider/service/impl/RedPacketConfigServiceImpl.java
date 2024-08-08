@@ -1,25 +1,36 @@
 package org.lmy.live.gift.provider.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.idea.lmy.live.framework.redis.starter.key.GiftProviderCacheKeyBuilder;
-import org.lmy.live.common.interfaces.enums.CommonStatusEum;
 import org.lmy.live.common.interfaces.utils.ListUtils;
+import org.lmy.live.gift.interfaces.constants.RedPacketStatusCodeEnum;
 import org.lmy.live.gift.interfaces.dto.RedPacketConfigReqDTO;
 import org.lmy.live.gift.interfaces.dto.RedPacketReceiveDTO;
 import org.lmy.live.gift.provider.dao.mapper.RedPacketConfigMapper;
 import org.lmy.live.gift.provider.dao.po.RedPacketConfigPO;
 import org.lmy.live.gift.provider.service.IRedPacketConfigService;
+import org.lmy.live.im.interfaces.constants.AppIdEnum;
+import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
+import org.lmy.live.im.router.interfaces.constants.ImMsgBizCodeEnum;
+import org.lmy.live.im.router.interfaces.rpc.ImRouterRpc;
+import org.lmy.live.living.interfaces.dto.LivingRoomReqDTO;
+import org.lmy.live.living.interfaces.rpc.ILivingRoomRpc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class RedPacketConfigServiceImpl implements IRedPacketConfigService {
@@ -32,11 +43,16 @@ public class RedPacketConfigServiceImpl implements IRedPacketConfigService {
     @Resource
     private GiftProviderCacheKeyBuilder cacheKeyBuilder;
 
+    @DubboReference
+    private ImRouterRpc routerRpc;
+    @DubboReference
+    private ILivingRoomRpc livingRoomRpc;
+
     @Override
     public RedPacketConfigPO queryByAnchorId(Long anchorId) {
         LambdaQueryWrapper<RedPacketConfigPO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(RedPacketConfigPO::getAnchorId, anchorId);
-        queryWrapper.eq(RedPacketConfigPO::getStatus, CommonStatusEum.VALID_STATUS.getCode());
+        queryWrapper.eq(RedPacketConfigPO::getStatus, RedPacketStatusCodeEnum.IS_PREPARE.getCode());
         queryWrapper.orderByDesc(RedPacketConfigPO::getCreateTime);
         queryWrapper.last("limit 1");
         return redPacketConfigMapper.selectOne(queryWrapper);
@@ -60,7 +76,8 @@ public class RedPacketConfigServiceImpl implements IRedPacketConfigService {
         if(redPacketConfigPO==null){
             return false;
         }
-        String lockCacheKey = cacheKeyBuilder.buildRedPacketInitLock(redPacketConfigPO.getConfigCode());
+        String configCode = redPacketConfigPO.getConfigCode();
+        String lockCacheKey = cacheKeyBuilder.buildRedPacketInitLock(configCode);
         boolean lockFlag = redisTemplate.opsForValue().setIfAbsent(lockCacheKey, 1, 3, TimeUnit.SECONDS);
         if(!lockFlag){
             return false;
@@ -68,15 +85,16 @@ public class RedPacketConfigServiceImpl implements IRedPacketConfigService {
         Integer totalCount = redPacketConfigPO.getTotalCount();
         Integer totalPrice = redPacketConfigPO.getTotalPrice();
         List<Integer> redPacketPriceList = this.createRedPacketPriceList(totalPrice, totalCount);
-        String cacheKey = cacheKeyBuilder.buildRedPacketList(redPacketConfigPO.getConfigCode());
+        String cacheKey = cacheKeyBuilder.buildRedPacketList(configCode);
         //redis 输入输出缓冲区
         List<List<Integer>> splitList = ListUtils.splitList(redPacketPriceList, 100);
         for (List<Integer> list:splitList) {
             redisTemplate.opsForList().leftPushAll(cacheKey,list);
         }
-        redPacketConfigPO.setStatus(CommonStatusEum.INVALID_STATUS.getCode());
+        redisTemplate.expire(cacheKey,1,TimeUnit.DAYS);
+        redPacketConfigPO.setStatus(RedPacketStatusCodeEnum.IS_PREPARE.getCode());
         this.updateById(redPacketConfigPO);
-
+        redisTemplate.opsForValue().set(cacheKeyBuilder.buildRedPacketPrepareSuccess(configCode), 1, 1, TimeUnit.DAYS);
         return true;
     }
 
@@ -130,8 +148,43 @@ public class RedPacketConfigServiceImpl implements IRedPacketConfigService {
         if (redisTemplate.hasKey(notifySuccessCache)) {
             return false;
         }
-
+        RedPacketConfigPO redPacketConfigPO = this.queryByAnchorId(reqDTO.getUserId());
+        LivingRoomReqDTO livingRoomReqDTO=new LivingRoomReqDTO();
+        livingRoomReqDTO.setRoomId(reqDTO.getRoomId());
+        livingRoomReqDTO.setAppId(AppIdEnum.LMY_LIVE_BIZ.getCode());
+        List<Long> userIdListInRoom = livingRoomRpc.queryUserIdByRoomId(livingRoomReqDTO);
+        if(CollectionUtils.isEmpty(userIdListInRoom)){
+            return false;
+        }
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("redPacketConfig", JSON.toJSONString(redPacketConfigPO));
+        this.batchSendImMsg(userIdListInRoom,ImMsgBizCodeEnum.START_RED_PACKET,jsonObject);
+        redPacketConfigPO.setStatus(RedPacketStatusCodeEnum.HAS_SEND.getCode());
+        this.updateById(redPacketConfigPO);
+        redisTemplate.opsForValue().set(notifySuccessCache, 1, 1, TimeUnit.DAYS);
         return true;
+    }
+
+    @Override
+    public RedPacketConfigPO queryByConfigCode(String configCode) {
+        LambdaQueryWrapper<RedPacketConfigPO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(RedPacketConfigPO::getConfigCode, configCode);
+        queryWrapper.eq(RedPacketConfigPO::getStatus, RedPacketStatusCodeEnum.IS_PREPARE.getCode());
+        queryWrapper.orderByDesc(RedPacketConfigPO::getCreateTime);
+        queryWrapper.last("limit 1");
+        return redPacketConfigMapper.selectOne(queryWrapper);
+    }
+
+    private void batchSendImMsg(List<Long> userIdList, ImMsgBizCodeEnum imMsgBizCodeEnum, JSONObject jsonObject) {
+        List<ImMsgBodyDTO> imMsgBodies = userIdList.stream().map(userId -> {
+            ImMsgBodyDTO imMsgBody = new ImMsgBodyDTO();
+            imMsgBody.setAppId(AppIdEnum.LMY_LIVE_BIZ.getCode());
+            imMsgBody.setBizCode(imMsgBizCodeEnum.getCode());
+            imMsgBody.setUserId(userId);
+            imMsgBody.setData(jsonObject.toJSONString());
+            return imMsgBody;
+        }).collect(Collectors.toList());
+        routerRpc.batchSendMsg(imMsgBodies);
     }
 
 
