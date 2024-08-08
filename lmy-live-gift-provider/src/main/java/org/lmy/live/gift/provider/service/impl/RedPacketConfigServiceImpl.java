@@ -5,7 +5,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.rocketmq.client.producer.MQProducer;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.client.producer.SendStatus;
+import org.apache.rocketmq.common.message.Message;
 import org.idea.lmy.live.framework.redis.starter.key.GiftProviderCacheKeyBuilder;
+import org.lmy.live.bank.interfaces.rpc.ILmyCurrencyAccountRpc;
+import org.lmy.live.common.interfaces.topic.GiftProviderTopicNames;
 import org.lmy.live.common.interfaces.utils.ListUtils;
 import org.lmy.live.gift.interfaces.constants.RedPacketStatusCodeEnum;
 import org.lmy.live.gift.interfaces.dto.RedPacketConfigReqDTO;
@@ -13,6 +19,7 @@ import org.lmy.live.gift.interfaces.dto.RedPacketReceiveDTO;
 import org.lmy.live.gift.provider.dao.mapper.RedPacketConfigMapper;
 import org.lmy.live.gift.provider.dao.po.RedPacketConfigPO;
 import org.lmy.live.gift.provider.service.IRedPacketConfigService;
+import org.lmy.live.gift.provider.service.bo.SendRedPacketBO;
 import org.lmy.live.im.interfaces.constants.AppIdEnum;
 import org.lmy.live.im.interfaces.dto.ImMsgBodyDTO;
 import org.lmy.live.im.router.interfaces.constants.ImMsgBizCodeEnum;
@@ -48,11 +55,17 @@ public class RedPacketConfigServiceImpl implements IRedPacketConfigService {
     @DubboReference
     private ILivingRoomRpc livingRoomRpc;
 
+    @DubboReference
+    private ILmyCurrencyAccountRpc accountRpc;
+
+    @Resource
+    MQProducer mqProducer;
+
     @Override
     public RedPacketConfigPO queryByAnchorId(Long anchorId) {
         LambdaQueryWrapper<RedPacketConfigPO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(RedPacketConfigPO::getAnchorId, anchorId);
-        queryWrapper.eq(RedPacketConfigPO::getStatus, RedPacketStatusCodeEnum.IS_PREPARE.getCode());
+        queryWrapper.eq(RedPacketConfigPO::getStatus, RedPacketStatusCodeEnum.NOT_PREPARE.getCode());
         queryWrapper.orderByDesc(RedPacketConfigPO::getCreateTime);
         queryWrapper.last("limit 1");
         return redPacketConfigMapper.selectOne(queryWrapper);
@@ -89,7 +102,7 @@ public class RedPacketConfigServiceImpl implements IRedPacketConfigService {
         //redis 输入输出缓冲区
         List<List<Integer>> splitList = ListUtils.splitList(redPacketPriceList, 100);
         for (List<Integer> list:splitList) {
-            redisTemplate.opsForList().leftPushAll(cacheKey,list);
+            redisTemplate.opsForList().leftPushAll(cacheKey,list.toArray());
         }
         redisTemplate.expire(cacheKey,1,TimeUnit.DAYS);
         redPacketConfigPO.setStatus(RedPacketStatusCodeEnum.IS_PREPARE.getCode());
@@ -126,16 +139,22 @@ public class RedPacketConfigServiceImpl implements IRedPacketConfigService {
             return null;
         }
         Integer price = (Integer) cacheObj;
-        String totalGetPriceCacheKey = cacheKeyBuilder.buildRedPacketTotalPrice(code);
-        String totalGetCacheKey = cacheKeyBuilder.buildRedPacketTotalCount(code);
-        redisTemplate.opsForValue().increment(cacheKeyBuilder.buildUserTotalGetPriceCache(reqDTO.getUserId()),price);
-        redisTemplate.opsForValue().increment(totalGetCacheKey);
-        redisTemplate.expire(totalGetCacheKey, 1, TimeUnit.DAYS);
-        redisTemplate.opsForValue().increment(totalGetPriceCacheKey, price);
-        redisTemplate.expire(totalGetPriceCacheKey, 1, TimeUnit.DAYS);
-        //todo lua脚本去记录最大值
         logger.info("[receiveRedPacket] code is {},price is {}", code, price);
-        return new RedPacketReceiveDTO(price);
+        SendRedPacketBO sendRedPacketBO = new SendRedPacketBO();
+        sendRedPacketBO.setPrice(price);
+        sendRedPacketBO.setReqDTO(reqDTO);
+        Message message = new Message();
+        message.setTopic(GiftProviderTopicNames.RECEIVE_RED_PACKET);
+        message.setBody(JSON.toJSONBytes(sendRedPacketBO));
+        try {
+            SendResult sendResult = mqProducer.send(message);
+            if (SendStatus.SEND_OK.equals(sendResult.getSendStatus())) {
+                return new RedPacketReceiveDTO(price, "恭喜领取红包" + price + "旗鱼币");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return new RedPacketReceiveDTO(null, "抱歉，红包被人抢走了，再试试？");
     }
 
     @Override
@@ -148,7 +167,7 @@ public class RedPacketConfigServiceImpl implements IRedPacketConfigService {
         if (redisTemplate.hasKey(notifySuccessCache)) {
             return false;
         }
-        RedPacketConfigPO redPacketConfigPO = this.queryByAnchorId(reqDTO.getUserId());
+        RedPacketConfigPO redPacketConfigPO = this.queryByConfigCode(code);
         LivingRoomReqDTO livingRoomReqDTO=new LivingRoomReqDTO();
         livingRoomReqDTO.setRoomId(reqDTO.getRoomId());
         livingRoomReqDTO.setAppId(AppIdEnum.LMY_LIVE_BIZ.getCode());
@@ -185,6 +204,21 @@ public class RedPacketConfigServiceImpl implements IRedPacketConfigService {
             return imMsgBody;
         }).collect(Collectors.toList());
         routerRpc.batchSendMsg(imMsgBodies);
+    }
+
+    @Override
+    public void receiveRedPacketHandle(RedPacketConfigReqDTO reqDTO,Integer price) {
+        String code = reqDTO.getRedPacketConfigCode();
+        String totalGetPriceCacheKey = cacheKeyBuilder.buildRedPacketTotalPrice(code);
+        String totalGetCacheKey = cacheKeyBuilder.buildRedPacketTotalCount(code);
+        redisTemplate.opsForValue().increment(cacheKeyBuilder.buildUserTotalGetPriceCache(reqDTO.getUserId()), price);
+        redisTemplate.opsForValue().increment(totalGetCacheKey);
+        redisTemplate.expire(totalGetCacheKey, 1, TimeUnit.DAYS);
+        redisTemplate.opsForValue().increment(totalGetPriceCacheKey, price);
+        redisTemplate.expire(totalGetPriceCacheKey, 1, TimeUnit.DAYS);
+        accountRpc.incr(reqDTO.getUserId(), price);
+        redPacketConfigMapper.incrTotalGetPrice(code,price);
+        redPacketConfigMapper.incrTotalGet(code);
     }
 
 

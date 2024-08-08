@@ -27,6 +27,7 @@ public class GiftProviderCacheKeyBuilder extends RedisKeyBuilder {
 
     private static String MAX_GET_PRICE_CACHE = "max_get_price_cache";
     private static String USER_TOTAL_GET_PRICE_CACHE = "user_total_get_price_cache";
+
     private static String RED_PACKET_PREPARE_SUCCESS = "red_packet_prepare_success";
     private static String RED_PACKET_NOTIFY = "red_packet_notify";
     public String buildRedPacketNotify(String code) {

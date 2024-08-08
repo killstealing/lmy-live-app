@@ -35,7 +35,7 @@ public class LivingRoomController {
     }
 
     @PostMapping("/getRedPacket")
-    @RequestLimit(limit = 1, second = 7, msg = "")
+    @RequestLimit(limit = 1, second = 1, msg = "")
     public WebResponseVO getRedPacket(LivingRoomReqVO livingRoomReqVO) {
         return WebResponseVO.success(livingRoomService.getRedPacket(LmyRequestContext.getUserId(),livingRoomReqVO.getRedPacketConfigCode()));
     }
