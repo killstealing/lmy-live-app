@@ -2,6 +2,7 @@ package org.idea.lmy.live.api.service;
 
 import org.idea.lmy.live.api.vo.req.ShopCarReqVO;
 import org.idea.lmy.live.api.vo.req.SkuInfoReqVO;
+import org.idea.lmy.live.api.vo.resp.ShopCarRespVO;
 import org.idea.lmy.live.api.vo.resp.SkuDetailInfoVO;
 import org.idea.lmy.live.api.vo.resp.SkuInfoVO;
 
@@ -34,4 +35,25 @@ public interface IShopInfoService {
      * @param shopCarReqVO
      */
     Boolean addCar(ShopCarReqVO shopCarReqVO);
+
+
+    /**
+     * 查看购物车信息
+     * @param shopCarReqVO
+     */
+    ShopCarRespVO getCarInfo(ShopCarReqVO shopCarReqVO);
+
+    /**
+     * 移除购物车
+     *
+     * @param shopCarReqVO
+     */
+    Boolean removeFromCar(ShopCarReqVO shopCarReqVO);
+
+    /**
+     * 清除整个购物车
+     *
+     * @param shopCarReqVO
+     */
+    Boolean clearShopCar(ShopCarReqVO shopCarReqVO);
 }
