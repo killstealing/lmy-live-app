@@ -51,4 +51,11 @@ public interface IRedPacketConfigService {
      * @param configCode
      */
     RedPacketConfigPO queryByConfigCode(String configCode);
+    /**
+     * 领红包之后的处理
+     *
+     * @param reqDTO
+     * @param price
+     */
+    void receiveRedPacketHandle(RedPacketConfigReqDTO reqDTO,Integer price);
 }

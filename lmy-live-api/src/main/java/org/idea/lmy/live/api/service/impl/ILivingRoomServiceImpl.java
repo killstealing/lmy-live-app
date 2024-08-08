@@ -141,6 +141,7 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
             redPacketReceiveVO.setMsg("红包已派发完毕");
         }else{
             redPacketReceiveVO.setPrice(redPacketReceiveDTO.getPrice());
+            redPacketReceiveVO.setMsg(redPacketReceiveDTO.getNotifyMsg());
         }
         return redPacketReceiveVO;
     }

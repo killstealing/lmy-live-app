@@ -11,7 +11,7 @@
  Target Server Version : 80035
  File Encoding         : 65001
 
- Date: 07/08/2024 22:18:53
+ Date: 08/08/2024 16:32:51
 */
 
 SET NAMES utf8mb4;
@@ -28,7 +28,7 @@ CREATE TABLE `t_red_packet_config`  (
   `total_get` int NULL DEFAULT 0 COMMENT '一共领取的数量',
   `total_get_price` int NULL DEFAULT 0 COMMENT '一共领取金额',
   `max_get_price` int NULL DEFAULT 0 COMMENT '最大领取金额',
-  `status` tinyint NULL DEFAULT 1 COMMENT '状态(0无效1有效)',
+  `status` tinyint NULL DEFAULT 1 COMMENT '1待准备2已准备3已发送',
   `total_price` int NULL DEFAULT 0 COMMENT '红包雨总金额数',
   `total_count` int NULL DEFAULT 0 COMMENT '红包雨总红宝数',
   `config_code` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL COMMENT '红包config code',
@@ -37,5 +37,10 @@ CREATE TABLE `t_red_packet_config`  (
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb3 COLLATE = utf8mb3_bin ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of t_red_packet_config
+-- ----------------------------
+INSERT INTO `t_red_packet_config` VALUES (3, 45601, '2024-08-08 07:21:03', 11, 0, 0, 1, 1000, 100, '3123123fdsafas132313', '1231231asdfa123', '2024-08-08 08:32:43', '2024-08-08 07:21:03');
 
 SET FOREIGN_KEY_CHECKS = 1;
