@@ -23,6 +23,13 @@ public interface ISkuStockInfoRPC {
      */
     boolean prepareStockInfo(Long anchorId);
 
+    /**
+     * 根据skuId更新库存值
+     * @param skuId
+     * @param num
+     */
+    boolean decrStockNumBySkuIdV2(Long skuId,Integer num);
+
     //提供基础的缓存查询接口
 
     /**

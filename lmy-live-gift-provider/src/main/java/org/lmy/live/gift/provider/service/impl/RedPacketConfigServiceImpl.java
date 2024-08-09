@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
-import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.rocketmq.client.producer.MQProducer;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.client.producer.SendStatus;
@@ -50,12 +49,12 @@ public class RedPacketConfigServiceImpl implements IRedPacketConfigService {
     @Resource
     private GiftProviderCacheKeyBuilder cacheKeyBuilder;
 
-    @DubboReference
+//    @DubboReference
     private ImRouterRpc routerRpc;
-    @DubboReference
+//    @DubboReference
     private ILivingRoomRpc livingRoomRpc;
 
-    @DubboReference
+//    @DubboReference
     private ILmyCurrencyAccountRpc accountRpc;
 
     @Resource
