@@ -34,6 +34,10 @@ public class GiftProviderCacheKeyBuilder extends RedisKeyBuilder {
     private static String SKU_STOCK = "sku_stock";
     private static String SHOP_CAR = "shop_car";
     private static String SKU_STOCK_SYNC_LOCK = "sku_stock_sync_lock";
+    private static String SKU_ORDER = "sku_order";
+    public String buildSkuOrder(Long userId,Integer roomId) {
+        return super.getPrefix() + SKU_ORDER + super.getSplitItem() + userId + super.getSplitItem() + roomId;
+    }
     public String buildSkuStockLock() {
         return super.getPrefix() + SKU_STOCK_SYNC_LOCK + super.getSplitItem();
     }
