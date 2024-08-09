@@ -16,6 +16,7 @@ import org.lmy.live.gift.provider.service.ISkuOrderInfoService;
 import org.lmy.live.gift.provider.service.ISkuStockInfoService;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,12 +53,12 @@ public class SkuOrderInfoRPCImpl implements ISkuOrderInfoRPC {
     }
 
     @Override
-    public boolean prepareOrder(PrepareOrderReqDTO prepareOrderReqDTO) {
+    public SkuPrepareOrderInfoDTO prepareOrder(PrepareOrderReqDTO prepareOrderReqDTO) {
         ShopCarReqDTO shopCarReqDTO = ConvertBeanUtils.convert(prepareOrderReqDTO, ShopCarReqDTO.class);
         ShopCarRespDTO shopCarRespDTO = shopCarService.getCarInfo(shopCarReqDTO);
         List<ShopCarItemRespDTO> carItemList = shopCarRespDTO.getShopCarItemRespDTOS();
         if (CollectionUtils.isEmpty(carItemList)) {
-            return false;
+            return null;
         }
         List<Long> skuIdList = carItemList.stream().map(item -> item.getSkuInfoDTO().getSkuId()).collect(Collectors.toList());
         //核心的知识点 库存回滚
@@ -81,8 +82,21 @@ public class SkuOrderInfoRPCImpl implements ISkuOrderInfoRPC {
         //2.redis的过期回调 key过期之后，会有一个回调通知，orderid:1001 ttl到期之后会回调到订阅方, redis key 存起来，回调并不是高可靠的，可能回丢失
         //3.rocketmq 延迟消息，时间轮去做的
         //4.将扣减库存的信息 利用rmq发送出去，在延迟回调处进行校验，
-        shopCarService.removeFromCar(shopCarReqDTO);
-        return true;
+//        shopCarService.removeFromCar(shopCarReqDTO);
+        List<ShopCarItemRespDTO> shopCarItemRespDTOS = shopCarRespDTO.getShopCarItemRespDTOS();
+        List<SkuPrepareOrderItemInfoDTO> itemList = new ArrayList<>();
+        Integer totalPrice = 0;
+        for (ShopCarItemRespDTO shopCarItemRespDTO : shopCarItemRespDTOS) {
+            SkuPrepareOrderItemInfoDTO orderItemInfoDTO = new SkuPrepareOrderItemInfoDTO();
+            orderItemInfoDTO.setSkuInfoDTO(shopCarItemRespDTO.getSkuInfoDTO());
+            orderItemInfoDTO.setCount(shopCarItemRespDTO.getCount());
+            itemList.add(orderItemInfoDTO);
+            totalPrice = totalPrice + shopCarItemRespDTO.getSkuInfoDTO().getSkuPrice();
+        }
+        SkuPrepareOrderInfoDTO skuPrepareOrderInfoDTO = new SkuPrepareOrderInfoDTO();
+        skuPrepareOrderInfoDTO.setSkuPrepareOrderItemInfoDTOS(itemList);
+        skuPrepareOrderInfoDTO.setTotalPrice(totalPrice);
+        return skuPrepareOrderInfoDTO;
     }
 
     private void stockRollBackHandler(Long userId,Long orderId) {

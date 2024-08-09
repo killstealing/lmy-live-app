@@ -1,10 +1,12 @@
 package org.idea.lmy.live.api.service;
 
+import org.idea.lmy.live.api.vo.PrepareOrderVO;
 import org.idea.lmy.live.api.vo.req.ShopCarReqVO;
 import org.idea.lmy.live.api.vo.req.SkuInfoReqVO;
 import org.idea.lmy.live.api.vo.resp.ShopCarRespVO;
 import org.idea.lmy.live.api.vo.resp.SkuDetailInfoVO;
 import org.idea.lmy.live.api.vo.resp.SkuInfoVO;
+import org.lmy.live.gift.interfaces.dto.SkuPrepareOrderInfoDTO;
 
 import java.util.List;
 
@@ -56,4 +58,16 @@ public interface IShopInfoService {
      * @param shopCarReqVO
      */
     Boolean clearShopCar(ShopCarReqVO shopCarReqVO);
+    /**
+     * 预下单接口
+     *
+     * @param prepareOrderVO
+     */
+    SkuPrepareOrderInfoDTO prepareOrder(PrepareOrderVO prepareOrderVO);
+
+    /**
+     * 立即支付
+     * @param prepareOrderVO
+     */
+    boolean payNow(PrepareOrderVO prepareOrderVO);
 }

@@ -43,7 +43,7 @@ public class ShopCarServiceImpl implements IShopCarService {
         Map<Long, Integer> skuCountMap = new HashMap<>();
         while (allCarData.hasNext()) {
             Map.Entry<Object, Object> entry = allCarData.next();
-            skuCountMap.put((Long) entry.getKey(), (Integer) entry.getValue());
+            skuCountMap.put(Long.valueOf(String.valueOf(entry.getKey())) , (Integer) entry.getValue());
         }
         List<SkuInfoPO> skuInfoDTOList = skuInfoService.queryBySkuIds(new ArrayList<>(skuCountMap.keySet()));
         for (SkuInfoPO skuInfoPO : skuInfoDTOList) {
@@ -67,7 +67,7 @@ public class ShopCarServiceImpl implements IShopCarService {
         // string （对象，对象里面关联上商品的数据信息）
         // set / list
         // map （k,v） key是skuId，value是商品的数量
-        redisTemplate.opsForHash().put(cacheKey,shopCarReqDTO.getSkuId(),1);
+        redisTemplate.opsForHash().put(cacheKey,String.valueOf(shopCarReqDTO.getSkuId()),1);
         return true;
     }
 
