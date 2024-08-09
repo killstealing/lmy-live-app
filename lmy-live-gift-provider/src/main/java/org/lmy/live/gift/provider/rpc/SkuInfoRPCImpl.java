@@ -1,6 +1,7 @@
 package org.lmy.live.gift.provider.rpc;
 
 import jakarta.annotation.Resource;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.lmy.live.common.interfaces.utils.ConvertBeanUtils;
 import org.lmy.live.gift.interfaces.dto.SkuDetailInfoDTO;
 import org.lmy.live.gift.interfaces.dto.SkuInfoDTO;
@@ -8,7 +9,6 @@ import org.lmy.live.gift.interfaces.rpc.ISkuInfoRPC;
 import org.lmy.live.gift.provider.dao.po.SkuInfoPO;
 import org.lmy.live.gift.provider.service.IAnchorShopInfoService;
 import org.lmy.live.gift.provider.service.ISkuInfoService;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
  * @Date: Created in 20:11 2023/10/3
  * @Description
  */
-@Service
+@DubboService
 public class SkuInfoRPCImpl implements ISkuInfoRPC {
 
     @Resource

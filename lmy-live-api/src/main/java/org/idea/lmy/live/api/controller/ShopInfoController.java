@@ -2,6 +2,7 @@ package org.idea.lmy.live.api.controller;
 
 import jakarta.annotation.Resource;
 import org.idea.lmy.live.api.service.IShopInfoService;
+import org.idea.lmy.live.api.vo.PrepareOrderVO;
 import org.idea.lmy.live.api.vo.req.ShopCarReqVO;
 import org.idea.lmy.live.api.vo.req.SkuInfoReqVO;
 import org.lmy.live.common.interfaces.vo.WebResponseVO;
@@ -70,6 +71,17 @@ public class ShopInfoController {
     @PostMapping("/clearCar")
     public WebResponseVO clearCar(ShopCarReqVO reqVO) {
         return WebResponseVO.success(shopInfoService.clearShopCar(reqVO));
+    }
+
+    @PostMapping("/prepareOrder")
+    public WebResponseVO prepareOrder(PrepareOrderVO prepareOrderVO) {
+        return WebResponseVO.success(shopInfoService.prepareOrder(prepareOrderVO));
+    }
+
+
+    @PostMapping("/payNow")
+    public WebResponseVO payNow(PrepareOrderVO prepareOrderVO) {
+        return null;
     }
 
 
