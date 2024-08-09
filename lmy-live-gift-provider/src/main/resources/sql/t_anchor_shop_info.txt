@@ -1,0 +1,39 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : master_mysql_inDocker
+ Source Server Type    : MySQL
+ Source Server Version : 80035
+ Source Host           : 192.168.3.24:8808
+ Source Schema         : lmy_live_living
+
+ Target Server Type    : MySQL
+ Target Server Version : 80035
+ File Encoding         : 65001
+
+ Date: 09/08/2024 15:52:43
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for t_anchor_shop_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_anchor_shop_info`;
+CREATE TABLE `t_anchor_shop_info`  (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `anchor_id` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '主播id',
+  `sku_id` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '商品sku id',
+  `status` tinyint UNSIGNED NOT NULL DEFAULT 1 COMMENT '有效（0无效，1有效）',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '主播带货配置表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of t_anchor_shop_info
+-- ----------------------------
+INSERT INTO `t_anchor_shop_info` VALUES (1, 45601, 90713, 1, '2024-08-09 07:41:42', '2024-08-09 07:41:42');
+
+SET FOREIGN_KEY_CHECKS = 1;
