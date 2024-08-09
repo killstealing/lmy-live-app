@@ -3,6 +3,7 @@ package org.lmy.live.gift.provider.service;
 
 import org.lmy.live.gift.interfaces.dto.SkuOrderInfoReqDTO;
 import org.lmy.live.gift.interfaces.dto.SkuOrderInfoRespDTO;
+import org.lmy.live.gift.provider.dao.po.SkuOrderInfoPO;
 
 /**
  * @Author idea
@@ -20,11 +21,17 @@ public interface ISkuOrderInfoService {
     SkuOrderInfoRespDTO queryByUserIdAndRoomId(Long userId, Integer roomId);
 
     /**
+     * 直接根据订单id查询
+     * @param orderId
+     */
+    SkuOrderInfoRespDTO queryByOrderId(Long orderId);
+
+    /**
      * 插入一条订单信息
      *
      * @param skuOrderInfoReqDTO
      */
-    boolean insertOne(SkuOrderInfoReqDTO skuOrderInfoReqDTO);
+    SkuOrderInfoPO insertOne(SkuOrderInfoReqDTO skuOrderInfoReqDTO);
 
     /**
      * 根据订单id修改状态

@@ -53,12 +53,29 @@ public class SkuOrderInfoServiceImpl implements ISkuOrderInfoService {
     }
 
     @Override
-    public boolean insertOne(SkuOrderInfoReqDTO skuOrderInfoReqDTO) {
+    public SkuOrderInfoRespDTO queryByOrderId(Long orderId) {
+        String cacheKey = cacheKeyBuilder.buildSkuOrderInfo(orderId);
+        Object cacheObj = redisTemplate.opsForValue().get(cacheKey);
+        if (cacheObj != null) {
+            return ConvertBeanUtils.convert(cacheObj, SkuOrderInfoRespDTO.class);
+        }
+        SkuOrderInfoPO skuOrderInfoPO = skuOrderInfoMapper.selectById(orderId);
+        if (skuOrderInfoPO != null) {
+            SkuOrderInfoRespDTO skuOrderInfoRespDTO = ConvertBeanUtils.convert(skuOrderInfoPO, SkuOrderInfoRespDTO.class);
+            redisTemplate.opsForValue().set(cacheKey, skuOrderInfoRespDTO,60, TimeUnit.MINUTES);
+            return skuOrderInfoRespDTO;
+        }
+        return null;
+    }
+
+
+    @Override
+    public SkuOrderInfoPO insertOne(SkuOrderInfoReqDTO skuOrderInfoReqDTO) {
         String skuIdListStr = StringUtils.join(skuOrderInfoReqDTO.getSkuIdList(),",");
         SkuOrderInfoPO skuOrderInfoPO = ConvertBeanUtils.convert(skuOrderInfoReqDTO, SkuOrderInfoPO.class);
         skuOrderInfoPO.setSkuIdList(skuIdListStr);
         skuOrderInfoMapper.insert(skuOrderInfoPO);
-        return true;
+        return skuOrderInfoPO;
     }
 
     @Override

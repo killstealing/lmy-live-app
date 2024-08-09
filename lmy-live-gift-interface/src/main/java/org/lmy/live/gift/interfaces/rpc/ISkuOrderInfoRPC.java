@@ -1,6 +1,7 @@
 package org.lmy.live.gift.interfaces.rpc;
 
 
+import org.lmy.live.gift.interfaces.dto.PrepareOrderReqDTO;
 import org.lmy.live.gift.interfaces.dto.SkuOrderInfoReqDTO;
 import org.lmy.live.gift.interfaces.dto.SkuOrderInfoRespDTO;
 
@@ -32,4 +33,11 @@ public interface ISkuOrderInfoRPC {
      * @param reqDTO
      */
     boolean updateOrderStatus(SkuOrderInfoReqDTO reqDTO);
+
+    /**
+     * 预支付订单生成
+     *
+     * @param prepareOrderReqDTO
+     */
+    boolean prepareOrder(PrepareOrderReqDTO prepareOrderReqDTO);
 }
