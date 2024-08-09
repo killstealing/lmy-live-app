@@ -5,16 +5,23 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import jakarta.annotation.Resource;
 import org.idea.lmy.live.framework.redis.starter.key.GiftProviderCacheKeyBuilder;
 import org.lmy.live.common.interfaces.enums.CommonStatusEum;
+import org.lmy.live.gift.interfaces.constants.SkuOrderInfoEnum;
+import org.lmy.live.gift.interfaces.dto.RollBackStockDTO;
+import org.lmy.live.gift.interfaces.dto.SkuOrderInfoReqDTO;
+import org.lmy.live.gift.interfaces.dto.SkuOrderInfoRespDTO;
 import org.lmy.live.gift.provider.dao.mapper.SkuStockInfoMapper;
 import org.lmy.live.gift.provider.dao.po.SkuStockInfoPO;
+import org.lmy.live.gift.provider.service.ISkuOrderInfoService;
 import org.lmy.live.gift.provider.service.ISkuStockInfoService;
 import org.lmy.live.gift.provider.service.bo.DcrStockNumBO;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author idea
@@ -30,6 +37,8 @@ public class SkuStockInfoServiceImpl implements ISkuStockInfoService {
     private RedisTemplate<String, Object> redisTemplate;
     @Resource
     private GiftProviderCacheKeyBuilder cacheKeyBuilder;
+    @Resource
+    private ISkuOrderInfoService skuOrderInfoService;
 
     private String LUA_SCRIPT =
             "if (redis.call('exists', KEYS[1])) == 1 then " +
@@ -93,5 +102,22 @@ public class SkuStockInfoServiceImpl implements ISkuStockInfoService {
         qw.in(SkuStockInfoPO::getSkuId, skuIdList);
         qw.eq(SkuStockInfoPO::getStatus, CommonStatusEum.VALID_STATUS.getCode());
         return skuStockInfoMapper.selectList(qw);
+    }
+    @Override
+    public void stockRollBackHandler(RollBackStockDTO rollBackStockDTO) {
+        SkuOrderInfoRespDTO orderInfoRespDTO = skuOrderInfoService.queryByOrderId(rollBackStockDTO.getOrderId());
+        if (orderInfoRespDTO == null || SkuOrderInfoEnum.HAS_PAY.getCode().equals(orderInfoRespDTO.getStatus())) {
+            return;
+        }
+        SkuOrderInfoReqDTO reqDTO = new SkuOrderInfoReqDTO();
+        reqDTO.setStatus(SkuOrderInfoEnum.END.getCode());
+        reqDTO.setId(orderInfoRespDTO.getId());
+        skuOrderInfoService.updateOrderStatus(reqDTO);
+        //因为我们的直播带货场景比较特别，每件商品只能买一件
+        List<Long> skuIdList = Arrays.asList(orderInfoRespDTO.getSkuIdList().split(",")).stream().map(x->Long.valueOf(x)).collect(Collectors.toList());
+        skuIdList.parallelStream().forEach( skuId -> {
+            String skuStockCacheKey = cacheKeyBuilder.buildSkuStock(skuId);
+            redisTemplate.opsForValue().increment(skuStockCacheKey,1);
+        });
     }
 }

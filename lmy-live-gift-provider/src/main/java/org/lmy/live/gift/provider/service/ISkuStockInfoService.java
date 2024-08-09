@@ -1,5 +1,6 @@
 package org.lmy.live.gift.provider.service;
 
+import org.lmy.live.gift.interfaces.dto.RollBackStockDTO;
 import org.lmy.live.gift.provider.dao.po.SkuStockInfoPO;
 import org.lmy.live.gift.provider.service.bo.DcrStockNumBO;
 
@@ -48,4 +49,10 @@ public interface ISkuStockInfoService {
      * @param skuIdList
      */
     List<SkuStockInfoPO> queryBySkuIds(List<Long> skuIdList);
+    /**
+     * 处理库存回滚逻辑
+     *
+     * @param rollBackStockDTO
+     */
+    void stockRollBackHandler(RollBackStockDTO rollBackStockDTO);
 }
