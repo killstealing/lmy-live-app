@@ -25,6 +25,15 @@ public class LmyCurrencyAccountRpcImpl implements ILmyCurrencyAccountRpc {
     }
 
     @Override
+    public boolean decrV2(long userId, int num) {
+        Integer balance = this.lmyCurrencyAccountService.getBalance(userId);
+        if(balance>=num){
+            return lmyCurrencyAccountService.decr(userId, num);
+        }
+        return false;
+    }
+
+    @Override
     public LmyCurrencyAccountDTO getByUserId(long userId) {
         return lmyCurrencyAccountService.getByUserId(userId);
     }

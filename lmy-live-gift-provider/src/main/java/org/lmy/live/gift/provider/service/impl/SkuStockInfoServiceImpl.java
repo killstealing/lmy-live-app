@@ -18,6 +18,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -48,6 +49,19 @@ public class SkuStockInfoServiceImpl implements ISkuStockInfoService {
                     "   else return -1 end " +
                     "else " +
                     "return -1 end";
+
+    private String BATCH_LUA_SCRIPT="for i=1,ARGV[2] do \n"+
+            "     if (redis.call('exists', KEYS[i])) ~= 1 then return -1 end \n" +
+            "\tlocal currentStock=redis.call('get',KEYS[i]) \n"+
+            "\tif (tonumber(currentStock)<=0 and tonumber(currentStock)-tonumber(ARGV[1])<0) then\n"+
+            "       return -1\n"+
+            "\tend\n"+
+            "end \n"+
+            "\n"+
+            "for j=1,ARGV[2] do \n"+
+            "\tredis.call('decrby',KEYS[j],tonumber(ARGV[1]))\n"+
+            "end \n"+
+            "return 1";
 
     @Override
     public boolean updateStockNum(Long skuId, Integer num) {
@@ -86,6 +100,20 @@ public class SkuStockInfoServiceImpl implements ISkuStockInfoService {
         String skuStockCacheKey = cacheKeyBuilder.buildSkuStock(skuId);
         return redisTemplate.execute(redisScript, Collections.singletonList(skuStockCacheKey), num) >= 0;
     }
+
+    @Override
+    public boolean decrStockNumBySkuIdV3(List<Long> skuIdList, Integer num) {
+        DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>();
+        redisScript.setScriptText(BATCH_LUA_SCRIPT);
+        redisScript.setResultType(Long.class);
+        List<String> skuStockCacheKeyList=new ArrayList<>();
+        for(Long skuId:skuIdList){
+            String skuStockCacheKey = cacheKeyBuilder.buildSkuStock(skuId);
+            skuStockCacheKeyList.add(skuStockCacheKey);
+        }
+        return redisTemplate.execute(redisScript, skuStockCacheKeyList, num,skuStockCacheKeyList.size()) >= 0;
+    }
+
 
     @Override
     public SkuStockInfoPO queryBySkuId(Long skuId) {

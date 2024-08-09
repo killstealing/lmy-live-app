@@ -11,7 +11,7 @@
  Target Server Version : 80035
  File Encoding         : 65001
 
- Date: 09/08/2024 16:12:39
+ Date: 09/08/2024 20:38:50
 */
 
 SET NAMES utf8mb4;
@@ -26,6 +26,7 @@ CREATE TABLE `t_sku_order_info`  (
   `sku_id_list` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
   `user_id` bigint NOT NULL COMMENT '用户id',
   `room_id` int NOT NULL COMMENT '直播间id',
+  `extra` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL,
   `status` int NOT NULL DEFAULT 1 COMMENT '状态',
   `remarks` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NULL DEFAULT NULL COMMENT '备注',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,

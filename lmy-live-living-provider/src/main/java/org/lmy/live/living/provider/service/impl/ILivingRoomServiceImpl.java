@@ -1,12 +1,17 @@
 package org.lmy.live.living.provider.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.rocketmq.client.producer.MQProducer;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.common.message.Message;
 import org.idea.lmy.live.framework.redis.starter.key.LivingProviderCacheKeyBuilder;
 import org.lmy.live.common.interfaces.dto.PageWrapper;
 import org.lmy.live.common.interfaces.enums.CommonStatusEum;
+import org.lmy.live.common.interfaces.topic.LivingRoomTopicNames;
 import org.lmy.live.common.interfaces.utils.ConvertBeanUtils;
 import org.lmy.live.im.core.server.interfaces.dto.ImOfflineDTO;
 import org.lmy.live.im.core.server.interfaces.dto.ImOnlineDTO;
@@ -53,6 +58,9 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
     @DubboReference
     private ImRouterRpc imRouterRpc;
 
+    @Resource
+    private MQProducer mqProducer;
+
     @Override
     public Integer startLivingRoom(LivingRoomReqDTO livingRoomReqDTO) {
         LivingRoomPO livingRoomPO = ConvertBeanUtils.convert(livingRoomReqDTO, LivingRoomPO.class);
@@ -64,7 +72,19 @@ public class ILivingRoomServiceImpl implements ILivingRoomService {
         //防止之前有空值缓存，这里做移除操作
         String cacheKey = livingProviderCacheKeyBuilder.buildLivingRoomObj(livingRoomPO.getId());
         redisTemplate.delete(cacheKey);
+        this.sendStartingLivingRoomMq(livingRoomPO);
         return id;
+    }
+    private void sendStartingLivingRoomMq(LivingRoomPO livingRoomPO){
+        Message message=new Message();
+        message.setBody(JSON.toJSONBytes(livingRoomPO));
+        message.setTopic(LivingRoomTopicNames.START_LIVING_ROOM);
+        try {
+            SendResult sendResult = mqProducer.send(message);
+            logger.info("[ILivingRoomServiceImpl] sendStartingLivingRoomMq sendResult is {}",sendResult);;
+        } catch (Exception e) {
+            logger.error("[ILivingRoomServiceImpl] sendStartingLivingRoomMq has exception:",e);
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)

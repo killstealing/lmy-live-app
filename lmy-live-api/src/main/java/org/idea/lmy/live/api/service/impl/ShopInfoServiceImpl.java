@@ -2,6 +2,7 @@ package org.idea.lmy.live.api.service.impl;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.idea.lmy.live.api.error.ApiErrorEnum;
 import org.idea.lmy.live.api.service.IShopInfoService;
 import org.idea.lmy.live.api.vo.PrepareOrderVO;
 import org.idea.lmy.live.api.vo.req.ShopCarReqVO;
@@ -10,10 +11,7 @@ import org.idea.lmy.live.api.vo.resp.ShopCarRespVO;
 import org.idea.lmy.live.api.vo.resp.SkuDetailInfoVO;
 import org.idea.lmy.live.api.vo.resp.SkuInfoVO;
 import org.lmy.live.common.interfaces.utils.ConvertBeanUtils;
-import org.lmy.live.gift.interfaces.dto.PrepareOrderReqDTO;
-import org.lmy.live.gift.interfaces.dto.ShopCarReqDTO;
-import org.lmy.live.gift.interfaces.dto.SkuInfoDTO;
-import org.lmy.live.gift.interfaces.dto.SkuPrepareOrderInfoDTO;
+import org.lmy.live.gift.interfaces.dto.*;
 import org.lmy.live.gift.interfaces.rpc.IShopCarRPC;
 import org.lmy.live.gift.interfaces.rpc.ISkuInfoRPC;
 import org.lmy.live.gift.interfaces.rpc.ISkuOrderInfoRPC;
@@ -97,7 +95,8 @@ public class ShopInfoServiceImpl implements IShopInfoService {
 
     @Override
     public boolean payNow(PrepareOrderVO prepareOrderVO) {
-
-        return false;
+        boolean status = skuOrderInfoRPC.payNow(ConvertBeanUtils.convert(prepareOrderVO, PayNowReqDTO.class));
+        ErrorAssert.isTure(status, ApiErrorEnum.PAY_ERROR);
+        return true;
     }
 }
