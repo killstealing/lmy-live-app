@@ -6,6 +6,7 @@ import org.idea.lmy.live.api.vo.PrepareOrderVO;
 import org.idea.lmy.live.api.vo.req.ShopCarReqVO;
 import org.idea.lmy.live.api.vo.req.SkuInfoReqVO;
 import org.lmy.live.common.interfaces.vo.WebResponseVO;
+import org.lmy.live.web.starter.context.LmyRequestContext;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -81,7 +82,8 @@ public class ShopInfoController {
 
     @PostMapping("/payNow")
     public WebResponseVO payNow(PrepareOrderVO prepareOrderVO) {
-        return null;
+        prepareOrderVO.setUserId(LmyRequestContext.getUserId());
+        return WebResponseVO.success(shopInfoService.payNow(prepareOrderVO));
     }
 
 

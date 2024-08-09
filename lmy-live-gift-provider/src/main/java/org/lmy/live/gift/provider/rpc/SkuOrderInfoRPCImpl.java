@@ -2,21 +2,27 @@ package org.lmy.live.gift.provider.rpc;
 
 import com.alibaba.fastjson.JSON;
 import jakarta.annotation.Resource;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.apache.rocketmq.client.producer.MQProducer;
 import org.apache.rocketmq.common.message.Message;
+import org.lmy.live.bank.interfaces.constants.OrderStatusEnum;
+import org.lmy.live.bank.interfaces.rpc.ILmyCurrencyAccountRpc;
 import org.lmy.live.common.interfaces.topic.GiftProviderTopicNames;
 import org.lmy.live.common.interfaces.utils.ConvertBeanUtils;
 import org.lmy.live.gift.interfaces.constants.SkuOrderInfoEnum;
 import org.lmy.live.gift.interfaces.dto.*;
 import org.lmy.live.gift.interfaces.rpc.ISkuOrderInfoRPC;
+import org.lmy.live.gift.provider.dao.po.SkuInfoPO;
 import org.lmy.live.gift.provider.dao.po.SkuOrderInfoPO;
 import org.lmy.live.gift.provider.service.IShopCarService;
+import org.lmy.live.gift.provider.service.ISkuInfoService;
 import org.lmy.live.gift.provider.service.ISkuOrderInfoService;
 import org.lmy.live.gift.provider.service.ISkuStockInfoService;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +41,11 @@ public class SkuOrderInfoRPCImpl implements ISkuOrderInfoRPC {
     @Resource
     private ISkuStockInfoService skuStockInfoService;
     @Resource
+    private ISkuInfoService skuInfoService;
+    @Resource
     private MQProducer mqProducer;
+    @DubboReference
+    private ILmyCurrencyAccountRpc accountRpc;
 
     @Override
     public SkuOrderInfoRespDTO queryByUserIdAndRoomId(Long userId, Integer roomId) {
@@ -63,10 +73,9 @@ public class SkuOrderInfoRPCImpl implements ISkuOrderInfoRPC {
         List<Long> skuIdList = carItemList.stream().map(item -> item.getSkuInfoDTO().getSkuId()).collect(Collectors.toList());
         //核心的知识点 库存回滚
         //10个skuId 前5个扣减成功了，后边5个有问题
-        boolean status = false;
-        for (Long skuId : skuIdList) {
-            //todo
-            status = skuStockInfoService.decrStockNumBySkuIdV2(skuId, 1);
+        boolean status = skuStockInfoService.decrStockNumBySkuIdV3(skuIdList, 1);
+        if (!status){
+            return null;
         }
 
         SkuOrderInfoReqDTO skuOrderInfoReqDTO = new SkuOrderInfoReqDTO();
@@ -97,6 +106,36 @@ public class SkuOrderInfoRPCImpl implements ISkuOrderInfoRPC {
         skuPrepareOrderInfoDTO.setSkuPrepareOrderItemInfoDTOS(itemList);
         skuPrepareOrderInfoDTO.setTotalPrice(totalPrice);
         return skuPrepareOrderInfoDTO;
+    }
+
+    @Override
+    public boolean payNow(PayNowReqDTO payNowReqDTO) {
+        SkuOrderInfoRespDTO skuOrderInfoRespDTO = skuOrderInfoService.queryByUserIdAndRoomId(payNowReqDTO.getUserId(), payNowReqDTO.getRoomId());
+        if(OrderStatusEnum.DAI_PAY.getCode()!=skuOrderInfoRespDTO.getStatus()){
+            return false;
+        }
+        List<Long> skuIds = Arrays.stream(skuOrderInfoRespDTO.getSkuIdList().split(",")).map(skuId->Long.valueOf(skuId)).collect(Collectors.toList());
+        List<SkuInfoPO> skuInfoPOS = skuInfoService.queryBySkuIds(skuIds);
+        Integer sum=0;
+        for (SkuInfoPO skuInfoPO:skuInfoPOS){
+            sum+=skuInfoPO.getSkuPrice();
+        }
+        Integer balance = accountRpc.getBalance(payNowReqDTO.getUserId());
+        if(balance<sum){
+            return false;
+        }
+        SkuOrderInfoReqDTO updateOrder=new SkuOrderInfoReqDTO();
+        updateOrder.setId(skuOrderInfoRespDTO.getId());
+        updateOrder.setStatus(OrderStatusEnum.PAID.getCode());
+        updateOrder.setRoomId(payNowReqDTO.getRoomId());
+        updateOrder.setUserId(payNowReqDTO.getUserId());
+        this.updateOrderStatus(updateOrder);
+        accountRpc.decrV2(payNowReqDTO.getUserId(),sum);
+        ShopCarReqDTO shopCarReqDTO=new ShopCarReqDTO();
+        shopCarReqDTO.setUserId(payNowReqDTO.getUserId());
+        shopCarReqDTO.setRoomId(payNowReqDTO.getRoomId());
+        shopCarService.clearShopCar(shopCarReqDTO);
+        return true;
     }
 
     private void stockRollBackHandler(Long userId,Long orderId) {

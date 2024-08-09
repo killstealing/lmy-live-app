@@ -35,6 +35,7 @@ public interface ISkuStockInfoService {
      * @return
      */
     boolean decrStockNumBySkuIdV2(Long skuId,Integer num);
+    boolean decrStockNumBySkuIdV3(List<Long> skuIdList,Integer num);
 
     /**
      * 根据skuId查询库存信息

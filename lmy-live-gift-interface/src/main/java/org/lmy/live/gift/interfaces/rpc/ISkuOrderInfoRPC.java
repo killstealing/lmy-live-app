@@ -1,10 +1,7 @@
 package org.lmy.live.gift.interfaces.rpc;
 
 
-import org.lmy.live.gift.interfaces.dto.PrepareOrderReqDTO;
-import org.lmy.live.gift.interfaces.dto.SkuOrderInfoReqDTO;
-import org.lmy.live.gift.interfaces.dto.SkuOrderInfoRespDTO;
-import org.lmy.live.gift.interfaces.dto.SkuPrepareOrderInfoDTO;
+import org.lmy.live.gift.interfaces.dto.*;
 
 /**
  * @Author idea
@@ -41,4 +38,6 @@ public interface ISkuOrderInfoRPC {
      * @param prepareOrderReqDTO
      */
     SkuPrepareOrderInfoDTO prepareOrder(PrepareOrderReqDTO prepareOrderReqDTO);
+
+    boolean payNow(PayNowReqDTO payNowReqDTO);
 }

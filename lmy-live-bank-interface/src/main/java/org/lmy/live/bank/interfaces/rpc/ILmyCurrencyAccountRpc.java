@@ -20,6 +20,7 @@ public interface ILmyCurrencyAccountRpc {
      * @param num
      */
     void decr(long userId,int num);
+    boolean decrV2(long userId, int num);
 
     /**
      * 查询账户

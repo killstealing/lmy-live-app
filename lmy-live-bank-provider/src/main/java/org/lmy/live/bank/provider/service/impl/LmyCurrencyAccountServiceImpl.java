@@ -68,10 +68,11 @@ public class LmyCurrencyAccountServiceImpl implements ILmyCurrencyAccountService
     }
 
     @Override
-    public void decr(Long userId, int num) {
+    public boolean decr(Long userId, int num) {
         String cacheKey = cacheKeyBuilder.buildGiftListCacheKey(userId);
         if(redisTemplate.hasKey(cacheKey)){
-            redisTemplate.opsForValue().decrement(cacheKey,num);
+            Long decrement = redisTemplate.opsForValue().decrement(cacheKey, num);
+            return decrement>0;
         }
         threadPoolExecutor.execute(new Runnable() {
             @Override
@@ -81,6 +82,7 @@ public class LmyCurrencyAccountServiceImpl implements ILmyCurrencyAccountService
                 consumeDecrDBHandler(userId,num);
             }
         });
+        return false;
     }
 
     @Transactional(rollbackFor = Exception.class)
