@@ -3,7 +3,6 @@ package org.lmy.live.gift.provider.consumer;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import jakarta.annotation.Resource;
-import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
@@ -68,11 +67,11 @@ public class SendGiftConsumer implements InitializingBean {
     private RedisTemplate<String, Object> redisTemplate;
     @Resource
     private GiftProviderCacheKeyBuilder cacheKeyBuilder;
-    @DubboReference
+//    @DubboReference
     private ILmyCurrencyAccountRpc qiyuCurrencyAccountRpc;
-    @DubboReference
+//    @DubboReference
     private ILivingRoomRpc livingRoomRpc;
-    @DubboReference
+//    @DubboReference
     private ImRouterRpc routerRpc;
 
     @Override

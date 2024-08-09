@@ -55,7 +55,7 @@ public class SkuStockInfoRPCImpl implements ISkuStockInfoRPC {
         List<Long> skuIdList = anchorShopInfoService.querySkuIdByAnchorId(anchorId);
         List<SkuStockInfoPO> skuStockInfoPOS = stockInfoService.queryBySkuIds(skuIdList);
         //通常来说一个主播带货的个数不多，可能也就几个商品，所以使用for循环也是可以的,更合适的做法是使用multiset
-        Map<String, SkuStockInfoPO> saveCacheMap = skuStockInfoPOS.stream().collect(Collectors.toMap(skuStockInfoPO -> cacheKeyBuilder.buildSkuStock(skuStockInfoPO.getSkuId()), x -> x));
+        Map<String, Integer> saveCacheMap = skuStockInfoPOS.stream().collect(Collectors.toMap(skuStockInfoPO -> cacheKeyBuilder.buildSkuStock(skuStockInfoPO.getSkuId()), x -> x.getStockNum()));
         redisTemplate.opsForValue().multiSet(saveCacheMap);
         //对命令执行批量过期设置操作
         redisTemplate.executePipelined(new SessionCallback<Object>() {
@@ -71,10 +71,15 @@ public class SkuStockInfoRPCImpl implements ISkuStockInfoRPC {
     }
 
     @Override
+    public boolean decrStockNumBySkuIdV2(Long skuId, Integer num) {
+        return stockInfoService.decrStockNumBySkuIdV2(skuId, num);
+    }
+
+    @Override
     public Integer queryStockNum(Long skuId) {
         String cacheKey = cacheKeyBuilder.buildSkuStock(skuId);
         Object stockNumObj = redisTemplate.opsForValue().get(cacheKey);
-        return stockNumObj == null ? 0 : (Integer) stockNumObj;
+        return stockNumObj == null ? null : (Integer) stockNumObj;
     }
 
     @Override
@@ -82,7 +87,9 @@ public class SkuStockInfoRPCImpl implements ISkuStockInfoRPC {
         List<Long> skuIdList = anchorShopInfoService.querySkuIdByAnchorId(anchorId);
         for (Long skuId : skuIdList) {
             Integer stockNum = this.queryStockNum(skuId);
-            stockInfoService.updateStockNum(skuId,stockNum);
+            if (stockNum!=null){
+                stockInfoService.updateStockNum(skuId,stockNum);
+            }
         }
         return true;
     }

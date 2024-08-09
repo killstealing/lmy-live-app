@@ -25,6 +25,16 @@ public interface ISkuStockInfoService {
      */
     DcrStockNumBO dcrStockNumBySkuId(Long skuId, Integer num);
 
+
+    /**
+     * 根据skuId扣减库存值
+     *
+     * @param skuId
+     * @param num
+     * @return
+     */
+    boolean decrStockNumBySkuIdV2(Long skuId,Integer num);
+
     /**
      * 根据skuId查询库存信息
      *
